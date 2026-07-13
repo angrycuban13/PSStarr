@@ -1,0 +1,49 @@
+BeforeDiscovery {
+    Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
+}
+
+Describe 'Get-StarrSystemStatus' {
+    InModuleScope PSStarr {
+        BeforeEach {
+            Mock Invoke-StarrApiRequest { [pscustomobject]@{ appName = 'Starr' } }
+        }
+
+        It 'delegates named requests to the transport' {
+            Get-StarrSystemStatus -Name Main
+
+            Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter {
+                $Name -eq 'Main' -and $Endpoint -eq 'system/status'
+            }
+        }
+
+        It 'delegates an explicit <Application> URL to the transport' -ForEach @(
+            @{ Application = 'Radarr'; Url = 'http://localhost:7878' }
+            @{ Application = 'Sonarr'; Url = 'http://localhost:8989' }
+            @{ Application = 'Lidarr'; Url = 'http://localhost:8686' }
+        ) {
+            $expectedUrl = $Url
+
+            Get-StarrSystemStatus -Url $expectedUrl -ApiKey fake
+
+            Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter {
+                $Url -eq $expectedUrl -and
+                $ApiKey -eq 'fake' -and
+                $Endpoint -eq 'system/status'
+            }
+        }
+
+        It 'passes query parameters to the transport' {
+            $query = @{
+                IncludeDetails = $true
+            }
+
+            Get-StarrSystemStatus -Name Main -Query $query
+
+            Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter {
+                $Name -eq 'Main' -and
+                $Endpoint -eq 'system/status' -and
+                $Query.IncludeDetails -eq $true
+            }
+        }
+    }
+}
