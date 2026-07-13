@@ -1,0 +1,240 @@
+function Invoke-StarrApiRequest {
+    <#
+    .SYNOPSIS
+        Invoke-Starr Api Request.
+
+    .DESCRIPTION
+        This function resolves a Starr instance, constructs an authenticated API request, invokes it, and returns the deserialized response.
+
+    .PARAMETER Name
+        The name of the saved Starr instance.
+
+    .PARAMETER Url
+        The absolute base URL of the Starr instance.
+
+    .PARAMETER ApiKey
+        The API key used to authenticate with the Starr instance.
+
+    .PARAMETER Endpoint
+        The relative API endpoint path.
+
+    .PARAMETER ApiVersion
+        The version segment used in versioned API URLs.
+
+    .PARAMETER Method
+        The HTTP method used for the request.
+
+    .PARAMETER Query
+        Query-string keys and values appended to the request URL.
+
+    .PARAMETER Body
+        The request body. Non-string values are serialized as JSON.
+
+    .PARAMETER ContentType
+        The request body content type.
+
+    .PARAMETER ExpectedApplication
+        The application type required by an application-specific wrapper.
+
+    .PARAMETER Unversioned
+        Builds the request without an API version segment.
+
+    .EXAMPLE
+        Invoke-StarrApiRequest -Name 'RadarrMain' -Endpoint 'health'
+
+    .EXAMPLE
+        Invoke-StarrApiRequest -Url 'http://localhost:7878' -ApiKey '<api-key>' -Endpoint 'health'
+
+    .INPUTS
+        None.
+
+        You cannot pipe objects to this function.
+
+    .OUTPUTS
+        [System.Object]
+
+        This function returns response objects retrieved from the Starr API.
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'Named')]
+    [OutputType([System.Object])]
+    param(
+        [Parameter(Mandatory = $true, ParameterSetName = 'Named')]
+        [ValidateNotNullOrWhiteSpace()]
+        [System.String]
+        $Name,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
+        [ValidateScript({ Test-StarrUrl -Url $_ })]
+        [System.String]
+        $Url,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
+        [ValidateNotNullOrWhiteSpace()]
+        [System.String]
+        $ApiKey,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrWhiteSpace()]
+        [System.String]
+        $Endpoint,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrWhiteSpace()]
+        [System.String]
+        $ApiVersion = 'v3',
+
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('GET', 'POST', 'PUT', 'PATCH', 'DELETE')]
+        [System.String]
+        $Method = 'GET',
+
+        [Parameter(Mandatory = $false)]
+        [System.Collections.Hashtable]
+        $Query,
+
+        [Parameter(Mandatory = $false)]
+        [System.Object]
+        $Body,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrWhiteSpace()]
+        [System.String]
+        $ContentType = 'application/json',
+
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('Radarr', 'Sonarr', 'Lidarr')]
+        [System.String]
+        $ExpectedApplication,
+
+        [Parameter(Mandatory = $false)]
+        [switch]
+        $Unversioned
+    )
+
+    if ($PSBoundParameters.ContainsKey('ErrorAction')) {
+        $originalErrorAction = [System.Management.Automation.ActionPreference] $PSBoundParameters.ErrorAction
+    }
+    else {
+        $originalErrorAction = [System.Management.Automation.ActionPreference] $ErrorActionPreference
+    }
+    $ErrorActionPreference = 'Stop'
+
+    if ($PSCmdlet.ParameterSetName -eq 'Named') {
+        try {
+            $configuration = Get-StarrConfiguration
+        }
+        catch {
+            $message = "Unable to load the saved Starr instance configuration. $($_.Exception.Message)"
+            $exception = [System.InvalidOperationException]::new($message, $_.Exception)
+            $errorRecord = New-StarrErrorRecord -Exception $exception -Category ReadError -ErrorId 'StarrConfigurationReadFailed' -TargetObject $Name -Activity $MyInvocation.MyCommand.Name
+
+            Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -LogMessage $message
+            return
+        }
+
+        if (-not $configuration.Instances.Contains($Name)) {
+            $message = "Starr instance '$Name' was not found."
+            $exception = [System.Management.Automation.ItemNotFoundException]::new($message)
+            $errorRecord = New-StarrErrorRecord -Exception $exception -Category ObjectNotFound -ErrorId 'StarrInstanceNotFound' -TargetObject $Name -Activity $MyInvocation.MyCommand.Name -RecommendedAction 'Create the instance with Set-StarrInstance or specify an existing instance name.'
+
+            Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -NoLog
+            return
+        }
+
+        $instance = $configuration.Instances[$Name]
+
+        if ($PSBoundParameters.ContainsKey('ExpectedApplication') -and $instance.Application -ne $ExpectedApplication) {
+            $message = "Starr instance '$Name' is '$($instance.Application)', not '$ExpectedApplication'."
+            $exception = [System.ArgumentException]::new($message, 'Name')
+            $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrApplicationMismatch' -TargetObject $Name -Activity $MyInvocation.MyCommand.Name -RecommendedAction "Specify an instance configured for $ExpectedApplication."
+
+            Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -NoLog
+            return
+        }
+
+        $Url = $instance.Url
+        $ApiKey = $instance.ApiKey
+    }
+
+    $baseUrl = $Url.TrimEnd('/')
+    $normalizedEndpoint = $Endpoint.Trim('/')
+
+    $requestUri = if ($Unversioned) {
+        "$baseUrl/$normalizedEndpoint"
+    }
+    else {
+        $normalizedApiVersion = $ApiVersion.Trim('/')
+
+        "$baseUrl/api/$normalizedApiVersion/$normalizedEndpoint"
+    }
+
+    if ($null -ne $Query -and $Query.Count -gt 0) {
+        $queryParts = foreach ($key in @($Query.Keys | Sort-Object)) {
+            foreach ($value in @($Query[$key])) {
+                $escapedKey = [System.Uri]::EscapeDataString([System.String] $key)
+                $escapedValue = [System.Uri]::EscapeDataString([System.String] $value)
+
+                "$escapedKey=$escapedValue"
+            }
+        }
+
+        $requestUri += '?' + ($queryParts -join '&')
+    }
+
+    $parameters = @{
+        Uri         = $requestUri
+        Method      = $Method
+        Headers     = @{
+            'X-Api-Key' = $ApiKey
+        }
+        ErrorAction = $ErrorActionPreference
+        Verbose     = $VerbosePreference
+        Debug       = $DebugPreference
+    }
+
+    if ($PSBoundParameters.ContainsKey('Body')) {
+        $parameters.ContentType = $ContentType
+        $parameters.Body = if ($Body -is [string]) {
+            $Body
+        }
+        else {
+            $Body | ConvertTo-Json -Depth 20
+        }
+    }
+
+    Write-Verbose "Invoking $Method request to `"$requestUri`"."
+
+    try {
+        Invoke-RestMethod @parameters
+    }
+    catch {
+        $detailParts = @($_.Exception.Message)
+
+        if ($null -ne $_.ErrorDetails -and -not [string]::IsNullOrWhiteSpace($_.ErrorDetails.Message)) {
+            $detailParts += $_.ErrorDetails.Message
+        }
+
+        $details = Protect-StarrSensitiveText -Text ($detailParts -join ' ') -SensitiveValue @($ApiKey)
+        $message = "Starr API $Method request to '$requestUri' failed. $($details.Trim())"
+        $exception = [System.Net.Http.HttpRequestException]::new($message)
+        $errorRecord = New-StarrErrorRecord -Exception $exception -Category ConnectionError -ErrorId 'StarrApiRequestFailed' -TargetObject $requestUri -Activity $MyInvocation.MyCommand.Name
+
+        Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -LogMessage $message -SensitiveValue @($ApiKey)
+        return
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
