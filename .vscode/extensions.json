@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+        "DavidAnson.vscode-markdownlint",
+        "ms-vscode.powershell",
+        "oderwat.indent-rainbow",
+        "TylerLeonhardt.vscode-inline-values-powershell",
+        "usernamehw.errorlens"
+    ]
+}
