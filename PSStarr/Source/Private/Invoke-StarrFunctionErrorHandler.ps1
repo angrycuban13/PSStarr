@@ -1,10 +1,10 @@
 function Invoke-StarrFunctionErrorHandler {
     <#
     .SYNOPSIS
-        Logs and emits a sanitized error according to the caller's effective error action.
+        Emits a sanitized error according to the caller's effective error action.
 
     .DESCRIPTION
-        This function logs a sanitized error and emits it according to the caller's effective error action.
+        This function optionally logs a sanitized error and emits it according to the caller's effective error action.
 
     .PARAMETER Cmdlet
         The calling function's PSCmdlet object.
@@ -24,8 +24,14 @@ function Invoke-StarrFunctionErrorHandler {
     .PARAMETER SensitiveValue
         Values replaced with the redaction marker.
 
+    .PARAMETER NoLog
+        Prevents expected errors from being written to the log.
+
     .EXAMPLE
         Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $_ -OriginalErrorAction $originalErrorAction
+
+    .EXAMPLE
+        Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -NoLog
 
     .INPUTS
         None.
@@ -38,6 +44,7 @@ function Invoke-StarrFunctionErrorHandler {
         This function does not return objects to the pipeline.
     #>
     [CmdletBinding()]
+    [OutputType([System.Void])]
     param(
         [Parameter(Mandatory)]
         [System.Management.Automation.PSCmdlet]
@@ -61,55 +68,48 @@ function Invoke-StarrFunctionErrorHandler {
 
         [Parameter()]
         [System.String[]]
-        $SensitiveValue
+        $SensitiveValue,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $NoLog
     )
 
-    $summary = if ([System.String]::IsNullOrWhiteSpace($LogMessage)) {
-        $ErrorRecord.Exception.Message
-    }
-    else {
-        $LogMessage
-    }
+    if (-not $NoLog) {
+        $summary = if ([System.String]::IsNullOrWhiteSpace($LogMessage)) {
+            $ErrorRecord.Exception.Message
+        }
+        else {
+            $LogMessage
+        }
 
-    $logText = "$summary`n$(Resolve-StarrErrorRecord -ErrorRecord $ErrorRecord)"
-    $logText = Protect-StarrSensitiveText -Text $logText -SensitiveValue $SensitiveValue
+        $errorDetails = Resolve-StarrErrorRecord -ErrorRecord $ErrorRecord
 
-    $writeLogParameters = @{
-        Message         = $logText
-        Severity        = 'Error'
-        NoConsoleOutput = $true
-    }
+        $logText = if ($summary -eq $ErrorRecord.Exception.Message) {
+            $errorDetails
+        }
+        else {
+            "$summary`n$errorDetails"
+        }
 
-    foreach ($key in $LogEntryParameters.Keys) {
-        if ($key -notin @('Message', 'Severity', 'NoConsoleOutput')) {
-            $writeLogParameters[$key] = $LogEntryParameters[$key]
-            $errorDetails = Resolve-StarrErrorRecord -ErrorRecord $ErrorRecord
+        $logText = Protect-StarrSensitiveText -Text $logText -SensitiveValue $SensitiveValue
 
-            $logText = if ($summary -eq $ErrorRecord.Exception.Message) {
-                $errorDetails
+        $writeLogParameters = @{
+            Message         = $logText
+            Severity        = 'Error'
+            NoConsoleOutput = $true
+        }
+
+        foreach ($key in $LogEntryParameters.Keys) {
+            if ($key -notin @('Message', 'Severity', 'NoConsoleOutput')) {
+                $writeLogParameters[$key] = $LogEntryParameters[$key]
             }
-            else {
-                "$summary`n$errorDetails"
-            }
-
         }
 
         Write-StarrLogEntry @writeLogParameters
-
-        $ErrorActionPreference = $OriginalErrorAction
-
-        switch ($OriginalErrorAction) {
-            'Stop' {
-                $Cmdlet.ThrowTerminatingError($ErrorRecord)
-            }
-            { $_ -in 'SilentlyContinue', 'Ignore' } {
-                return
-            }
-            default {
-                $Cmdlet.WriteError($ErrorRecord)
-            }
-        }
     }
+
+    $ErrorActionPreference = $OriginalErrorAction
 
     switch ($OriginalErrorAction) {
         'Stop' {
