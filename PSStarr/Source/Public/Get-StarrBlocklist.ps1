@@ -30,10 +30,10 @@ function Get-StarrBlocklist {
     .PARAMETER SortDirection
         The result sort direction.
 
-    .PARAMETER MovieIds
+    .PARAMETER MovieIdFilter
         The Radarr movie identifiers used to filter the paged blocklist.
 
-    .PARAMETER SeriesIds
+    .PARAMETER SeriesIdFilter
         The Sonarr series identifiers used to filter the paged blocklist.
 
     .PARAMETER Protocols
@@ -43,7 +43,7 @@ function Get-StarrBlocklist {
         Get-StarrBlocklist
 
     .EXAMPLE
-        Get-StarrBlocklist -Name 'RadarrMain' -MovieIds 12, 34 -PageSize 50
+        Get-StarrBlocklist -Name 'RadarrMain' -MovieIdFilter 12, 34 -PageSize 50
 
     .EXAMPLE
         Get-StarrBlocklist -Name 'RadarrMain' -MovieId 12
@@ -104,12 +104,12 @@ function Get-StarrBlocklist {
         [Parameter(Mandatory = $false)]
         [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
         [System.Int32[]]
-        $MovieIds,
+        $MovieIdFilter,
 
         [Parameter(Mandatory = $false)]
         [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
         [System.Int32[]]
-        $SeriesIds,
+        $SeriesIdFilter,
 
         [Parameter(Mandatory = $false)]
         [ValidateSet('unknown', 'usenet', 'torrent')]
@@ -117,11 +117,11 @@ function Get-StarrBlocklist {
         $Protocols
     )
 
-    $hasRadarrParameters = $PSBoundParameters.ContainsKey('MovieId') -or $PSBoundParameters.ContainsKey('MovieIds')
-    $hasSonarrParameters = $PSBoundParameters.ContainsKey('SeriesIds')
+    $hasRadarrParameters = $PSBoundParameters.ContainsKey('MovieId') -or $PSBoundParameters.ContainsKey('MovieIdFilter')
+    $hasSonarrParameters = $PSBoundParameters.ContainsKey('SeriesIdFilter')
 
     if ($hasRadarrParameters -and $hasSonarrParameters) {
-        $message = 'MovieId or MovieIds cannot be combined with SeriesIds.'
+        $message = 'MovieId or MovieIdFilter cannot be combined with SeriesIdFilter.'
         $exception = [System.ArgumentException]::new($message)
         $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrApplicationParameterConflict' -TargetObject $PSBoundParameters -Activity $MyInvocation.MyCommand.Name
 
@@ -137,8 +137,8 @@ function Get-StarrBlocklist {
         PageSize      = 'pageSize'
         SortKey       = 'sortKey'
         SortDirection = 'sortDirection'
-        MovieIds      = 'movieIds'
-        SeriesIds     = 'seriesIds'
+        MovieIdFilter  = 'movieIds'
+        SeriesIdFilter = 'seriesIds'
         Protocols     = 'protocols'
     }
 

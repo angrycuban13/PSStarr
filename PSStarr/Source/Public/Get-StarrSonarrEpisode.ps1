@@ -24,7 +24,7 @@ function Get-StarrSonarrEpisode {
     .PARAMETER SeasonNumber
         The Sonarr season number used to filter results.
 
-    .PARAMETER EpisodeIds
+    .PARAMETER EpisodeIdFilter
         The Sonarr episode identifiers used to filter results.
 
     .PARAMETER EpisodeFileId
@@ -98,7 +98,7 @@ function Get-StarrSonarrEpisode {
         [Parameter(Mandatory = $false)]
         [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
         [System.Int32[]]
-        $EpisodeIds,
+        $EpisodeIdFilter,
 
         [Parameter(Mandatory = $false)]
         [ValidateRange(1, [System.Int32]::MaxValue)]
@@ -132,7 +132,7 @@ function Get-StarrSonarrEpisode {
         $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
             SeriesId = 'seriesId'
             SeasonNumber = 'seasonNumber'
-            EpisodeIds = 'episodeIds'
+            EpisodeIdFilter = 'episodeIds'
             EpisodeFileId = 'episodeFileId'
             IncludeSeries = 'includeSeries'
             IncludeEpisodeFile = 'includeEpisodeFile'

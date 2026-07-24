@@ -24,7 +24,7 @@ function Get-StarrQueueDetail {
     .PARAMETER SeriesId
         The Sonarr series identifier used to filter results.
 
-    .PARAMETER EpisodeIds
+    .PARAMETER EpisodeIdFilter
         The Sonarr episode identifiers used to filter results.
 
     .PARAMETER IncludeSeries
@@ -87,7 +87,7 @@ function Get-StarrQueueDetail {
         [Parameter(Mandatory = $false)]
         [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
         [System.Int32[]]
-        $EpisodeIds,
+        $EpisodeIdFilter,
 
         [Parameter(Mandatory = $false)]
         [System.Boolean]
@@ -99,7 +99,7 @@ function Get-StarrQueueDetail {
     )
 
     $hasRadarrParameters = @('MovieId', 'IncludeMovie') | Where-Object { $PSBoundParameters.ContainsKey($_) }
-    $hasSonarrParameters = @('SeriesId', 'EpisodeIds', 'IncludeSeries', 'IncludeEpisode') | Where-Object { $PSBoundParameters.ContainsKey($_) }
+    $hasSonarrParameters = @('SeriesId', 'EpisodeIdFilter', 'IncludeSeries', 'IncludeEpisode') | Where-Object { $PSBoundParameters.ContainsKey($_) }
 
     if (@($hasRadarrParameters).Count -gt 0 -and @($hasSonarrParameters).Count -gt 0) {
         $message = 'Radarr-specific and Sonarr-specific queue parameters cannot be combined.'
@@ -117,7 +117,7 @@ function Get-StarrQueueDetail {
         MovieId = 'movieId'
         IncludeMovie = 'includeMovie'
         SeriesId = 'seriesId'
-        EpisodeIds = 'episodeIds'
+        EpisodeIdFilter = 'episodeIds'
         IncludeSeries = 'includeSeries'
         IncludeEpisode = 'includeEpisode'
     }
@@ -129,7 +129,7 @@ function Get-StarrQueueDetail {
         $request.ExpectedApplication = 'Radarr'
     }
 
-    if ($PSBoundParameters.ContainsKey('SeriesId') -or $PSBoundParameters.ContainsKey('EpisodeIds') -or $PSBoundParameters.ContainsKey('IncludeSeries') -or $PSBoundParameters.ContainsKey('IncludeEpisode')) {
+    if ($PSBoundParameters.ContainsKey('SeriesId') -or $PSBoundParameters.ContainsKey('EpisodeIdFilter') -or $PSBoundParameters.ContainsKey('IncludeSeries') -or $PSBoundParameters.ContainsKey('IncludeEpisode')) {
         $request.ExpectedApplication = 'Sonarr'
     }
 

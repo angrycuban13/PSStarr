@@ -21,7 +21,7 @@ function Get-StarrSonarrEpisodeFile {
     .PARAMETER SeriesId
         The Sonarr series identifier used to filter results. This parameter accepts an Id property from the pipeline.
 
-    .PARAMETER EpisodeFileIds
+    .PARAMETER EpisodeFileIdFilter
         The Sonarr episode-file identifiers used to filter results.
 
     .EXAMPLE
@@ -78,7 +78,7 @@ function Get-StarrSonarrEpisodeFile {
         [Parameter(Mandatory = $false)]
         [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
         [System.Int32[]]
-        $EpisodeFileIds
+        $EpisodeFileIdFilter
     )
 
     process {
@@ -94,7 +94,7 @@ function Get-StarrSonarrEpisodeFile {
 
         $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
             SeriesId = 'seriesId'
-            EpisodeFileIds = 'episodeFileIds'
+            EpisodeFileIdFilter = 'episodeFileIds'
         }
 
         if ($query.Count -gt 0) {

@@ -48,10 +48,10 @@ function Get-StarrHistory {
     .PARAMETER DownloadId
         The download identifier used to filter paged history.
 
-    .PARAMETER MovieIds
+    .PARAMETER MovieIdFilter
         The Radarr movie identifiers used to filter paged history.
 
-    .PARAMETER SeriesIds
+    .PARAMETER SeriesIdFilter
         The Sonarr series identifiers used to filter paged history.
 
     .PARAMETER EpisodeId
@@ -166,12 +166,12 @@ function Get-StarrHistory {
         [Parameter(Mandatory = $false)]
         [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
         [System.Int32[]]
-        $MovieIds,
+        $MovieIdFilter,
 
         [Parameter(Mandatory = $false)]
         [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
         [System.Int32[]]
-        $SeriesIds,
+        $SeriesIdFilter,
 
         [Parameter(Mandatory = $false)]
         [ValidateRange(1, [System.Int32]::MaxValue)]
@@ -211,8 +211,8 @@ function Get-StarrHistory {
         $PSCmdlet.ThrowTerminatingError($errorRecord)
     }
 
-    $hasRadarrParameters = $PSBoundParameters.ContainsKey('MovieId') -or $PSBoundParameters.ContainsKey('MovieIds') -or $PSBoundParameters.ContainsKey('IncludeMovie')
-    $hasSonarrParameters = @('SeriesId', 'SeriesIds', 'SeasonNumber', 'EpisodeId', 'IncludeSeries', 'IncludeEpisode') | Where-Object { $PSBoundParameters.ContainsKey($_) }
+    $hasRadarrParameters = $PSBoundParameters.ContainsKey('MovieId') -or $PSBoundParameters.ContainsKey('MovieIdFilter') -or $PSBoundParameters.ContainsKey('IncludeMovie')
+    $hasSonarrParameters = @('SeriesId', 'SeriesIdFilter', 'SeasonNumber', 'EpisodeId', 'IncludeSeries', 'IncludeEpisode') | Where-Object { $PSBoundParameters.ContainsKey($_) }
 
     if ($hasRadarrParameters -and @($hasSonarrParameters).Count -gt 0) {
         $message = 'Radarr-specific and Sonarr-specific history parameters cannot be combined.'
@@ -233,8 +233,8 @@ function Get-StarrHistory {
         SortDirection  = 'sortDirection'
         EventTypeId    = 'eventType'
         DownloadId     = 'downloadId'
-        MovieIds       = 'movieIds'
-        SeriesIds      = 'seriesIds'
+        MovieIdFilter  = 'movieIds'
+        SeriesIdFilter = 'seriesIds'
         EpisodeId      = 'episodeId'
         Languages      = 'languages'
         Quality        = 'quality'

@@ -33,7 +33,7 @@ function Get-StarrQueue {
     .PARAMETER IncludeMovie
         Includes movie data when true.
 
-    .PARAMETER MovieIds
+    .PARAMETER MovieIdFilter
         The Radarr movie identifiers used to filter results.
 
     .PARAMETER IncludeUnknownSeriesItems
@@ -45,7 +45,7 @@ function Get-StarrQueue {
     .PARAMETER IncludeEpisode
         Includes episode data when true.
 
-    .PARAMETER SeriesIds
+    .PARAMETER SeriesIdFilter
         The Sonarr series identifiers used to filter results.
 
     .PARAMETER Protocol
@@ -128,7 +128,7 @@ function Get-StarrQueue {
         [Parameter(Mandatory = $false)]
         [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
         [System.Int32[]]
-        $MovieIds,
+        $MovieIdFilter,
 
         [Parameter(Mandatory = $false)]
         [System.Boolean]
@@ -145,7 +145,7 @@ function Get-StarrQueue {
         [Parameter(Mandatory = $false)]
         [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
         [System.Int32[]]
-        $SeriesIds,
+        $SeriesIdFilter,
 
         [Parameter(Mandatory = $false)]
         [ValidateSet('unknown', 'usenet', 'torrent')]
@@ -168,8 +168,8 @@ function Get-StarrQueue {
         $Status
     )
 
-    $hasRadarrParameters = @('IncludeUnknownMovieItems', 'IncludeMovie', 'MovieIds') | Where-Object { $PSBoundParameters.ContainsKey($_) }
-    $hasSonarrParameters = @('IncludeUnknownSeriesItems', 'IncludeSeries', 'IncludeEpisode', 'SeriesIds') | Where-Object { $PSBoundParameters.ContainsKey($_) }
+    $hasRadarrParameters = @('IncludeUnknownMovieItems', 'IncludeMovie', 'MovieIdFilter') | Where-Object { $PSBoundParameters.ContainsKey($_) }
+    $hasSonarrParameters = @('IncludeUnknownSeriesItems', 'IncludeSeries', 'IncludeEpisode', 'SeriesIdFilter') | Where-Object { $PSBoundParameters.ContainsKey($_) }
 
     if (@($hasRadarrParameters).Count -gt 0 -and @($hasSonarrParameters).Count -gt 0) {
         $message = 'Radarr-specific and Sonarr-specific queue parameters cannot be combined.'
@@ -190,11 +190,11 @@ function Get-StarrQueue {
         SortDirection = 'sortDirection'
         IncludeUnknownMovieItems = 'includeUnknownMovieItems'
         IncludeMovie = 'includeMovie'
-        MovieIds = 'movieIds'
+        MovieIdFilter = 'movieIds'
         IncludeUnknownSeriesItems = 'includeUnknownSeriesItems'
         IncludeSeries = 'includeSeries'
         IncludeEpisode = 'includeEpisode'
-        SeriesIds = 'seriesIds'
+        SeriesIdFilter = 'seriesIds'
         Protocol = 'protocol'
         Languages = 'languages'
         Quality = 'quality'
@@ -204,11 +204,11 @@ function Get-StarrQueue {
     if ($query.Count -gt 0) {
         $request.Query = $query
     }
-    if ($PSBoundParameters.ContainsKey('IncludeUnknownMovieItems') -or $PSBoundParameters.ContainsKey('IncludeMovie') -or $PSBoundParameters.ContainsKey('MovieIds')) {
+    if ($PSBoundParameters.ContainsKey('IncludeUnknownMovieItems') -or $PSBoundParameters.ContainsKey('IncludeMovie') -or $PSBoundParameters.ContainsKey('MovieIdFilter')) {
         $request.ExpectedApplication = 'Radarr'
     }
 
-    if ($PSBoundParameters.ContainsKey('IncludeUnknownSeriesItems') -or $PSBoundParameters.ContainsKey('IncludeSeries') -or $PSBoundParameters.ContainsKey('IncludeEpisode') -or $PSBoundParameters.ContainsKey('SeriesIds')) {
+    if ($PSBoundParameters.ContainsKey('IncludeUnknownSeriesItems') -or $PSBoundParameters.ContainsKey('IncludeSeries') -or $PSBoundParameters.ContainsKey('IncludeEpisode') -or $PSBoundParameters.ContainsKey('SeriesIdFilter')) {
         $request.ExpectedApplication = 'Sonarr'
     }
 

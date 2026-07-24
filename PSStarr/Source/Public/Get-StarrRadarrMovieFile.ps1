@@ -18,10 +18,10 @@ function Get-StarrRadarrMovieFile {
     .PARAMETER MovieFileId
         The positive MovieFile resource identifier used for an individual lookup.
 
-    .PARAMETER MovieIds
+    .PARAMETER MovieIdFilter
         The Radarr movie identifiers used to filter results. This parameter accepts an Id property from the pipeline.
 
-    .PARAMETER MovieFileIds
+    .PARAMETER MovieFileIdFilter
         The Radarr movie-file identifiers used to filter results.
 
     .EXAMPLE
@@ -73,12 +73,12 @@ function Get-StarrRadarrMovieFile {
         [Alias('Id')]
         [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
         [System.Int32[]]
-        $MovieIds,
+        $MovieIdFilter,
 
         [Parameter(Mandatory = $false)]
         [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
         [System.Int32[]]
-        $MovieFileIds
+        $MovieFileIdFilter
     )
 
     process {
@@ -93,8 +93,8 @@ function Get-StarrRadarrMovieFile {
         }
 
         $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-            MovieIds = 'movieId'
-            MovieFileIds = 'movieFileIds'
+            MovieIdFilter = 'movieId'
+            MovieFileIdFilter = 'movieFileIds'
         }
 
         if ($query.Count -gt 0) {
