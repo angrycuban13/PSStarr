@@ -43,9 +43,9 @@ function Get-StarrRadarrMovieLookup {
     [CmdletBinding(DefaultParameterSetName = 'NamedTerm')]
     [OutputType([System.Object])]
     param(
-        [Parameter(Mandatory = $true, ParameterSetName = 'NamedTerm')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'NamedImdb')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'NamedTmdb')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'NamedTerm')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'NamedImdb')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'NamedTmdb')]
         [ValidateNotNullOrWhiteSpace()]
         [string]
         $Name,
@@ -105,12 +105,12 @@ function Get-StarrRadarrMovieLookup {
         }
     }
 
-    if ($PSCmdlet.ParameterSetName -like 'Named*') {
-        $request.Name = $Name
-    }
-    else {
+    if ($PSCmdlet.ParameterSetName -like 'Explicit*') {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
+    }
+    elseif ($PSBoundParameters.ContainsKey('Name')) {
+        $request.Name = $Name
     }
 
     Invoke-StarrApiRequest @request

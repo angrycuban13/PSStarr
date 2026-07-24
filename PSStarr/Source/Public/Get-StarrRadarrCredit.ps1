@@ -1,13 +1,13 @@
 function Get-StarrRadarrCredit {
     <#
     .SYNOPSIS
-        Get-Starr Radarr Credit.
+        Retrieves Radarr credits from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves Radarr Credit data from a named Starr instance or an explicit URL and API key.
+        This function retrieves Radarr credits from an inferred or named Starr instance, or from an explicit URL and API key.
 
     .PARAMETER Name
-        The name of the saved Starr instance.
+        The optional name of a saved Starr instance. When omitted, the only matching instance is used.
 
     .PARAMETER Url
         The absolute base URL of the Starr instance.
@@ -15,22 +15,31 @@ function Get-StarrRadarrCredit {
     .PARAMETER ApiKey
         The API key used to authenticate with the Starr instance.
 
-    .PARAMETER Query
-        Query-string keys and values appended to the request URL.
+    .PARAMETER CreditId
+        The positive Credit resource identifier used for an individual lookup.
 
-    .PARAMETER Id
-        The numeric identifier of a single API resource.
+    .PARAMETER MovieId
+        The Radarr movie identifier used to filter results. This parameter accepts an Id property from the pipeline.
+
+    .PARAMETER MovieMetadataId
+        The Radarr movie metadata identifier used to filter results.
 
     .EXAMPLE
-        Get-StarrRadarrCredit -Name 'RadarrMain'
+        Get-StarrRadarrCredit
+
+    .EXAMPLE
+        Get-StarrRadarrCredit -Name 'Main'
 
     .EXAMPLE
         Get-StarrRadarrCredit -Url 'http://localhost:7878' -ApiKey '<api-key>'
 
-    .INPUTS
-        None.
+    .EXAMPLE
+        Get-StarrRadarrMovie -MovieId 123 | Get-StarrRadarrCredit
 
-        You cannot pipe objects to this function.
+    .INPUTS
+        [System.Object]
+
+        This function accepts objects with an Id property representing a Radarr movie.
 
     .OUTPUTS
         [System.Object]
@@ -40,59 +49,68 @@ function Get-StarrRadarrCredit {
     [CmdletBinding(DefaultParameterSetName = 'Named')]
     [OutputType([System.Object])]
     param(
-        [Parameter(Mandatory = $true, ParameterSetName = 'Named')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
         [ValidateNotNullOrWhiteSpace()]
-        [string]
+        [System.String]
         $Name,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
-        [string]
+        [System.String]
         $Url,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateNotNullOrWhiteSpace()]
-        [string]
+        [System.String]
         $ApiKey,
 
         [Parameter(Mandatory = $false)]
-        [hashtable]
-        $Query,
+        [ValidateRange(1, [System.Int32]::MaxValue)]
+        [System.Int32]
+        $CreditId,
+
+        [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
+        [Alias('Id')]
+        [ValidateRange(1, [System.Int32]::MaxValue)]
+        [System.Int32]
+        $MovieId,
 
         [Parameter(Mandatory = $false)]
-        [ValidateRange(1, [int]::MaxValue)]
-        [int]
-        $Id
+        [ValidateRange(1, [System.Int32]::MaxValue)]
+        [System.Int32]
+        $MovieMetadataId
     )
 
-    $endpoint = 'credit'
+    process {
+        $endpoint = 'credit'
 
-    if ($PSBoundParameters.ContainsKey('Id')) {
-        $endpoint += "/$Id"
+        $request = @{
+            Endpoint = $endpoint
+        }
+
+        if ($PSBoundParameters.ContainsKey('CreditId')) {
+            $request.Endpoint = "$endpoint/$CreditId"
+        }
+
+        $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
+            MovieId = 'movieId'
+            MovieMetadataId = 'movieMetadataId'
+        }
+
+        if ($query.Count -gt 0) {
+            $request.Query = $query
+        }
+
+        $request.ExpectedApplication = 'Radarr'
+
+        if ($PSCmdlet.ParameterSetName -eq 'Explicit') {
+            $request.Url = $Url
+            $request.ApiKey = $ApiKey
+        }
+        elseif ($PSBoundParameters.ContainsKey('Name')) {
+            $request.Name = $Name
+        }
+
+        Invoke-StarrApiRequest @request
     }
-
-    $request = @{
-        Endpoint = $endpoint
-    }
-
-    if ($null -ne $Query) {
-        $request.Query = $Query
-    }
-
-    $request.ExpectedApplication = 'Radarr'
-
-    if ($PSCmdlet.ParameterSetName -eq 'Named') {
-        $request.Name = $Name
-    }
-    else {
-        $request.Url = $Url
-        $request.ApiKey = $ApiKey
-    }
-
-    Invoke-StarrApiRequest @request
 }
-
-
-
-
-
