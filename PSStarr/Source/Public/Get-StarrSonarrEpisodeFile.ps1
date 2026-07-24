@@ -1,13 +1,13 @@
 function Get-StarrSonarrEpisodeFile {
     <#
     .SYNOPSIS
-        Get-Starr Sonarr Episode File.
+        Retrieves Sonarr episode files from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves Sonarr Episode File data from a named Starr instance or an explicit URL and API key.
+        This function retrieves Sonarr episode files from an inferred or named Starr instance, or from an explicit URL and API key.
 
     .PARAMETER Name
-        The name of the saved Starr instance.
+        The optional name of a saved Starr instance. When omitted, the only matching instance is used.
 
     .PARAMETER Url
         The absolute base URL of the Starr instance.
@@ -15,22 +15,31 @@ function Get-StarrSonarrEpisodeFile {
     .PARAMETER ApiKey
         The API key used to authenticate with the Starr instance.
 
-    .PARAMETER Query
-        Query-string keys and values appended to the request URL.
+    .PARAMETER EpisodeFileId
+        The positive EpisodeFile resource identifier used for an individual lookup.
 
-    .PARAMETER Id
-        The numeric identifier of a single API resource.
+    .PARAMETER SeriesId
+        The Sonarr series identifier used to filter results. This parameter accepts an Id property from the pipeline.
+
+    .PARAMETER EpisodeFileIds
+        The Sonarr episode-file identifiers used to filter results.
 
     .EXAMPLE
-        Get-StarrSonarrEpisodeFile -Name 'RadarrMain'
+        Get-StarrSonarrEpisodeFile
+
+    .EXAMPLE
+        Get-StarrSonarrEpisodeFile -Name 'Main'
 
     .EXAMPLE
         Get-StarrSonarrEpisodeFile -Url 'http://localhost:7878' -ApiKey '<api-key>'
 
-    .INPUTS
-        None.
+    .EXAMPLE
+        Get-StarrSonarrSeries -SeriesId 123 | Get-StarrSonarrEpisodeFile
 
-        You cannot pipe objects to this function.
+    .INPUTS
+        [System.Object]
+
+        This function accepts objects with an Id property representing a Sonarr series.
 
     .OUTPUTS
         [System.Object]
@@ -40,59 +49,68 @@ function Get-StarrSonarrEpisodeFile {
     [CmdletBinding(DefaultParameterSetName = 'Named')]
     [OutputType([System.Object])]
     param(
-        [Parameter(Mandatory = $true, ParameterSetName = 'Named')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
         [ValidateNotNullOrWhiteSpace()]
-        [string]
+        [System.String]
         $Name,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
-        [string]
+        [System.String]
         $Url,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateNotNullOrWhiteSpace()]
-        [string]
+        [System.String]
         $ApiKey,
 
         [Parameter(Mandatory = $false)]
-        [hashtable]
-        $Query,
+        [ValidateRange(1, [System.Int32]::MaxValue)]
+        [System.Int32]
+        $EpisodeFileId,
+
+        [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
+        [Alias('Id')]
+        [ValidateRange(1, [System.Int32]::MaxValue)]
+        [System.Int32]
+        $SeriesId,
 
         [Parameter(Mandatory = $false)]
-        [ValidateRange(1, [int]::MaxValue)]
-        [int]
-        $Id
+        [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
+        [System.Int32[]]
+        $EpisodeFileIds
     )
 
-    $endpoint = 'episodefile'
+    process {
+        $endpoint = 'episodefile'
 
-    if ($PSBoundParameters.ContainsKey('Id')) {
-        $endpoint += "/$Id"
+        $request = @{
+            Endpoint = $endpoint
+        }
+
+        if ($PSBoundParameters.ContainsKey('EpisodeFileId')) {
+            $request.Endpoint = "$endpoint/$EpisodeFileId"
+        }
+
+        $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
+            SeriesId = 'seriesId'
+            EpisodeFileIds = 'episodeFileIds'
+        }
+
+        if ($query.Count -gt 0) {
+            $request.Query = $query
+        }
+
+        $request.ExpectedApplication = 'Sonarr'
+
+        if ($PSCmdlet.ParameterSetName -eq 'Explicit') {
+            $request.Url = $Url
+            $request.ApiKey = $ApiKey
+        }
+        elseif ($PSBoundParameters.ContainsKey('Name')) {
+            $request.Name = $Name
+        }
+
+        Invoke-StarrApiRequest @request
     }
-
-    $request = @{
-        Endpoint = $endpoint
-    }
-
-    if ($null -ne $Query) {
-        $request.Query = $Query
-    }
-
-    $request.ExpectedApplication = 'Sonarr'
-
-    if ($PSCmdlet.ParameterSetName -eq 'Named') {
-        $request.Name = $Name
-    }
-    else {
-        $request.Url = $Url
-        $request.ApiKey = $ApiKey
-    }
-
-    Invoke-StarrApiRequest @request
 }
-
-
-
-
-

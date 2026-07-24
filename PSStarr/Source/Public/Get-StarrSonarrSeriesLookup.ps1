@@ -37,7 +37,7 @@ function Get-StarrSonarrSeriesLookup {
     [CmdletBinding(DefaultParameterSetName = 'Named')]
     [OutputType([System.Object])]
     param(
-        [Parameter(Mandatory = $true, ParameterSetName = 'Named')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
         [ValidateNotNullOrWhiteSpace()]
         [string]
         $Name,
@@ -66,12 +66,12 @@ function Get-StarrSonarrSeriesLookup {
         }
     }
 
-    if ($PSCmdlet.ParameterSetName -eq 'Named') {
-        $request.Name = $Name
-    }
-    else {
+    if ($PSCmdlet.ParameterSetName -like 'Explicit*') {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
+    }
+    elseif ($PSBoundParameters.ContainsKey('Name')) {
+        $request.Name = $Name
     }
 
     Invoke-StarrApiRequest @request
