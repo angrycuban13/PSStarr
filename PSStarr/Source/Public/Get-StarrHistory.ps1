@@ -4,10 +4,10 @@ function Get-StarrHistory {
         Retrieves history from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves history from a named Starr instance or an explicit URL and API key, optionally scoped by date or application resource.
+        This function retrieves paged history or history scoped by date, Radarr movie, or Sonarr series using documented filters.
 
     .PARAMETER Name
-        The name of the saved Starr instance.
+        The optional name of a saved Starr instance. When omitted, the only matching instance is used.
 
     .PARAMETER Url
         The absolute base URL of the Starr instance.
@@ -16,25 +16,70 @@ function Get-StarrHistory {
         The API key used to authenticate with the Starr instance.
 
     .PARAMETER Since
-        The earliest history timestamp to retrieve.
+        Uses the history/since endpoint beginning at this timestamp.
 
     .PARAMETER MovieId
-        The numeric Radarr movie identifier.
+        Uses the Radarr history/movie endpoint for this movie identifier.
 
     .PARAMETER SeriesId
-        The numeric Sonarr series identifier.
+        Uses the Sonarr history/series endpoint for this series identifier.
 
-    .PARAMETER Query
-        Query-string keys and values appended to the request URL.
+    .PARAMETER SeasonNumber
+        Filters Sonarr series history by season number.
+
+    .PARAMETER Page
+        The one-based result page for paged history.
+
+    .PARAMETER PageSize
+        The maximum number of records returned per page.
+
+    .PARAMETER SortKey
+        The field used to sort paged history.
+
+    .PARAMETER SortDirection
+        The paged-history sort direction.
+
+    .PARAMETER EventTypeId
+        The numeric event type identifiers used by the paged history endpoint.
+
+    .PARAMETER EventType
+        The named event type used by movie, series, or since history endpoints.
+
+    .PARAMETER DownloadId
+        The download identifier used to filter paged history.
+
+    .PARAMETER MovieIds
+        The Radarr movie identifiers used to filter paged history.
+
+    .PARAMETER SeriesIds
+        The Sonarr series identifiers used to filter paged history.
+
+    .PARAMETER EpisodeId
+        The Sonarr episode identifier used to filter paged history.
+
+    .PARAMETER Languages
+        The language identifiers used to filter paged history.
+
+    .PARAMETER Quality
+        The quality identifiers used to filter paged history.
+
+    .PARAMETER IncludeMovie
+        Includes Radarr movie data when true.
+
+    .PARAMETER IncludeSeries
+        Includes Sonarr series data when true.
+
+    .PARAMETER IncludeEpisode
+        Includes Sonarr episode data when true.
 
     .EXAMPLE
-        Get-StarrHistory -Name 'RadarrMain'
+        Get-StarrHistory
 
     .EXAMPLE
-        Get-StarrHistory -Name 'RadarrMain' -MovieId 42
+        Get-StarrHistory -Name 'RadarrMain' -MovieId 42 -EventType grabbed
 
     .EXAMPLE
-        Get-StarrHistory -Url 'http://localhost:8989' -ApiKey '<api-key>' -SeriesId 7
+        Get-StarrHistory -Name 'SonarrMain' -SeriesId 7 -SeasonNumber 2
 
     .INPUTS
         None.
@@ -49,86 +94,187 @@ function Get-StarrHistory {
     [CmdletBinding(DefaultParameterSetName = 'Named')]
     [OutputType([System.Object])]
     param(
-        [Parameter(Mandatory = $true, ParameterSetName = 'Named')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'NamedSince')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'NamedMovie')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'NamedSeries')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
         $Name,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitSince')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitMovie')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitSeries')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
         [System.String]
         $Url,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitSince')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitMovie')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitSeries')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
         $ApiKey,
 
-        [Parameter(Mandatory = $true, ParameterSetName = 'NamedSince')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitSince')]
+        [Parameter(Mandatory = $false)]
         [System.DateTime]
         $Since,
 
-        [Parameter(Mandatory = $true, ParameterSetName = 'NamedMovie')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitMovie')]
+        [Parameter(Mandatory = $false)]
         [ValidateRange(1, [System.Int32]::MaxValue)]
         [System.Int32]
         $MovieId,
 
-        [Parameter(Mandatory = $true, ParameterSetName = 'NamedSeries')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitSeries')]
+        [Parameter(Mandatory = $false)]
         [ValidateRange(1, [System.Int32]::MaxValue)]
         [System.Int32]
         $SeriesId,
 
         [Parameter(Mandatory = $false)]
-        [System.Collections.Hashtable]
-        $Query
+        [ValidateRange(0, [System.Int32]::MaxValue)]
+        [System.Int32]
+        $SeasonNumber,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateRange(1, [System.Int32]::MaxValue)]
+        [System.Int32]
+        $Page,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateRange(1, [System.Int32]::MaxValue)]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrWhiteSpace()]
+        [System.String]
+        $SortKey,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('default', 'ascending', 'descending')]
+        [System.String]
+        $SortDirection,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 0 }).Count -eq 0 })]
+        [System.Int32[]]
+        $EventTypeId,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('unknown', 'grabbed', 'downloadFolderImported', 'downloadFailed', 'movieFileDeleted', 'movieFolderImported', 'movieFileRenamed', 'seriesFolderImported', 'episodeFileDeleted', 'episodeFileRenamed', 'downloadIgnored')]
+        [System.String]
+        $EventType,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrWhiteSpace()]
+        [System.String]
+        $DownloadId,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
+        [System.Int32[]]
+        $MovieIds,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
+        [System.Int32[]]
+        $SeriesIds,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateRange(1, [System.Int32]::MaxValue)]
+        [System.Int32]
+        $EpisodeId,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
+        [System.Int32[]]
+        $Languages,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
+        [System.Int32[]]
+        $Quality,
+
+        [Parameter(Mandatory = $false)]
+        [System.Boolean]
+        $IncludeMovie,
+
+        [Parameter(Mandatory = $false)]
+        [System.Boolean]
+        $IncludeSeries,
+
+        [Parameter(Mandatory = $false)]
+        [System.Boolean]
+        $IncludeEpisode
     )
 
-    $endpoint = 'history'
+    $selectors = @('Since', 'MovieId', 'SeriesId') | Where-Object { $PSBoundParameters.ContainsKey($_) }
 
-    $request = @{
-        Endpoint = $endpoint
-        Query    = @{}
+    if (@($selectors).Count -gt 1) {
+        $message = 'Specify only one of Since, MovieId, or SeriesId.'
+        $exception = [System.ArgumentException]::new($message)
+        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrHistorySelectorConflict' -TargetObject $selectors -Activity $MyInvocation.MyCommand.Name
+
+        $PSCmdlet.ThrowTerminatingError($errorRecord)
     }
 
-    if ($null -ne $Query) {
-        $request.Query = $Query.Clone()
+    $hasRadarrParameters = $PSBoundParameters.ContainsKey('MovieId') -or $PSBoundParameters.ContainsKey('MovieIds') -or $PSBoundParameters.ContainsKey('IncludeMovie')
+    $hasSonarrParameters = @('SeriesId', 'SeriesIds', 'SeasonNumber', 'EpisodeId', 'IncludeSeries', 'IncludeEpisode') | Where-Object { $PSBoundParameters.ContainsKey($_) }
+
+    if ($hasRadarrParameters -and @($hasSonarrParameters).Count -gt 0) {
+        $message = 'Radarr-specific and Sonarr-specific history parameters cannot be combined.'
+        $exception = [System.ArgumentException]::new($message)
+        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrApplicationParameterConflict' -TargetObject $PSBoundParameters -Activity $MyInvocation.MyCommand.Name
+
+        $PSCmdlet.ThrowTerminatingError($errorRecord)
+    }
+
+    $request = @{
+        Endpoint = 'history'
+    }
+
+    $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
+        Page           = 'page'
+        PageSize       = 'pageSize'
+        SortKey        = 'sortKey'
+        SortDirection  = 'sortDirection'
+        EventTypeId    = 'eventType'
+        DownloadId     = 'downloadId'
+        MovieIds       = 'movieIds'
+        SeriesIds      = 'seriesIds'
+        EpisodeId      = 'episodeId'
+        Languages      = 'languages'
+        Quality        = 'quality'
+        IncludeMovie   = 'includeMovie'
+        IncludeSeries  = 'includeSeries'
+        IncludeEpisode = 'includeEpisode'
+        SeasonNumber   = 'seasonNumber'
+        EventType      = 'eventType'
     }
 
     if ($PSBoundParameters.ContainsKey('Since')) {
-        $request.Endpoint = "$endpoint/since"
-        $request.Query.Date = $Since.ToString('o')
+        $request.Endpoint = 'history/since'
+        $query.date = $Since.ToString('o')
+    }
+    elseif ($PSBoundParameters.ContainsKey('MovieId')) {
+        $request.Endpoint = 'history/movie'
+        $query.movieId = $MovieId
+    }
+    elseif ($PSBoundParameters.ContainsKey('SeriesId')) {
+        $request.Endpoint = 'history/series'
+        $query.seriesId = $SeriesId
     }
 
-    if ($PSBoundParameters.ContainsKey('MovieId')) {
-        $request.Endpoint = "$endpoint/movie"
-        $request.Query.MovieId = $MovieId
+    if ($query.Count -gt 0) {
+        $request.Query = $query
+    }
+
+    if ($hasRadarrParameters) {
         $request.ExpectedApplication = 'Radarr'
     }
-
-    if ($PSBoundParameters.ContainsKey('SeriesId')) {
-        $request.Endpoint = "$endpoint/series"
-        $request.Query.SeriesId = $SeriesId
+    elseif (@($hasSonarrParameters).Count -gt 0) {
         $request.ExpectedApplication = 'Sonarr'
     }
 
-    if ($PSCmdlet.ParameterSetName -like 'Named*') {
-        $request.Name = $Name
-    }
-    else {
+    if ($PSCmdlet.ParameterSetName -eq 'Explicit') {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
+    }
+    elseif ($PSBoundParameters.ContainsKey('Name')) {
+        $request.Name = $Name
     }
 
     Invoke-StarrApiRequest @request

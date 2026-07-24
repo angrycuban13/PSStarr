@@ -1,13 +1,13 @@
 function Get-StarrCustomFormatSchema {
     <#
     .SYNOPSIS
-        Get-Starr Custom Format Schema.
+        Retrieves custom-format schemas from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves Custom Format Schema data from a named Starr instance or an explicit URL and API key.
+        This function retrieves custom-format schemas from an inferred or named Starr instance, or from an explicit URL and API key.
 
     .PARAMETER Name
-        The name of the saved Starr instance.
+        The optional name of a saved Starr instance. When omitted, the only matching instance is used.
 
     .PARAMETER Url
         The absolute base URL of the Starr instance.
@@ -15,11 +15,11 @@ function Get-StarrCustomFormatSchema {
     .PARAMETER ApiKey
         The API key used to authenticate with the Starr instance.
 
-    .PARAMETER Query
-        Query-string keys and values appended to the request URL.
+    .EXAMPLE
+        Get-StarrCustomFormatSchema
 
     .EXAMPLE
-        Get-StarrCustomFormatSchema -Name 'RadarrMain'
+        Get-StarrCustomFormatSchema -Name 'Main'
 
     .EXAMPLE
         Get-StarrCustomFormatSchema -Url 'http://localhost:7878' -ApiKey '<api-key>'
@@ -37,24 +37,20 @@ function Get-StarrCustomFormatSchema {
     [CmdletBinding(DefaultParameterSetName = 'Named')]
     [OutputType([System.Object])]
     param(
-        [Parameter(Mandatory = $true, ParameterSetName = 'Named')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
         [ValidateNotNullOrWhiteSpace()]
-        [string]
+        [System.String]
         $Name,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
-        [string]
+        [System.String]
         $Url,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateNotNullOrWhiteSpace()]
-        [string]
-        $ApiKey,
-
-        [Parameter(Mandatory = $false)]
-        [hashtable]
-        $Query
+        [System.String]
+        $ApiKey
     )
 
     $endpoint = 'customformat/schema'
@@ -62,23 +58,13 @@ function Get-StarrCustomFormatSchema {
     $request = @{
         Endpoint = $endpoint
     }
-
-    if ($null -ne $Query) {
-        $request.Query = $Query
-    }
-
-    if ($PSCmdlet.ParameterSetName -eq 'Named') {
-        $request.Name = $Name
-    }
-    else {
+    if ($PSCmdlet.ParameterSetName -eq 'Explicit') {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
+    }
+    elseif ($PSBoundParameters.ContainsKey('Name')) {
+        $request.Name = $Name
     }
 
     Invoke-StarrApiRequest @request
 }
-
-
-
-
-

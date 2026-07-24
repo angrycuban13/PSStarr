@@ -4,10 +4,10 @@ function Get-StarrSystemStatus {
         Retrieves system status information from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves system status information from a named Starr instance or an explicit URL and API key.
+        This function retrieves system status information from an inferred or named Starr instance, or from an explicit URL and API key.
 
     .PARAMETER Name
-        The name of the saved Starr instance.
+        The optional name of a saved Starr instance. When omitted, the only matching instance is used.
 
     .PARAMETER Url
         The absolute base URL of the Starr instance.
@@ -15,11 +15,11 @@ function Get-StarrSystemStatus {
     .PARAMETER ApiKey
         The API key used to authenticate with the Starr instance.
 
-    .PARAMETER Query
-        Query-string keys and values appended to the request URL.
+    .EXAMPLE
+        Get-StarrSystemStatus
 
     .EXAMPLE
-        Get-StarrSystemStatus -Name 'RadarrMain'
+        Get-StarrSystemStatus -Name 'Main'
 
     .EXAMPLE
         Get-StarrSystemStatus -Url 'http://localhost:7878' -ApiKey '<api-key>'
@@ -32,29 +32,25 @@ function Get-StarrSystemStatus {
     .OUTPUTS
         [System.Object]
 
-        This function returns system status response objects retrieved from the Starr API.
+        This function returns response objects retrieved from the Starr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
     [OutputType([System.Object])]
     param(
-        [Parameter(Mandatory = $true, ParameterSetName = 'Named')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
         [ValidateNotNullOrWhiteSpace()]
-        [string]
+        [System.String]
         $Name,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
-        [string]
+        [System.String]
         $Url,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateNotNullOrWhiteSpace()]
-        [string]
-        $ApiKey,
-
-        [Parameter(Mandatory = $false)]
-        [hashtable]
-        $Query
+        [System.String]
+        $ApiKey
     )
 
     $endpoint = 'system/status'
@@ -62,17 +58,12 @@ function Get-StarrSystemStatus {
     $request = @{
         Endpoint = $endpoint
     }
-
-    if ($null -ne $Query) {
-        $request.Query = $Query
-    }
-
-    if ($PSCmdlet.ParameterSetName -eq 'Named') {
-        $request.Name = $Name
-    }
-    else {
+    if ($PSCmdlet.ParameterSetName -eq 'Explicit') {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
+    }
+    elseif ($PSBoundParameters.ContainsKey('Name')) {
+        $request.Name = $Name
     }
 
     Invoke-StarrApiRequest @request

@@ -57,7 +57,7 @@ Describe 'GET endpoint wrappers' {
         }
 
         It 'uses an ID path in resource wrappers' {
-            Get-StarrTag -Name Main -Id 12
+            Get-StarrTag -Name Main -TagId 12
             Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter { $Endpoint -eq 'tag/12' }
         }
 

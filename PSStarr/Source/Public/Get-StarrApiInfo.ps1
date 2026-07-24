@@ -1,13 +1,13 @@
 function Get-StarrApiInfo {
     <#
     .SYNOPSIS
-        Get-Starr Api Info.
+        Retrieves API information from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves Api Info data from a named Starr instance or an explicit URL and API key.
+        This function retrieves API information from an inferred or named Starr instance, or from an explicit URL and API key.
 
     .PARAMETER Name
-        The name of the saved Starr instance.
+        The optional name of a saved Starr instance. When omitted, the only matching instance is used.
 
     .PARAMETER Url
         The absolute base URL of the Starr instance.
@@ -16,7 +16,10 @@ function Get-StarrApiInfo {
         The API key used to authenticate with the Starr instance.
 
     .EXAMPLE
-        Get-StarrApiInfo -Name 'RadarrMain'
+        Get-StarrApiInfo
+
+    .EXAMPLE
+        Get-StarrApiInfo -Name 'Main'
 
     .EXAMPLE
         Get-StarrApiInfo -Url 'http://localhost:7878' -ApiKey '<api-key>'
@@ -34,37 +37,35 @@ function Get-StarrApiInfo {
     [CmdletBinding(DefaultParameterSetName = 'Named')]
     [OutputType([System.Object])]
     param(
-        [Parameter(Mandatory = $true, ParameterSetName = 'Named')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
         [ValidateNotNullOrWhiteSpace()]
-        [string]
+        [System.String]
         $Name,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
-        [string]
+        [System.String]
         $Url,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateNotNullOrWhiteSpace()]
-        [string]
+        [System.String]
         $ApiKey
     )
 
+    $endpoint = 'api'
+
     $request = @{
-        Endpoint    = 'api'
+        Endpoint = $endpoint
         Unversioned = $true
     }
-
-    if ($PSCmdlet.ParameterSetName -eq 'Named') {
-        $request.Name = $Name
-    }
-    else {
+    if ($PSCmdlet.ParameterSetName -eq 'Explicit') {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
+    }
+    elseif ($PSBoundParameters.ContainsKey('Name')) {
+        $request.Name = $Name
     }
 
     Invoke-StarrApiRequest @request
 }
-
-
-

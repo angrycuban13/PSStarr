@@ -32,17 +32,12 @@ Describe 'Get-StarrSystemStatus' {
             }
         }
 
-        It 'passes query parameters to the transport' {
-            $query = @{
-                IncludeDetails = $true
-            }
-
-            Get-StarrSystemStatus -Name Main -Query $query
+        It 'delegates an inferred request without binding Name' {
+            Get-StarrSystemStatus
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter {
-                $Name -eq 'Main' -and
                 $Endpoint -eq 'system/status' -and
-                $Query.IncludeDetails -eq $true
+                -not $PSBoundParameters.ContainsKey('Name')
             }
         }
     }
