@@ -53,6 +53,25 @@ Describe 'Invoke-StarrApiRequest' {
             (Invoke-StarrApiRequest -Url 'http://localhost:7878' -ApiKey fake -Endpoint system/status).ok | Should -BeTrue
         }
 
+        It 'enumerates collection responses on the pipeline' {
+            Mock Invoke-RestMethod {
+                Write-Output -NoEnumerate @(
+                    [pscustomobject]@{
+                        id = 1
+                    }
+                    [pscustomobject]@{
+                        id = 2
+                    }
+                )
+            }
+
+            $firstResult = Invoke-StarrApiRequest -Url 'http://localhost:7878' -ApiKey fake -Endpoint episodefile |
+                Select-Object -First 1
+
+            $firstResult.id | Should -Be 1
+            @($firstResult).Count | Should -Be 1
+        }
+
         It 'sanitizes API keys in terminating errors' {
             Mock Invoke-RestMethod { throw 'request failed with key secret-key' }
             $message = try { Invoke-StarrApiRequest -Url 'http://localhost:7878' -ApiKey secret-key -Endpoint system/status -ErrorAction Stop } catch { $_.Exception.Message }
@@ -74,3 +93,69 @@ Describe 'Invoke-StarrApiRequest' {
 
 
 
+
+Describe 'Invoke-StarrApiRequest instance inference' {
+    InModuleScope PSStarr {
+        BeforeEach {
+            Mock Write-StarrLogEntry
+            Mock Invoke-RestMethod { [PSCustomObject]@{ ok = $true } }
+        }
+
+        It 'uses the only configured instance when Name is omitted' {
+            Mock Get-StarrConfiguration {
+                @{ Instances = @{ Main = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = 'fake' } } }
+            }
+
+            Invoke-StarrApiRequest -Endpoint health
+
+            Should -Invoke Invoke-RestMethod -Times 1 -ParameterFilter {
+                $Uri -eq 'http://localhost:7878/api/v3/health'
+            }
+        }
+
+        It 'uses the only application-compatible instance' {
+            Mock Get-StarrConfiguration {
+                @{
+                    Instances = @{
+                        RadarrMain = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = 'radarr-key' }
+                        SonarrMain = @{ Application = 'Sonarr'; Url = 'http://localhost:8989'; ApiKey = 'sonarr-key' }
+                    }
+                }
+            }
+
+            Invoke-StarrApiRequest -Endpoint series -ExpectedApplication Sonarr
+
+            Should -Invoke Invoke-RestMethod -Times 1 -ParameterFilter {
+                $Uri -eq 'http://localhost:8989/api/v3/series' -and
+                $Headers['X-Api-Key'] -eq 'sonarr-key'
+            }
+        }
+
+        It 'rejects ambiguous inferred instances' {
+            Mock Get-StarrConfiguration {
+                @{
+                    Instances = @{
+                        Main = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = 'fake' }
+                        FourK = @{ Application = 'Radarr'; Url = 'http://localhost:7879'; ApiKey = 'fake' }
+                    }
+                }
+            }
+
+            { Invoke-StarrApiRequest -Endpoint movie -ExpectedApplication Radarr -ErrorAction Stop } | Should -Throw '*Multiple Starr instances*Specify Name*'
+
+            Should -Invoke Invoke-RestMethod -Times 0
+            Should -Invoke Write-StarrLogEntry -Times 0
+        }
+
+        It 'rejects inference when no compatible instance exists' {
+            Mock Get-StarrConfiguration {
+                @{ Instances = @{ Main = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = 'fake' } } }
+            }
+
+            { Invoke-StarrApiRequest -Endpoint series -ExpectedApplication Sonarr -ErrorAction Stop } | Should -Throw '*No Starr instances for Sonarr*'
+
+            Should -Invoke Invoke-RestMethod -Times 0
+            Should -Invoke Write-StarrLogEntry -Times 0
+        }
+    }
+}
