@@ -23,21 +23,23 @@ function Get-StarrConfiguration {
     [OutputType([System.Collections.Hashtable])]
     param()
 
-    $configuration = Import-Configuration -CompanyName 'AngryCuban13' -Name 'PSStarr'
-
-    if ($null -eq $configuration) { return @{Instances = @{} } }
-
-    if (-not $configuration.ContainsKey('Instances') -or $null -eq $configuration.Instances) {
-        $configuration.Instances = @{}
+    $persistedConfiguration = Import-StarrConfiguration
+    $configuration = @{
+        Instances = @{}
     }
 
-    if ($configuration.Instances -isnot [System.Collections.IDictionary]) {
-        throw 'The saved Starr instance configuration is invalid. Remove it and create the instances again.'
+    foreach ($instanceName in $persistedConfiguration.Instances.Keys) {
+        $persistedInstance = $persistedConfiguration.Instances[$instanceName]
+
+        $configuration.Instances[$instanceName] = [ordered]@{
+            Application = $persistedInstance.Application
+            Url         = $persistedInstance.Url
+            ApiKey      = Unprotect-StarrConfigurationSecret -Value $persistedInstance.ApiKey
+        }
     }
 
     $configuration
 }
-
 
 
 

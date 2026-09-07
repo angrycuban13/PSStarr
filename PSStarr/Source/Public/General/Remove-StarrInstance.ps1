@@ -41,7 +41,7 @@ function Remove-StarrInstance {
     $ErrorActionPreference = 'Stop'
 
     try {
-        $configuration = Get-StarrConfiguration
+        $configuration = Import-StarrConfiguration
     }
     catch {
         $message = "Unable to load the saved Starr instance configuration. $($_.Exception.Message)"

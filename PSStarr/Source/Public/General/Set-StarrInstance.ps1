@@ -18,8 +18,17 @@ function Set-StarrInstance {
     .PARAMETER ApiKey
         The API key used to authenticate with the Starr instance.
 
+    .PARAMETER EncryptionMode
+        The API-key storage mode. The default is Dpapi on Windows and None on other platforms. Aes256 requires PSSTARR_AES_KEY to contain exactly 32 Base64-encoded bytes.
+
     .EXAMPLE
         Set-StarrInstance -Name 'RadarrMain' -Application Radarr -Url 'http://localhost:7878' -ApiKey '<api-key>'
+
+    .EXAMPLE
+        Set-StarrInstance -Name 'RadarrMain' -Application Radarr -Url 'http://localhost:7878' -ApiKey '<api-key>' -EncryptionMode Aes256
+
+    .EXAMPLE
+        Set-StarrInstance -Name 'RadarrMain' -Application Radarr -Url 'http://localhost:7878' -ApiKey '<api-key>' -EncryptionMode None
 
     .INPUTS
         None.
@@ -51,8 +60,13 @@ function Set-StarrInstance {
 
         [Parameter(Mandatory = $true, Position = 3)]
         [ValidateNotNullOrWhiteSpace()]
-        [string]
-        $ApiKey
+        [System.String]
+        $ApiKey,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('None', 'Dpapi', 'Aes256')]
+        [System.String]
+        $EncryptionMode
     )
 
     if ($PSBoundParameters.ContainsKey('ErrorAction')) {
@@ -64,8 +78,12 @@ function Set-StarrInstance {
 
     $ErrorActionPreference = 'Stop'
 
+    if (-not $PSCmdlet.ShouldProcess($Name, 'Save Starr instance')) {
+        return
+    }
+
     try {
-        $configuration = Get-StarrConfiguration
+        $configuration = Import-StarrConfiguration
     }
     catch {
         $message = "Unable to load the saved Starr instance configuration. $($_.Exception.Message)"
@@ -77,14 +95,30 @@ function Set-StarrInstance {
         return
     }
 
+    try {
+        $encryptionParameters = @{}
+
+        if ($PSBoundParameters.ContainsKey('EncryptionMode')) {
+            $encryptionParameters.EncryptionMode = $EncryptionMode
+        }
+
+        $resolvedEncryptionMode = Resolve-StarrEncryptionMode @encryptionParameters
+        $protectedApiKey = Protect-StarrConfigurationSecret -Secret $ApiKey -EncryptionMode $resolvedEncryptionMode
+    }
+    catch {
+        $message = "Unable to protect the API key for Starr instance '$Name'. $($_.Exception.Message)"
+        $message = Protect-StarrSensitiveText -Text $message -SensitiveValue @($ApiKey)
+        $exception = [System.Security.Cryptography.CryptographicException]::new($message, $_.Exception)
+        $errorRecord = New-StarrErrorRecord -Exception $exception -Category SecurityError -ErrorId 'StarrConfigurationEncryptionFailed' -TargetObject $Name -Activity $MyInvocation.MyCommand.Name
+
+        Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -LogMessage $message -SensitiveValue @($ApiKey)
+        return
+    }
+
     $configuration.Instances[$Name] = [ordered]@{
         Application = $Application
         Url         = $Url.TrimEnd('/')
-        ApiKey      = $ApiKey
-    }
-
-    if (-not $PSCmdlet.ShouldProcess($Name, 'Save Starr instance')) {
-        return
+        ApiKey      = $protectedApiKey
     }
 
     try {
@@ -101,10 +135,11 @@ function Set-StarrInstance {
     }
 
     [PSCustomObject]@{
-        Name        = $Name
-        Application = $Application
-        Url         = $Url.TrimEnd('/')
-        ApiKey      = '********'
+        Name           = $Name
+        Application    = $Application
+        Url            = $Url.TrimEnd('/')
+        ApiKey         = '********'
+        EncryptionMode = $resolvedEncryptionMode
     }
 }
 

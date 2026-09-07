@@ -4,7 +4,7 @@ function Get-StarrInstance {
         Get-Starr Instance.
 
     .DESCRIPTION
-        This function retrieves saved Starr instances without exposing API keys.
+        This function retrieves saved Starr instances and their encryption modes without exposing API keys.
 
     .PARAMETER Name
         The name of the saved Starr instance.
@@ -44,7 +44,7 @@ function Get-StarrInstance {
     $ErrorActionPreference = 'Stop'
 
     try {
-        $configuration = Get-StarrConfiguration
+        $configuration = Import-StarrConfiguration
     }
     catch {
         $message = "Unable to load the saved Starr instance configuration. $($_.Exception.Message)"
@@ -73,17 +73,22 @@ function Get-StarrInstance {
 
     foreach ($instanceName in $instanceNames) {
         $instance = $configuration.Instances[$instanceName]
+        $encryptionMode = if ($instance.ApiKey -is [System.Collections.IDictionary]) {
+            $instance.ApiKey.Mode
+        }
+        else {
+            'None'
+        }
 
         [PSCustomObject]@{
-            Name        = $instanceName
-            Application = $instance.Application
-            Url         = $instance.Url
-            ApiKey      = '********'
+            Name           = $instanceName
+            Application    = $instance.Application
+            Url            = $instance.Url
+            ApiKey         = '********'
+            EncryptionMode = $encryptionMode
         }
     }
 }
-
-
 
 
 
