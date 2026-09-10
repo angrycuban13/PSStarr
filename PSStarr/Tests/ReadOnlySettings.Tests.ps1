@@ -9,6 +9,7 @@ InModuleScope PSStarr {
         @{ Command = 'Get-StarrLanguage'; EndpointPath = 'language'; IdParameter = 'LanguageId' }
         @{ Command = 'Get-StarrDelayProfile'; EndpointPath = 'delayprofile'; IdParameter = 'DelayProfileId' }
         @{ Command = 'Get-StarrCustomFilter'; EndpointPath = 'customfilter'; IdParameter = 'CustomFilterId' }
+        @{ Command = 'Get-StarrReleaseProfile'; EndpointPath = 'releaseprofile'; IdParameter = 'ReleaseProfileId' }
     ) {
         BeforeEach {
             Mock Invoke-StarrApiRequest {
