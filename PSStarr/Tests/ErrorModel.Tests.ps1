@@ -79,7 +79,7 @@ Describe 'Configuration operation error behavior' {
             Mock Import-Configuration { @{ Instances = @{} } }
             Mock Export-Configuration { throw 'write failed with secret-key' }
 
-            $errorOutput = @(Set-StarrInstance -Name Main -Application Radarr -Url 'http://localhost:7878' -ApiKey secret-key -ErrorAction Continue 2>&1)
+            $errorOutput = @(Set-PSStarrInstance -Name Main -Application Radarr -Url 'http://localhost:7878' -ApiKey secret-key -ErrorAction Continue 2>&1)
             $errorRecords = @($errorOutput | Where-Object { $_ -is [System.Management.Automation.ErrorRecord] })
 
             $errorRecords.Count | Should -Be 1
@@ -109,7 +109,7 @@ Describe 'Configuration operation error behavior' {
             }
             Mock Export-Configuration { throw 'write failed' }
 
-            $errorOutput = @(Remove-StarrInstance -Name Main -Confirm:$false -ErrorAction Continue 2>&1)
+            $errorOutput = @(Remove-PSStarrInstance -Name Main -Confirm:$false -ErrorAction Continue 2>&1)
             $errorRecords = @($errorOutput | Where-Object { $_ -is [System.Management.Automation.ErrorRecord] })
 
             $errorRecords.Count | Should -Be 1

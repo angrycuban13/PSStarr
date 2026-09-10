@@ -1,4 +1,4 @@
-function Remove-StarrInstance {
+function Remove-PSStarrInstance {
     <#
     .SYNOPSIS
         Removes a saved Starr instance.
@@ -10,7 +10,7 @@ function Remove-StarrInstance {
         The name of the saved Starr instance.
 
     .EXAMPLE
-        Remove-StarrInstance -Name 'RadarrMain' -Confirm:$false
+        Remove-PSStarrInstance -Name 'RadarrMain' -Confirm:$false
 
     .INPUTS
         None.

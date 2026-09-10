@@ -4,7 +4,7 @@ PSStarr encrypts only saved API keys. Instance names, application types, and URL
 
 ## Encryption modes
 
-`Set-StarrInstance` accepts `-EncryptionMode None`, `Dpapi`, or `Aes256`.
+`Set-PSStarrInstance` accepts `-EncryptionMode None`, `Dpapi`, or `Aes256`.
 
 - On Windows, omitting `-EncryptionMode` defaults to `Dpapi`.
 - On non-Windows systems, omitting `-EncryptionMode` defaults to `None` because PowerShell does not provide equivalent native `SecureString` protection there.
@@ -19,7 +19,7 @@ Existing plaintext configuration remains readable. Saving an existing instance a
 No encryption parameter is required on Windows:
 
 ```powershell
-Set-StarrInstance `
+Set-PSStarrInstance `
     -Name RadarrMain `
     -Application Radarr `
     -Url http://localhost:7878 `
@@ -44,7 +44,7 @@ Set the key in each process that uses the saved configuration:
 ```powershell
 $env:PSSTARR_AES_KEY = '<Base64-encoded-32-byte-key>'
 
-Set-StarrInstance `
+Set-PSStarrInstance `
     -Name RadarrMain `
     -Application Radarr `
     -Url http://localhost:7878 `
@@ -61,7 +61,7 @@ Environment variables provide key separation from the configuration file, but th
 Use plaintext only when its tradeoff is acceptable:
 
 ```powershell
-Set-StarrInstance `
+Set-PSStarrInstance `
     -Name RadarrMain `
     -Application Radarr `
     -Url http://localhost:7878 `

@@ -1,4 +1,4 @@
-function Get-StarrInstance {
+function Get-PSStarrInstance {
     <#
     .SYNOPSIS
         Get-Starr Instance.
@@ -10,10 +10,10 @@ function Get-StarrInstance {
         The name of the saved Starr instance.
 
     .EXAMPLE
-        Get-StarrInstance
+        Get-PSStarrInstance
 
     .EXAMPLE
-        Get-StarrInstance -Name 'RadarrMain'
+        Get-PSStarrInstance -Name 'RadarrMain'
 
     .INPUTS
         None.
@@ -67,7 +67,7 @@ function Get-StarrInstance {
     }
 
     if ($instanceNames.Count -eq 0) {
-        Write-Warning 'No Starr instances were found. Run "Set-StarrInstance" to create a new instance.'
+        Write-Warning 'No Starr instances were found. Run "Set-PSStarrInstance" to create a new instance.'
         return
     }
 
@@ -89,8 +89,6 @@ function Get-StarrInstance {
         }
     }
 }
-
-
 
 
 

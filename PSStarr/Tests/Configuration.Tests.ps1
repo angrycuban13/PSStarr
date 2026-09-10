@@ -10,15 +10,15 @@ Describe 'Starr instance configuration' {
         }
 
         It 'validates supported applications' {
-            { Set-StarrInstance -Name Test -Application Plex -Url 'http://localhost:7878' -ApiKey fake } | Should -Throw
+            { Set-PSStarrInstance -Name Test -Application Plex -Url 'http://localhost:7878' -ApiKey fake } | Should -Throw
         }
 
         It 'validates absolute HTTP URLs' {
-            { Set-StarrInstance -Name Test -Application Radarr -Url 'ftp://localhost/file' -ApiKey fake } | Should -Throw
+            { Set-PSStarrInstance -Name Test -Application Radarr -Url 'ftp://localhost/file' -ApiKey fake } | Should -Throw
         }
 
         It 'persists the name as a key and only three instance fields' -Skip:(-not $IsWindows) {
-            Set-StarrInstance -Name Main -Application Radarr -Url 'http://localhost:7878/' -ApiKey fake
+            Set-PSStarrInstance -Name Main -Application Radarr -Url 'http://localhost:7878/' -ApiKey fake
 
             Should -Invoke Export-Configuration -Times 1 -ParameterFilter {
                 $InputObject.Instances.Count -eq 1 -and
@@ -37,7 +37,7 @@ Describe 'Starr instance configuration' {
                 @{ Instances = @{ Main = @{ Application = 'Radarr'; Url = 'http://old'; ApiKey = 'old' } } }
             }
 
-            Set-StarrInstance -Name Main -Application Radarr -Url 'http://localhost:7878' -ApiKey new -EncryptionMode None
+            Set-PSStarrInstance -Name Main -Application Radarr -Url 'http://localhost:7878' -ApiKey new -EncryptionMode None
 
             Should -Invoke Export-Configuration -Times 1 -ParameterFilter {
                 $InputObject.Instances.Count -eq 1 -and
@@ -63,7 +63,7 @@ Describe 'Starr instance configuration' {
                 }
             }
 
-            Set-StarrInstance -Name Main -Application Radarr -Url 'http://localhost:7878' -ApiKey new -EncryptionMode None
+            Set-PSStarrInstance -Name Main -Application Radarr -Url 'http://localhost:7878' -ApiKey new -EncryptionMode None
 
             Should -Invoke Export-Configuration -Times 1 -ParameterFilter {
                 $InputObject.Instances.Main.ApiKey -eq 'new' -and
@@ -76,7 +76,7 @@ Describe 'Starr instance configuration' {
             Mock Import-Configuration {
                 @{ Instances = @{ Main = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = 'secret' } } }
             }
-            (Get-StarrInstance -Name Main).ApiKey | Should -Be '********'
+            (Get-PSStarrInstance -Name Main).ApiKey | Should -Be '********'
         }
 
         It 'reports saved encryption modes without decrypting API keys' {
@@ -102,7 +102,7 @@ Describe 'Starr instance configuration' {
             }
             Mock Unprotect-StarrConfigurationSecret { throw 'Decryption should not occur.' }
 
-            $instances = @(Get-StarrInstance)
+            $instances = @(Get-PSStarrInstance)
 
             ($instances | Where-Object Name -eq 'Encrypted').EncryptionMode | Should -Be 'Aes256'
             ($instances | Where-Object Name -eq 'Legacy').EncryptionMode | Should -Be 'None'
@@ -119,7 +119,7 @@ Describe 'Starr instance configuration' {
             }
             Mock Remove-Item
 
-            Remove-StarrInstance -Name Main -Confirm:$false
+            Remove-PSStarrInstance -Name Main -Confirm:$false
 
             Should -Invoke Export-Configuration -Times 1 -ParameterFilter {
                 $InputObject.Instances.Count -eq 1 -and
@@ -152,7 +152,7 @@ Describe 'Starr instance configuration' {
                 }
             }
 
-            Remove-StarrInstance -Name Main -Confirm:$false
+            Remove-PSStarrInstance -Name Main -Confirm:$false
 
             Should -Invoke Export-Configuration -Times 1 -ParameterFilter {
                 $InputObject.Instances.Secondary.ApiKey.CipherText -eq 'encrypted' -and
@@ -169,7 +169,7 @@ Describe 'Starr instance configuration' {
             Mock Get-ChildItem { @() }
             Mock Remove-Item
 
-            Remove-StarrInstance -Name Main -Confirm:$false
+            Remove-PSStarrInstance -Name Main -Confirm:$false
 
             Should -Invoke Export-Configuration -Times 0
             Should -Invoke Get-ConfigurationPath -Times 1 -ParameterFilter { $Scope -eq 'User' -and $SkipCreatingFolder }
@@ -188,7 +188,7 @@ Describe 'Starr instance configuration' {
             Mock Get-ChildItem { @([pscustomobject]@{ Name = 'OtherModule' }) } -ParameterFilter { $LiteralPath -eq 'C:\Config\AngryCuban13' }
             Mock Remove-Item
 
-            Remove-StarrInstance -Name Main -Confirm:$false
+            Remove-PSStarrInstance -Name Main -Confirm:$false
 
             Should -Invoke Remove-Item -Times 1 -ParameterFilter { $LiteralPath -eq 'C:\Config\AngryCuban13\PSStarr' }
             Should -Invoke Remove-Item -Times 0 -ParameterFilter { $LiteralPath -eq 'C:\Config\AngryCuban13' }
@@ -200,7 +200,7 @@ Describe 'Starr instance configuration' {
             }
             Mock Remove-Item
 
-            Remove-StarrInstance -Name Missing -Confirm:$false -WarningAction SilentlyContinue
+            Remove-PSStarrInstance -Name Missing -Confirm:$false -WarningAction SilentlyContinue
 
             Should -Invoke Export-Configuration -Times 0
             Should -Invoke Remove-Item -Times 0
@@ -211,7 +211,7 @@ Describe 'Starr instance configuration' {
             [System.Environment]::SetEnvironmentVariable('PSSTARR_AES_KEY', $null)
 
             try {
-                Set-StarrInstance -Name Main -Application Radarr -Url 'http://localhost:7878' -ApiKey fake -EncryptionMode Aes256 -WhatIf
+                Set-PSStarrInstance -Name Main -Application Radarr -Url 'http://localhost:7878' -ApiKey fake -EncryptionMode Aes256 -WhatIf
 
                 Should -Invoke Import-Configuration -Times 0
                 Should -Invoke Export-Configuration -Times 0
@@ -222,7 +222,7 @@ Describe 'Starr instance configuration' {
         }
 
         It 'stores plaintext only when explicitly requested' {
-            Set-StarrInstance -Name Main -Application Radarr -Url 'http://localhost:7878' -ApiKey fake -EncryptionMode None
+            Set-PSStarrInstance -Name Main -Application Radarr -Url 'http://localhost:7878' -ApiKey fake -EncryptionMode None
 
             Should -Invoke Export-Configuration -Times 1 -ParameterFilter {
                 $InputObject.Instances.Main.ApiKey -eq 'fake'
@@ -234,7 +234,7 @@ Describe 'Starr instance configuration' {
             [System.Environment]::SetEnvironmentVariable('PSSTARR_AES_KEY', $null)
 
             try {
-                $errorOutput = @(Set-StarrInstance -Name Main -Application Radarr -Url 'http://localhost:7878' -ApiKey secret-key -EncryptionMode Aes256 -ErrorAction Continue 2>&1)
+                $errorOutput = @(Set-PSStarrInstance -Name Main -Application Radarr -Url 'http://localhost:7878' -ApiKey secret-key -EncryptionMode Aes256 -ErrorAction Continue 2>&1)
 
                 Should -Invoke Export-Configuration -Times 0
                 ($errorOutput | Out-String) | Should -Not -Match 'secret-key'

@@ -136,7 +136,7 @@ function Invoke-StarrApiRequest {
             if (-not $configuration.Instances.Contains($Name)) {
                 $message = "Starr instance '$Name' was not found."
                 $exception = [System.Management.Automation.ItemNotFoundException]::new($message)
-                $errorRecord = New-StarrErrorRecord -Exception $exception -Category ObjectNotFound -ErrorId 'StarrInstanceNotFound' -TargetObject $Name -Activity $MyInvocation.MyCommand.Name -RecommendedAction 'Create the instance with Set-StarrInstance or specify an existing instance name.'
+                $errorRecord = New-StarrErrorRecord -Exception $exception -Category ObjectNotFound -ErrorId 'StarrInstanceNotFound' -TargetObject $Name -Activity $MyInvocation.MyCommand.Name -RecommendedAction 'Create the instance with Set-PSStarrInstance or specify an existing instance name.'
 
                 Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -NoLog
                 return
@@ -165,7 +165,7 @@ function Invoke-StarrApiRequest {
 
                 $message = "No Starr instances$targetApplication were found."
                 $exception = [System.Management.Automation.ItemNotFoundException]::new($message)
-                $errorRecord = New-StarrErrorRecord -Exception $exception -Category ObjectNotFound -ErrorId 'StarrInstanceNotFound' -TargetObject $ExpectedApplication -Activity $MyInvocation.MyCommand.Name -RecommendedAction 'Create an instance with Set-StarrInstance.'
+                $errorRecord = New-StarrErrorRecord -Exception $exception -Category ObjectNotFound -ErrorId 'StarrInstanceNotFound' -TargetObject $ExpectedApplication -Activity $MyInvocation.MyCommand.Name -RecommendedAction 'Create an instance with Set-PSStarrInstance.'
 
                 Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -NoLog
                 return
@@ -269,7 +269,6 @@ function Invoke-StarrApiRequest {
         return
     }
 }
-
 
 
 
