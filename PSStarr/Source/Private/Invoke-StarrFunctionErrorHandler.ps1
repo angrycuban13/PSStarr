@@ -75,7 +75,7 @@ function Invoke-StarrFunctionErrorHandler {
         $NoLog
     )
 
-    if (-not $NoLog) {
+    if (-not $NoLog -and $env:PSSTARR_LOG_DISABLED -cne '1') {
         $summary = if ([System.String]::IsNullOrWhiteSpace($LogMessage)) {
             $ErrorRecord.Exception.Message
         }
@@ -100,13 +100,23 @@ function Invoke-StarrFunctionErrorHandler {
             NoConsoleOutput = $true
         }
 
+        if (-not [System.String]::IsNullOrWhiteSpace($env:PSSTARR_LOG_DIRECTORY)) {
+            $writeLogParameters.LogFileDirectory = $env:PSSTARR_LOG_DIRECTORY
+        }
+
         foreach ($key in $LogEntryParameters.Keys) {
             if ($key -notin @('Message', 'Severity', 'NoConsoleOutput')) {
                 $writeLogParameters[$key] = $LogEntryParameters[$key]
             }
         }
 
-        Write-StarrLogEntry @writeLogParameters
+        try {
+            Write-StarrLogEntry @writeLogParameters -ErrorAction Stop
+        }
+        catch {
+            # A logging failure must never replace the original operation's error.
+            Write-Warning 'PSStarr could not write the operational error log.' -WarningAction Continue
+        }
     }
 
     $ErrorActionPreference = $OriginalErrorAction

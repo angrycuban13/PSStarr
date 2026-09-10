@@ -26,6 +26,14 @@ Do not automatically copy information, warning, verbose, or debug streams into
 files. Successful requests remain unlogged. Logging failures must not recursively
 log themselves.
 
-A public logging opt-out and custom destination remain pending implementation:
-consuming applications need control over duplicate logging and filesystem writes.
-Do not interpret ErrorAction SilentlyContinue as a file-logging opt-out.
+Set PSSTARR_LOG_DISABLED to exactly 1 to disable automatic file logging.
+This does not suppress the original PowerShell error. Unset it to restore logging.
+Set PSSTARR_LOG_DIRECTORY to choose the directory for PSStarr.log; unset or
+whitespace values use the platform default. The existing logger may fall back
+to a temporary directory if it cannot create the requested directory.
+These process environment controls are checked on each operational failure and
+do not modify saved connections. Child processes inherit environment values.
+Explicit internal log parameters take precedence over the environment directory.
+ErrorAction SilentlyContinue is not a file-logging opt-out.
+Choose a private directory: API keys are sanitized, but logs can contain server
+URLs and other operational details. Logging failures do not replace the original error.
