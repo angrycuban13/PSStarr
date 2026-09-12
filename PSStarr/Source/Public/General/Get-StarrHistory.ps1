@@ -222,6 +222,58 @@ function Get-StarrHistory {
         $PSCmdlet.ThrowTerminatingError($errorRecord)
     }
 
+    $route = if ($PSBoundParameters.ContainsKey('Since')) {
+        'Since'
+    }
+    elseif ($PSBoundParameters.ContainsKey('MovieId')) {
+        'Movie'
+    }
+    elseif ($PSBoundParameters.ContainsKey('SeriesId')) {
+        'Series'
+    }
+    else {
+        'Paged'
+    }
+
+    $allowedParameters = @{
+        Paged = @(
+            'Name', 'Url', 'ApiKey', 'Page', 'PageSize', 'SortKey',
+            'SortDirection', 'EventTypeId', 'DownloadId', 'MovieIdFilter',
+            'SeriesIdFilter', 'EpisodeId', 'Languages', 'Quality',
+            'IncludeMovie', 'IncludeSeries', 'IncludeEpisode'
+        )
+        Since = @(
+            'Name', 'Url', 'ApiKey', 'Since', 'EventType', 'IncludeMovie',
+            'IncludeSeries', 'IncludeEpisode'
+        )
+        Movie = @(
+            'Name', 'Url', 'ApiKey', 'MovieId', 'EventType', 'IncludeMovie'
+        )
+        Series = @(
+            'Name', 'Url', 'ApiKey', 'SeriesId', 'SeasonNumber', 'EventType',
+            'IncludeSeries', 'IncludeEpisode'
+        )
+    }
+
+    $commonParameters = @(
+        'Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction',
+        'ProgressAction', 'ErrorVariable', 'WarningVariable',
+        'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable'
+    )
+
+    $unsupportedParameters = @(
+        $PSBoundParameters.Keys |
+            Where-Object { $_ -notin $allowedParameters[$route] -and $_ -notin $commonParameters }
+    )
+
+    if ($unsupportedParameters.Count -gt 0) {
+        $message = "$route history does not support: $($unsupportedParameters -join ', ')."
+        $exception = [System.ArgumentException]::new($message)
+        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrHistoryParameterNotSupported' -TargetObject $unsupportedParameters -Activity $MyInvocation.MyCommand.Name
+
+        $PSCmdlet.ThrowTerminatingError($errorRecord)
+    }
+
     $request = @{
         Endpoint = 'history'
     }

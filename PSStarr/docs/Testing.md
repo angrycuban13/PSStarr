@@ -19,6 +19,19 @@ Both applications are required once enabled; missing credentials fail the test.
 Only GET system/status is requested. No saved connection is read or changed.
 Use trusted HTTPS endpoints when accessing servers across a network.
 
+Saved connections can also be checked without exposing API keys to environment
+variables. Build and import the module, then call safe reads by connection name:
+
+~~~powershell
+Get-StarrSystemStatus -Name Radarr
+Get-StarrHealth -Name Sonarr
+~~~
+
+On 2026-09-12, saved Radarr and Sonarr connections passed system-status, health,
+tag, quality-profile, root-folder, and disk-space reads. Only command names,
+success state, and result counts were printed. No saved Prowlarr connection was
+available, and no indexer search or state-changing request was executed.
+
 ## Logging policy
 
 Keep automatic file logging limited to sanitized operational failures.

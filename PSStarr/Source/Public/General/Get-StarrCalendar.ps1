@@ -118,6 +118,12 @@ function Get-StarrCalendar {
         IncludeEpisodeImages = 'includeEpisodeImages'
     }
 
+    foreach ($parameter in @('Start', 'End')) {
+        if ($PSBoundParameters.ContainsKey($parameter)) {
+            $query[$parameter.ToLowerInvariant()] = $PSBoundParameters[$parameter].ToString('o')
+        }
+    }
+
     if ($query.Count -gt 0) {
         $request.Query = $query
     }

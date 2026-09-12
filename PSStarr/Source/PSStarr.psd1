@@ -15,7 +15,7 @@
     ModuleVersion     = '1.0.0'
 
     # Supported PSEditions
-    # CompatiblePSEditions = @()
+    CompatiblePSEditions = @('Core')
 
     # ID used to uniquely identify this module
     GUID              = '06cf630d-08c5-491c-901a-fdc6413c671b'
@@ -30,7 +30,7 @@
     Copyright         = '(c) AngryCuban13. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description       = 'A PowerShell module to interact with Starr applications'
+    Description       = 'A PowerShell 7 client module for Radarr, Sonarr, and Prowlarr APIs.'
 
     # Minimum version of the PowerShell engine required by this module
     PowerShellVersion = '7.0'
@@ -97,13 +97,13 @@
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            # Tags = @()
+            Tags = @('Radarr', 'Sonarr', 'Prowlarr', 'API', 'PowerShell')
 
             # A URL to the license for this module.
             # LicenseUri = ''
 
             # A URL to the main website for this project.
-            # ProjectUri = ''
+            ProjectUri = 'https://github.com/angrycuban13/PSStarr'
 
             # A URL to an icon representing this module.
             # IconUri = ''

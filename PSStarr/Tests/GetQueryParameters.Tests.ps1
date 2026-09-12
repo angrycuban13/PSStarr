@@ -19,7 +19,7 @@ Describe 'Documented GET query parameters' {
         }
 
         It '<Command> maps documented parameters' -ForEach @(
-            @{ Command='Get-StarrCalendar'; Parameters=@{ Name='Main'; Start=[datetime]'2026-01-01'; IncludeSeries=$true }; Expected=@{ start=([datetime]'2026-01-01'); includeSeries=$true }; Application='Sonarr' }
+            @{ Command='Get-StarrCalendar'; Parameters=@{ Name='Main'; Start=[datetime]'2026-01-01'; IncludeSeries=$true }; Expected=@{ start=([datetime]'2026-01-01').ToString('o'); includeSeries=$true }; Application='Sonarr' }
             @{ Command='Get-StarrBlocklist'; Parameters=@{ Name='Main'; Page=2; MovieIdFilter=@(12,34); Protocols=@('usenet','torrent') }; Expected=@{ page=2; movieIds=@(12,34); protocols=@('usenet','torrent') }; Application='Radarr' }
             @{ Command='Get-StarrBlocklist'; Parameters=@{ Name='Main'; SeriesIdFilter=@(7,8) }; Expected=@{ seriesIds=@(7,8) }; Application='Sonarr' }
             @{ Command='Get-StarrQueue'; Parameters=@{ Name='Main'; PageSize=50; SeriesIdFilter=@(7); IncludeEpisode=$true }; Expected=@{ pageSize=50; seriesIds=@(7); includeEpisode=$true }; Application='Sonarr' }
@@ -83,6 +83,31 @@ Describe 'Documented GET query parameters' {
 
         It 'rejects mixed Radarr and Sonarr queue filters' {
             { Get-StarrQueue -Name Main -MovieIdFilter 1 -SeriesIdFilter 2 } | Should -Throw '*cannot be combined*'
+
+            Should -Invoke Invoke-StarrApiRequest -Times 0
+        }
+
+        It 'serializes calendar date ranges as ISO 8601 values' {
+            Get-StarrCalendar -Name Main -Start ([datetime]'2026-01-01T01:02:03') -End ([datetime]'2026-01-02T04:05:06')
+
+            $script:lastRequest.Query.start | Should -Be ([datetime]'2026-01-01T01:02:03').ToString('o')
+            $script:lastRequest.Query.end | Should -Be ([datetime]'2026-01-02T04:05:06').ToString('o')
+        }
+
+        It 'rejects paged-only parameters on since history' {
+            { Get-StarrHistory -Name Main -Since ([datetime]'2026-01-01') -Page 2 } | Should -Throw '*Since history does not support: Page*'
+
+            Should -Invoke Invoke-StarrApiRequest -Times 0
+        }
+
+        It 'rejects named event types on paged history' {
+            { Get-StarrHistory -Name Main -EventType grabbed } | Should -Throw '*Paged history does not support: EventType*'
+
+            Should -Invoke Invoke-StarrApiRequest -Times 0
+        }
+
+        It 'rejects paged filters on movie history' {
+            { Get-StarrHistory -Name Main -MovieId 42 -DownloadId fixture } | Should -Throw '*Movie history does not support: DownloadId*'
 
             Should -Invoke Invoke-StarrApiRequest -Times 0
         }
