@@ -1,4 +1,4 @@
-function Write-StarrLogEntry {
+function Write-PSStarrLogEntry {
     <#
     .SYNOPSIS
         Writes readable entries to the PSStarr log.
@@ -34,7 +34,7 @@ function Write-StarrLogEntry {
         Suppresses optional console output.
 
     .EXAMPLE
-        Write-StarrLogEntry -Message 'Request completed.' -Severity Info -NoConsoleOutput
+        Write-PSStarrLogEntry -Message 'Request completed.' -Severity Info -NoConsoleOutput
 
     .INPUTS
         [System.String]

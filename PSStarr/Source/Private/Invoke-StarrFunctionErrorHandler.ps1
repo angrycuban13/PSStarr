@@ -111,7 +111,7 @@ function Invoke-StarrFunctionErrorHandler {
         }
 
         try {
-            Write-StarrLogEntry @writeLogParameters -ErrorAction Stop
+            Write-PSStarrLogEntry @writeLogParameters -ErrorAction Stop
         }
         catch {
             # A logging failure must never replace the original operation's error.

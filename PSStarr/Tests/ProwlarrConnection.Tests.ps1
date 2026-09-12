@@ -5,7 +5,7 @@ BeforeDiscovery {
 InModuleScope PSStarr {
     Describe 'Prowlarr connections' {
         BeforeEach {
-            Mock Write-StarrLogEntry
+            Mock Write-PSStarrLogEntry
             Mock Invoke-RestMethod { [pscustomobject]@{ appName = 'Prowlarr' } }
             Mock Get-StarrConfiguration {
                 @{ Instances = @{ Main = @{ Application = 'Prowlarr'; Url = 'http://localhost:9696/base/'; ApiKey = 'fixture-key' } } }

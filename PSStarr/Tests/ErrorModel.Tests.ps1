@@ -6,7 +6,7 @@ Describe 'Structured Starr error behavior' {
     InModuleScope PSStarr {
         BeforeEach {
             Mock Invoke-RestMethod { [PSCustomObject]@{ ok = $true } }
-            Mock Write-StarrLogEntry
+            Mock Write-PSStarrLogEntry
         }
 
         It 'emits but does not log a missing named instance error' {
@@ -17,7 +17,7 @@ Describe 'Structured Starr error behavior' {
 
             $errorRecords.Count | Should -Be 1
             $errorRecords[0].FullyQualifiedErrorId | Should -Match '^StarrInstanceNotFound'
-            Should -Invoke Write-StarrLogEntry -Times 0
+            Should -Invoke Write-PSStarrLogEntry -Times 0
             Should -Invoke Invoke-RestMethod -Times 0
         }
 
@@ -39,7 +39,7 @@ Describe 'Structured Starr error behavior' {
 
             $errorRecords.Count | Should -Be 1
             $errorRecords[0].FullyQualifiedErrorId | Should -Match '^StarrApplicationMismatch'
-            Should -Invoke Write-StarrLogEntry -Times 0
+            Should -Invoke Write-PSStarrLogEntry -Times 0
             Should -Invoke Invoke-RestMethod -Times 0
         }
 
@@ -48,14 +48,14 @@ Describe 'Structured Starr error behavior' {
 
             $null = @(Invoke-StarrApiRequest -Name Main -Endpoint health -ErrorAction Continue 2>&1)
 
-            Should -Invoke Write-StarrLogEntry -Times 1
+            Should -Invoke Write-PSStarrLogEntry -Times 1
             Should -Invoke Invoke-RestMethod -Times 0
         }
 
         It 'does not log successful API requests' {
             Invoke-StarrApiRequest -Url 'http://localhost:7878' -ApiKey fake -Endpoint health
 
-            Should -Invoke Write-StarrLogEntry -Times 0
+            Should -Invoke Write-PSStarrLogEntry -Times 0
             Should -Invoke Invoke-RestMethod -Times 1
         }
 
@@ -72,7 +72,7 @@ Describe 'Structured Starr error behavior' {
 Describe 'Configuration operation error behavior' {
     InModuleScope PSStarr {
         BeforeEach {
-            Mock Write-StarrLogEntry
+            Mock Write-PSStarrLogEntry
         }
 
         It 'sanitizes and logs instance persistence failures' {
@@ -85,7 +85,7 @@ Describe 'Configuration operation error behavior' {
             $errorRecords.Count | Should -Be 1
             $errorRecords[0].Exception.Message | Should -Not -Match 'secret-key'
             $errorRecords[0].Exception.Message | Should -Match '\[REDACTED\]'
-            Should -Invoke Write-StarrLogEntry -Times 1 -ParameterFilter {
+            Should -Invoke Write-PSStarrLogEntry -Times 1 -ParameterFilter {
                 $Message -notmatch 'secret-key'
             }
         }
@@ -114,7 +114,7 @@ Describe 'Configuration operation error behavior' {
 
             $errorRecords.Count | Should -Be 1
             $errorRecords[0].FullyQualifiedErrorId | Should -Match '^StarrConfigurationWriteFailed'
-            Should -Invoke Write-StarrLogEntry -Times 1
+            Should -Invoke Write-PSStarrLogEntry -Times 1
         }
     }
 }
@@ -123,7 +123,7 @@ Describe 'Error log formatting' {
     InModuleScope PSStarr {
         BeforeEach {
             Mock Invoke-RestMethod { throw 'unique request failure' }
-            Mock Write-StarrLogEntry
+            Mock Write-PSStarrLogEntry
         }
 
         It 'does not duplicate an exception message in the log entry' {
@@ -133,7 +133,7 @@ Describe 'Error log formatting' {
             catch {
             }
 
-            Should -Invoke Write-StarrLogEntry -Times 1 -ParameterFilter {
+            Should -Invoke Write-PSStarrLogEntry -Times 1 -ParameterFilter {
                 ([System.Text.RegularExpressions.Regex]::Matches($Message, 'unique request failure')).Count -eq 1
             }
         }

@@ -67,7 +67,7 @@ InModuleScope PSStarr {
 
     Describe 'Transport sanitizes returned application logs' {
         BeforeEach {
-            Mock Write-StarrLogEntry
+            Mock Write-PSStarrLogEntry
             Mock Invoke-RestMethod {
                 [pscustomobject]@{
                     page = 1
@@ -97,7 +97,7 @@ InModuleScope PSStarr {
             $result.records[0].message | Should -Be 'Request used [REDACTED]'
             $result.records[0].exception | Should -Be 'Error [REDACTED]'
             $result.records[0].time | Should -Be '2026-09-10'
-            Should -Invoke Write-StarrLogEntry -Times 0
+            Should -Invoke Write-PSStarrLogEntry -Times 0
         }
 
         It 'redacts explicit connection keys' {

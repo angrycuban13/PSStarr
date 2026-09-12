@@ -5,7 +5,7 @@ BeforeDiscovery {
 Describe 'Transport response shapes and HTTP failures' {
     InModuleScope PSStarr {
         BeforeEach {
-            Mock Write-StarrLogEntry
+            Mock Write-PSStarrLogEntry
         }
 
         It 'preserves a paged response and its records' {
@@ -69,7 +69,7 @@ Describe 'Transport response shapes and HTTP failures' {
                 $caught.Exception.Message | Should -Match "HTTP $Status"
                 $caught.Exception.Message | Should -Not -Match 'fixture-key'
                 $caught.Exception.Message | Should -Match '\[REDACTED\]'
-                Should -Invoke Write-StarrLogEntry -Times 1 -Exactly -ParameterFilter {
+                Should -Invoke Write-PSStarrLogEntry -Times 1 -Exactly -ParameterFilter {
                     $Message -notmatch 'fixture-key'
                 }
             }

@@ -6,7 +6,7 @@ Describe 'Starr error handling and logging' {
     InModuleScope PSStarr {
         BeforeEach {
             Mock Invoke-RestMethod { throw 'request failed with key secret-key' }
-            Mock Write-StarrLogEntry
+            Mock Write-PSStarrLogEntry
         }
 
         It 'throws when ErrorAction is Stop' {
@@ -38,7 +38,7 @@ Describe 'Starr error handling and logging' {
 
         It 'redacts sensitive values before logging' {
             try { Invoke-StarrApiRequest -Url 'http://localhost:7878' -ApiKey secret-key -Endpoint health -ErrorAction Stop } catch { }
-            Should -Invoke Write-StarrLogEntry -Times 1 -ParameterFilter {
+            Should -Invoke Write-PSStarrLogEntry -Times 1 -ParameterFilter {
                 $Message -notmatch 'secret-key' -and $Message -match '\[REDACTED\]'
             }
         }
@@ -47,11 +47,11 @@ Describe 'Starr error handling and logging' {
     }
 }
 
-Describe 'Write-StarrLogEntry' {
+Describe 'Write-PSStarrLogEntry' {
     InModuleScope PSStarr {
         It 'writes a plain-text log with an explicit portable path' {
             $logDirectory = Join-Path $TestDrive 'logs'
-            Write-StarrLogEntry -Message 'portable test' -LogFileDirectory $logDirectory -LogFileName 'PSStarr.log' -NoConsoleOutput
+            Write-PSStarrLogEntry -Message 'portable test' -LogFileDirectory $logDirectory -LogFileName 'PSStarr.log' -NoConsoleOutput
             $logPath = Join-Path $logDirectory 'PSStarr.log'
             Test-Path -LiteralPath $logPath | Should -BeTrue
             Get-Content -Raw -LiteralPath $logPath | Should -Match 'portable test'

@@ -10,7 +10,7 @@ Describe 'Process logging controls' {
             $env:PSSTARR_LOG_DISABLED = $null
             $env:PSSTARR_LOG_DIRECTORY = $null
             Mock Invoke-RestMethod { throw 'fixture failure' }
-            Mock Write-StarrLogEntry
+            Mock Write-PSStarrLogEntry
         }
 
         AfterEach {
@@ -22,7 +22,7 @@ Describe 'Process logging controls' {
             $env:PSSTARR_LOG_DISABLED = '1'
 
             { Invoke-StarrApiRequest -Url 'http://localhost:7878' -ApiKey fake -Endpoint health -ErrorAction Stop } | Should -Throw '*fixture failure*'
-            Should -Invoke Write-StarrLogEntry -Times 0
+            Should -Invoke Write-PSStarrLogEntry -Times 0
         }
 
         It 'uses the requested log directory' {
@@ -31,7 +31,7 @@ Describe 'Process logging controls' {
 
             Invoke-StarrApiRequest -Url 'http://localhost:7878' -ApiKey fake -Endpoint health -ErrorAction SilentlyContinue
 
-            Should -Invoke Write-StarrLogEntry -Times 1 -Exactly -ParameterFilter {
+            Should -Invoke Write-PSStarrLogEntry -Times 1 -Exactly -ParameterFilter {
                 $LogFileDirectory -eq $expectedDirectory
             }
         }
@@ -41,7 +41,7 @@ Describe 'Process logging controls' {
 
             Invoke-StarrApiRequest -Url 'http://localhost:7878' -ApiKey fake -Endpoint health -ErrorAction SilentlyContinue
 
-            Should -Invoke Write-StarrLogEntry -Times 1 -Exactly
+            Should -Invoke Write-PSStarrLogEntry -Times 1 -Exactly
         }
 
         It 'uses the default directory when the override is whitespace' {
@@ -49,7 +49,7 @@ Describe 'Process logging controls' {
 
             Invoke-StarrApiRequest -Url 'http://localhost:7878' -ApiKey fake -Endpoint health -ErrorAction SilentlyContinue
 
-            Should -Invoke Write-StarrLogEntry -Times 1 -Exactly -ParameterFilter {
+            Should -Invoke Write-PSStarrLogEntry -Times 1 -Exactly -ParameterFilter {
                 [string]::IsNullOrEmpty($LogFileDirectory)
             }
         }
@@ -63,11 +63,11 @@ Describe 'Process logging controls' {
 
             Invoke-StarrApiRequest -Url 'http://localhost:7878' -ApiKey fake -Endpoint health -ErrorAction SilentlyContinue
 
-            Should -Invoke Write-StarrLogEntry -Times 1 -Exactly
+            Should -Invoke Write-PSStarrLogEntry -Times 1 -Exactly
         }
 
         It 'preserves the original failure when logging throws' {
-            Mock Write-StarrLogEntry { throw 'logger failure' }
+            Mock Write-PSStarrLogEntry { throw 'logger failure' }
 
             { Invoke-StarrApiRequest -Url 'http://localhost:7878' -ApiKey fake -Endpoint health -ErrorAction Stop -WarningAction SilentlyContinue } | Should -Throw '*fixture failure*'
         }

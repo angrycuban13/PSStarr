@@ -5,7 +5,7 @@ BeforeDiscovery {
 Describe 'Invoke-StarrApiRequest' {
     InModuleScope PSStarr {
         BeforeEach {
-            Mock Write-StarrLogEntry
+            Mock Write-PSStarrLogEntry
             Mock Invoke-RestMethod { [pscustomobject]@{ ok = $true } }
         }
 
@@ -97,7 +97,7 @@ Describe 'Invoke-StarrApiRequest' {
 Describe 'Invoke-StarrApiRequest instance inference' {
     InModuleScope PSStarr {
         BeforeEach {
-            Mock Write-StarrLogEntry
+            Mock Write-PSStarrLogEntry
             Mock Invoke-RestMethod { [PSCustomObject]@{ ok = $true } }
         }
 
@@ -144,7 +144,7 @@ Describe 'Invoke-StarrApiRequest instance inference' {
             { Invoke-StarrApiRequest -Endpoint movie -ExpectedApplication Radarr -ErrorAction Stop } | Should -Throw '*Multiple Starr instances*Specify Name*'
 
             Should -Invoke Invoke-RestMethod -Times 0
-            Should -Invoke Write-StarrLogEntry -Times 0
+            Should -Invoke Write-PSStarrLogEntry -Times 0
         }
 
         It 'rejects inference when no compatible instance exists' {
@@ -155,7 +155,7 @@ Describe 'Invoke-StarrApiRequest instance inference' {
             { Invoke-StarrApiRequest -Endpoint series -ExpectedApplication Sonarr -ErrorAction Stop } | Should -Throw '*No Starr instances for Sonarr*'
 
             Should -Invoke Invoke-RestMethod -Times 0
-            Should -Invoke Write-StarrLogEntry -Times 0
+            Should -Invoke Write-PSStarrLogEntry -Times 0
         }
     }
 }
