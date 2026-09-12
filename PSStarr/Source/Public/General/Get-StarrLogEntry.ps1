@@ -15,6 +15,9 @@ function Get-StarrLogEntry {
     .PARAMETER ApiKey
         The API key used to authenticate with the Starr instance.
 
+    .PARAMETER Application
+        The expected application type. Specify Prowlarr with explicit credentials to use API v1.
+
     .PARAMETER Page
         The one-based result page.
 
@@ -68,6 +71,11 @@ function Get-StarrLogEntry {
         $ApiKey,
 
         [Parameter(Mandatory = $false)]
+        [ValidateSet('Radarr', 'Sonarr', 'Prowlarr')]
+        [System.String]
+        $Application,
+
+        [Parameter(Mandatory = $false)]
         [ValidateRange(1, [System.Int32]::MaxValue)]
         [System.Int32]
         $Page,
@@ -98,6 +106,10 @@ function Get-StarrLogEntry {
     $request = @{
         Endpoint = $endpoint
         Method   = 'GET'
+    }
+
+    if ($PSBoundParameters.ContainsKey('Application')) {
+        $request.ExpectedApplication = $Application
     }
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
         Page          = 'page'

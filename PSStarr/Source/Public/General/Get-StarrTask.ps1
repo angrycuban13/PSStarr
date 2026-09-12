@@ -15,6 +15,9 @@ function Get-StarrTask {
     .PARAMETER ApiKey
         The API key used to authenticate with the Starr instance.
 
+    .PARAMETER Application
+        The expected application type. Specify Prowlarr with explicit credentials to use API v1.
+
     .PARAMETER TaskId
         The positive Task resource identifier used for an individual lookup.
 
@@ -56,6 +59,11 @@ function Get-StarrTask {
         $ApiKey,
 
         [Parameter(Mandatory = $false)]
+        [ValidateSet('Radarr', 'Sonarr', 'Prowlarr')]
+        [System.String]
+        $Application,
+
+        [Parameter(Mandatory = $false)]
         [ValidateRange(1, [System.Int32]::MaxValue)]
         [System.Int32]
         $TaskId
@@ -65,6 +73,10 @@ function Get-StarrTask {
 
     $request = @{
         Endpoint = $endpoint
+    }
+
+    if ($PSBoundParameters.ContainsKey('Application')) {
+        $request.ExpectedApplication = $Application
     }
     if ($PSBoundParameters.ContainsKey('TaskId')) {
         $request.Endpoint = "$endpoint/$TaskId"

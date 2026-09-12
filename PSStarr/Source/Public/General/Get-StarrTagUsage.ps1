@@ -15,6 +15,9 @@ function Get-StarrTagUsage {
     .PARAMETER ApiKey
         The API key used to authenticate.
 
+    .PARAMETER Application
+        The expected application type. Specify Prowlarr with explicit credentials to use API v1.
+
     .PARAMETER TagId
         The positive identifier used to limit usage records to one tag.
 
@@ -52,6 +55,11 @@ function Get-StarrTagUsage {
         [System.String]
         $ApiKey,
 
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('Radarr', 'Sonarr', 'Prowlarr')]
+        [System.String]
+        $Application,
+
         [Parameter()]
         [ValidateRange(1, [System.Int32]::MaxValue)]
         [System.Int32]
@@ -65,6 +73,10 @@ function Get-StarrTagUsage {
 
     if ($PSBoundParameters.ContainsKey('TagId')) {
         $request.Endpoint = "tag/detail/$TagId"
+    }
+
+    if ($PSBoundParameters.ContainsKey('Application')) {
+        $request.ExpectedApplication = $Application
     }
 
     if ($PSCmdlet.ParameterSetName -eq 'Explicit') {

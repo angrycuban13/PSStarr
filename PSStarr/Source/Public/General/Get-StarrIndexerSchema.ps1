@@ -15,6 +15,9 @@ function Get-StarrIndexerSchema {
     .PARAMETER ApiKey
         The API key used to authenticate with the Starr instance.
 
+    .PARAMETER Application
+        The expected application type. Specify Prowlarr with explicit credentials to use API v1.
+
     .EXAMPLE
         Get-StarrIndexerSchema
 
@@ -50,13 +53,22 @@ function Get-StarrIndexerSchema {
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $ApiKey
+        $ApiKey,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('Radarr', 'Sonarr', 'Prowlarr')]
+        [System.String]
+        $Application
     )
 
     $endpoint = 'indexer/schema'
 
     $request = @{
         Endpoint = $endpoint
+    }
+
+    if ($PSBoundParameters.ContainsKey('Application')) {
+        $request.ExpectedApplication = $Application
     }
     if ($PSCmdlet.ParameterSetName -eq 'Explicit') {
         $request.Url = $Url

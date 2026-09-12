@@ -2,6 +2,54 @@ BeforeDiscovery {
     Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
 }
 
+Describe 'Shared Prowlarr-compatible command routing' {
+    BeforeAll {
+        $sharedProwlarrCommands = @(
+            'Get-StarrBackup'
+            'Get-StarrCommand'
+            'Get-StarrCustomFilter'
+            'Get-StarrDownloadClient'
+            'Get-StarrDownloadClientSchema'
+            'Get-StarrHealth'
+            'Get-StarrIndexer'
+            'Get-StarrIndexerSchema'
+            'Get-StarrLogEntry'
+            'Get-StarrNotification'
+            'Get-StarrNotificationSchema'
+            'Get-StarrSystemStatus'
+            'Get-StarrTag'
+            'Get-StarrTagDetail'
+            'Get-StarrTagUsage'
+            'Get-StarrTask'
+            'Get-StarrUpdate'
+        )
+    }
+
+    It 'passes an explicit Prowlarr application discriminator to the transport' {
+        InModuleScope PSStarr -Parameters @{ Commands = $sharedProwlarrCommands } {
+            Mock Invoke-StarrApiRequest { @() }
+
+            foreach ($command in $Commands) {
+                & $command -Url 'http://localhost:9696' -ApiKey 'test-key' -Application Prowlarr
+            }
+
+            Should -Invoke Invoke-StarrApiRequest -Times $Commands.Count -Exactly -ParameterFilter {
+                $ExpectedApplication -eq 'Prowlarr'
+            }
+        }
+    }
+
+    It 'keeps the application discriminator optional for existing explicit calls' {
+        InModuleScope PSStarr -Parameters @{ Commands = $sharedProwlarrCommands } {
+            Mock Invoke-StarrApiRequest { @() }
+
+            foreach ($command in $Commands) {
+                { & $command -Url 'http://localhost:7878' -ApiKey 'test-key' } | Should -Not -Throw
+            }
+        }
+    }
+}
+
 Describe 'Discoverable Prowlarr and tag reads' {
     InModuleScope PSStarr {
         BeforeEach {

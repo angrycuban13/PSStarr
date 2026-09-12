@@ -15,6 +15,9 @@ function Get-StarrIndexer {
     .PARAMETER ApiKey
         The API key used to authenticate with the Starr instance.
 
+    .PARAMETER Application
+        The expected application type. Specify Prowlarr with explicit credentials to use API v1.
+
     .PARAMETER IndexerId
         The positive Indexer resource identifier used for an individual lookup.
 
@@ -56,6 +59,11 @@ function Get-StarrIndexer {
         $ApiKey,
 
         [Parameter(Mandatory = $false)]
+        [ValidateSet('Radarr', 'Sonarr', 'Prowlarr')]
+        [System.String]
+        $Application,
+
+        [Parameter(Mandatory = $false)]
         [ValidateRange(1, [System.Int32]::MaxValue)]
         [System.Int32]
         $IndexerId
@@ -65,6 +73,10 @@ function Get-StarrIndexer {
 
     $request = @{
         Endpoint = $endpoint
+    }
+
+    if ($PSBoundParameters.ContainsKey('Application')) {
+        $request.ExpectedApplication = $Application
     }
     if ($PSBoundParameters.ContainsKey('IndexerId')) {
         $request.Endpoint = "$endpoint/$IndexerId"
