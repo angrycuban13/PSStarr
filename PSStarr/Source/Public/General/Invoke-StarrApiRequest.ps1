@@ -19,7 +19,7 @@ function Invoke-StarrApiRequest {
         The relative API endpoint path.
 
     .PARAMETER ApiVersion
-        The version segment used in versioned API URLs.
+        The version segment used in versioned API URLs. When omitted, saved Prowlarr instances and explicit requests with ExpectedApplication Prowlarr use v1; other requests use v3.
 
     .PARAMETER Method
         The HTTP method used for the request.
@@ -102,7 +102,7 @@ function Invoke-StarrApiRequest {
         $ContentType = 'application/json',
 
         [Parameter(Mandatory = $false)]
-        [ValidateSet('Radarr', 'Sonarr', 'Lidarr')]
+        [ValidateSet('Radarr', 'Sonarr', 'Prowlarr')]
         [System.String]
         $ExpectedApplication,
 
@@ -118,6 +118,8 @@ function Invoke-StarrApiRequest {
         $originalErrorAction = [System.Management.Automation.ActionPreference] $ErrorActionPreference
     }
     $ErrorActionPreference = 'Stop'
+
+    $resolvedApplication = $ExpectedApplication
 
     if ($PSCmdlet.ParameterSetName -eq 'Named') {
         try {
@@ -186,6 +188,8 @@ function Invoke-StarrApiRequest {
 
         $instance = $configuration.Instances[$instanceName]
 
+        $resolvedApplication = $instance.Application
+
         if ($PSBoundParameters.ContainsKey('ExpectedApplication') -and $instance.Application -ne $ExpectedApplication) {
             $message = "Starr instance '$instanceName' is '$($instance.Application)', not '$ExpectedApplication'."
             $exception = [System.ArgumentException]::new($message, 'Name')
@@ -198,6 +202,10 @@ function Invoke-StarrApiRequest {
         $Url = $instance.Url
         $ApiKey = $instance.ApiKey
     }
+    if (-not $PSBoundParameters.ContainsKey('ApiVersion') -and $resolvedApplication -eq 'Prowlarr') {
+        $ApiVersion = 'v1'
+    }
+
     $baseUrl = $Url.TrimEnd('/')
     $normalizedEndpoint = $Endpoint.Trim('/')
 
@@ -249,6 +257,14 @@ function Invoke-StarrApiRequest {
     try {
         $response = Invoke-RestMethod @parameters
 
+        if ($resolvedApplication -eq 'Prowlarr' -and $normalizedEndpoint -match '^(indexer|downloadclient|notification)(/(schema|[0-9]+))?$') {
+            $response = @(
+                foreach ($provider in $response) {
+                    Protect-StarrProviderResource -Resource $provider
+                }
+            )
+        }
+
         if ($normalizedEndpoint -eq 'log' -and $null -ne $response -and $null -ne $response.PSObject.Properties['records']) {
             foreach ($record in @($response.records)) {
                 if ($null -eq $record) {
@@ -283,10 +299,6 @@ function Invoke-StarrApiRequest {
         return
     }
 }
-
-
-
-
 
 
 

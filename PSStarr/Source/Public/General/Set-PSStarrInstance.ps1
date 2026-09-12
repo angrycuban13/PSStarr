@@ -49,7 +49,7 @@ function Set-PSStarrInstance {
         $Name,
 
         [Parameter(Mandatory = $true, Position = 1)]
-        [ValidateSet('Radarr', 'Sonarr', 'Lidarr')]
+        [ValidateSet('Radarr', 'Sonarr', 'Prowlarr')]
         [string]
         $Application,
 
@@ -142,7 +142,6 @@ function Set-PSStarrInstance {
         EncryptionMode = $resolvedEncryptionMode
     }
 }
-
 
 
 

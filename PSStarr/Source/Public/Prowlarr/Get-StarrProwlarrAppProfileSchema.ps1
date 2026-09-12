@@ -1,0 +1,69 @@
+function Get-StarrProwlarrAppProfileSchema {
+    <#
+    .SYNOPSIS
+        Retrieves Prowlarr AppProfileSchema resources.
+
+    .DESCRIPTION
+        This function retrieves Prowlarr AppProfileSchema resources through API v1 using the shared transport.
+
+    .PARAMETER Name
+        The saved Prowlarr instance name. When omitted, the only matching instance is used.
+
+    .PARAMETER Url
+        The absolute base URL of the instance.
+
+    .PARAMETER ApiKey
+        The API key used to authenticate with the instance.
+
+    .EXAMPLE
+        Get-StarrProwlarrAppProfileSchema -Name Main
+
+    .EXAMPLE
+        Get-StarrProwlarrAppProfileSchema -Url 'http://localhost:9696' -ApiKey '<api-key>'
+
+    .INPUTS
+        None.
+
+        You cannot pipe objects to this function.
+
+    .OUTPUTS
+        [System.Object]
+
+        This function returns deserialized Prowlarr AppProfileSchema resources.
+    #>
+    [CmdletBinding(DefaultParameterSetName = 'Named')]
+    [OutputType([System.Object])]
+    param(
+        [Parameter(ParameterSetName = 'Named')]
+        [ValidateNotNullOrWhiteSpace()]
+        [System.String]
+        $Name,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
+        [ValidateScript({ Test-StarrUrl -Url $_ })]
+        [System.String]
+        $Url,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
+        [ValidateNotNullOrWhiteSpace()]
+        [System.String]
+        $ApiKey
+    )
+
+    $request = @{
+        Endpoint            = 'appprofile/schema'
+        Method              = 'GET'
+        ApiVersion          = 'v1'
+        ExpectedApplication = 'Prowlarr'
+    }
+
+    if ($PSCmdlet.ParameterSetName -eq 'Explicit') {
+        $request.Url = $Url
+        $request.ApiKey = $ApiKey
+    }
+    elseif ($PSBoundParameters.ContainsKey('Name')) {
+        $request.Name = $Name
+    }
+
+    Invoke-StarrApiRequest @request
+}
