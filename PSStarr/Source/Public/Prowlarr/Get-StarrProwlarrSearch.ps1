@@ -108,12 +108,12 @@ function Get-StarrProwlarrSearch {
     }
 
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        Term = 'query'
-        Type = 'type'
-        IndexerIdFilter = 'indexerIds'
+        Term             = 'query'
+        Type             = 'type'
+        IndexerIdFilter  = 'indexerIds'
         CategoryIdFilter = 'categories'
-        Limit = 'limit'
-        Offset = 'offset'
+        Limit            = 'limit'
+        Offset           = 'offset'
     }
 
     if ($query.Count -gt 0) {

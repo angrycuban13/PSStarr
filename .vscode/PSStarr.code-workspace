@@ -31,7 +31,6 @@
 		"powershell.codeFormatting.whitespaceBetweenParameters": true,
 		"powershell.integratedConsole.showOnStartup": false,
 		"powershell.integratedConsole.suppressStartupBanner": true,
-		"powershell.powerShellDefaultVersion": "PowerShell (x64)",
 		"powershell.promptToUpdatePowerShell": false,
 		"powershell.scriptAnalysis.enable": true,
 		"powershell.scriptAnalysis.settingsPath": ".vscode\\PSScriptAnalyzerSettings.psd1"

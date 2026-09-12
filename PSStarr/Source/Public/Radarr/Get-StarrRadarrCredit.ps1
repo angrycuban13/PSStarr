@@ -93,7 +93,7 @@ function Get-StarrRadarrCredit {
         }
 
         $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-            MovieId = 'movieId'
+            MovieId         = 'movieId'
             MovieMetadataId = 'movieMetadataId'
         }
 

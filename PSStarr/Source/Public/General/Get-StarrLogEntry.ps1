@@ -97,14 +97,14 @@ function Get-StarrLogEntry {
 
     $request = @{
         Endpoint = $endpoint
-        Method = 'GET'
+        Method   = 'GET'
     }
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        Page = 'page'
-        PageSize = 'pageSize'
-        SortKey = 'sortKey'
+        Page          = 'page'
+        PageSize      = 'pageSize'
+        SortKey       = 'sortKey'
         SortDirection = 'sortDirection'
-        Level = 'level'
+        Level         = 'level'
     }
 
     if ($query.Count -gt 0) {

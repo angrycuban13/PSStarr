@@ -130,14 +130,14 @@ function Get-StarrSonarrCutoff {
         $request.Endpoint = "$endpoint/$EpisodeId"
     }
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        Page = 'page'
-        PageSize = 'pageSize'
-        SortKey = 'sortKey'
-        SortDirection = 'sortDirection'
-        IncludeSeries = 'includeSeries'
+        Page               = 'page'
+        PageSize           = 'pageSize'
+        SortKey            = 'sortKey'
+        SortDirection      = 'sortDirection'
+        IncludeSeries      = 'includeSeries'
         IncludeEpisodeFile = 'includeEpisodeFile'
-        IncludeImages = 'includeImages'
-        Monitored = 'monitored'
+        IncludeImages      = 'includeImages'
+        Monitored          = 'monitored'
     }
 
     if ($query.Count -gt 0) {

@@ -51,8 +51,8 @@ function Get-StarrPing {
     )
 
     $request = @{
-        Endpoint = 'ping'
-        Method   = 'GET'
+        Endpoint    = 'ping'
+        Method      = 'GET'
         Unversioned = $true
     }
 

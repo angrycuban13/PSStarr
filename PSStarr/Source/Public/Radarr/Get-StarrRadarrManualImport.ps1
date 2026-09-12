@@ -95,9 +95,9 @@ function Get-StarrRadarrManualImport {
     }
 
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        Folder = 'folder'
-        DownloadId = 'downloadId'
-        MovieId = 'movieId'
+        Folder              = 'folder'
+        DownloadId          = 'downloadId'
+        MovieId             = 'movieId'
         FilterExistingFiles = 'filterExistingFiles'
     }
 

@@ -56,7 +56,7 @@ function Get-StarrApiInfo {
     $endpoint = 'api'
 
     $request = @{
-        Endpoint = $endpoint
+        Endpoint    = $endpoint
         Unversioned = $true
     }
     if ($PSCmdlet.ParameterSetName -eq 'Explicit') {

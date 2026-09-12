@@ -121,13 +121,13 @@ function Get-StarrRadarrNamingExample {
     }
 
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        NamingConfigId = 'id'
-        RenameMovies = 'renameMovies'
+        NamingConfigId           = 'id'
+        RenameMovies             = 'renameMovies'
         ReplaceIllegalCharacters = 'replaceIllegalCharacters'
-        ColonReplacementFormat = 'colonReplacementFormat'
-        StandardMovieFormat = 'standardMovieFormat'
-        MovieFolderFormat = 'movieFolderFormat'
-        ResourceName = 'resourceName'
+        ColonReplacementFormat   = 'colonReplacementFormat'
+        StandardMovieFormat      = 'standardMovieFormat'
+        MovieFolderFormat        = 'movieFolderFormat'
+        ResourceName             = 'resourceName'
     }
 
     if ($query.Count -gt 0) {

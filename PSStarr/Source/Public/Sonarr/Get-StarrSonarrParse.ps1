@@ -72,14 +72,14 @@ function Get-StarrSonarrParse {
     )
 
     $request = @{
-        Endpoint = "parse"
-        Method = 'GET'
+        Endpoint            = 'parse'
+        Method              = 'GET'
         ExpectedApplication = 'Sonarr'
     }
 
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
         Title = 'title'
-        Path = 'path'
+        Path  = 'path'
     }
 
     if ($query.Count -gt 0) {

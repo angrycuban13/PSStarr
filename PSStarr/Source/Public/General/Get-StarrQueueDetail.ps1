@@ -114,12 +114,12 @@ function Get-StarrQueueDetail {
         Endpoint = $endpoint
     }
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        MovieId = 'movieId'
-        IncludeMovie = 'includeMovie'
-        SeriesId = 'seriesId'
+        MovieId         = 'movieId'
+        IncludeMovie    = 'includeMovie'
+        SeriesId        = 'seriesId'
         EpisodeIdFilter = 'episodeIds'
-        IncludeSeries = 'includeSeries'
-        IncludeEpisode = 'includeEpisode'
+        IncludeSeries   = 'includeSeries'
+        IncludeEpisode  = 'includeEpisode'
     }
 
     if ($query.Count -gt 0) {

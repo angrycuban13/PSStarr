@@ -72,13 +72,13 @@ function Get-StarrSonarrRenamePreview {
     )
 
     $request = @{
-        Endpoint = "rename"
-        Method = 'GET'
+        Endpoint            = 'rename'
+        Method              = 'GET'
         ExpectedApplication = 'Sonarr'
     }
 
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        SeriesId = 'seriesId'
+        SeriesId     = 'seriesId'
         SeasonNumber = 'seasonNumber'
     }
 

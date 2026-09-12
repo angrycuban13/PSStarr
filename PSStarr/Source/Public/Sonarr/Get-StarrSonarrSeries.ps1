@@ -85,7 +85,7 @@ function Get-StarrSonarrSeries {
         $request.Endpoint = "$endpoint/$SeriesId"
     }
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        TvdbId = 'tvdbId'
+        TvdbId              = 'tvdbId'
         IncludeSeasonImages = 'includeSeasonImages'
     }
 

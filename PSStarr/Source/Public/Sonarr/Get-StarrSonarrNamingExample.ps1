@@ -165,24 +165,24 @@ function Get-StarrSonarrNamingExample {
     )
 
     $request = @{
-        Endpoint = "config/naming/examples"
-        Method = 'GET'
+        Endpoint            = 'config/naming/examples'
+        Method              = 'GET'
         ExpectedApplication = 'Sonarr'
     }
 
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        NamingConfigId = 'id'
-        RenameEpisodes = 'renameEpisodes'
-        ReplaceIllegalCharacters = 'replaceIllegalCharacters'
-        ColonReplacementFormat = 'colonReplacementFormat'
+        NamingConfigId               = 'id'
+        RenameEpisodes               = 'renameEpisodes'
+        ReplaceIllegalCharacters     = 'replaceIllegalCharacters'
+        ColonReplacementFormat       = 'colonReplacementFormat'
         CustomColonReplacementFormat = 'customColonReplacementFormat'
-        MultiEpisodeStyle = 'multiEpisodeStyle'
-        StandardEpisodeFormat = 'standardEpisodeFormat'
-        DailyEpisodeFormat = 'dailyEpisodeFormat'
-        AnimeEpisodeFormat = 'animeEpisodeFormat'
-        SeriesFolderFormat = 'seriesFolderFormat'
-        SeasonFolderFormat = 'seasonFolderFormat'
-        SpecialsFolderFormat = 'specialsFolderFormat'
+        MultiEpisodeStyle            = 'multiEpisodeStyle'
+        StandardEpisodeFormat        = 'standardEpisodeFormat'
+        DailyEpisodeFormat           = 'dailyEpisodeFormat'
+        AnimeEpisodeFormat           = 'animeEpisodeFormat'
+        SeriesFolderFormat           = 'seriesFolderFormat'
+        SeasonFolderFormat           = 'seasonFolderFormat'
+        SpecialsFolderFormat         = 'specialsFolderFormat'
     }
 
     if ($query.Count -gt 0) {

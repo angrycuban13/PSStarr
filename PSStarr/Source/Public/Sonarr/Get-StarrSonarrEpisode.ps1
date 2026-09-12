@@ -130,13 +130,13 @@ function Get-StarrSonarrEpisode {
         }
 
         $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-            SeriesId = 'seriesId'
-            SeasonNumber = 'seasonNumber'
-            EpisodeIdFilter = 'episodeIds'
-            EpisodeFileId = 'episodeFileId'
-            IncludeSeries = 'includeSeries'
+            SeriesId           = 'seriesId'
+            SeasonNumber       = 'seasonNumber'
+            EpisodeIdFilter    = 'episodeIds'
+            EpisodeFileId      = 'episodeFileId'
+            IncludeSeries      = 'includeSeries'
             IncludeEpisodeFile = 'includeEpisodeFile'
-            IncludeImages = 'includeImages'
+            IncludeImages      = 'includeImages'
         }
 
         if ($query.Count -gt 0) {

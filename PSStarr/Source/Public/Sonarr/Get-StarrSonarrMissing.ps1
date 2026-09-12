@@ -123,13 +123,13 @@ function Get-StarrSonarrMissing {
         $request.Endpoint = "$endpoint/$EpisodeId"
     }
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        Page = 'page'
-        PageSize = 'pageSize'
-        SortKey = 'sortKey'
+        Page          = 'page'
+        PageSize      = 'pageSize'
+        SortKey       = 'sortKey'
         SortDirection = 'sortDirection'
         IncludeSeries = 'includeSeries'
         IncludeImages = 'includeImages'
-        Monitored = 'monitored'
+        Monitored     = 'monitored'
     }
 
     if ($query.Count -gt 0) {

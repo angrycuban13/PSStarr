@@ -103,17 +103,17 @@ function Get-StarrSonarrManualImport {
     )
 
     $request = @{
-        Endpoint = "manualimport"
-        Method = 'GET'
+        Endpoint            = 'manualimport'
+        Method              = 'GET'
         ExpectedApplication = 'Sonarr'
     }
 
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        Folder = 'folder'
-        DownloadId = 'downloadId'
+        Folder              = 'folder'
+        DownloadId          = 'downloadId'
         FilterExistingFiles = 'filterExistingFiles'
-        SeriesId = 'seriesId'
-        SeasonNumber = 'seasonNumber'
+        SeriesId            = 'seriesId'
+        SeasonNumber        = 'seasonNumber'
     }
 
     if ($query.Count -gt 0) {

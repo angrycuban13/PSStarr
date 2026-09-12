@@ -93,9 +93,9 @@ function Get-StarrRadarrMovie {
         $request.Endpoint = "$endpoint/$MovieId"
     }
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        TmdbId = 'tmdbId'
+        TmdbId             = 'tmdbId'
         ExcludeLocalCovers = 'excludeLocalCovers'
-        LanguageId = 'languageId'
+        LanguageId         = 'languageId'
     }
 
     if ($query.Count -gt 0) {

@@ -93,7 +93,7 @@ function Get-StarrRadarrMovieFile {
         }
 
         $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-            MovieIdFilter = 'movieId'
+            MovieIdFilter     = 'movieId'
             MovieFileIdFilter = 'movieFileIds'
         }
 

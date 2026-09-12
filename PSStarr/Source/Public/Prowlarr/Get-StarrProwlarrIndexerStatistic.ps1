@@ -99,11 +99,11 @@ function Get-StarrProwlarrIndexerStatistic {
     }
 
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        StartDate = 'startDate'
-        EndDate = 'endDate'
+        StartDate       = 'startDate'
+        EndDate         = 'endDate'
         IndexerIdFilter = 'indexers'
-        Protocol = 'protocols'
-        Tag = 'tags'
+        Protocol        = 'protocols'
+        Tag             = 'tags'
     }
 
     foreach ($parameter in @('StartDate', 'EndDate')) {

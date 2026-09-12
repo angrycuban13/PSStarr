@@ -59,8 +59,8 @@ function Get-StarrSonarrCalendarEntry {
     )
 
     $request = @{
-        Endpoint = "calendar/$EpisodeId"
-        Method = 'GET'
+        Endpoint            = "calendar/$EpisodeId"
+        Method              = 'GET'
         ExpectedApplication = 'Sonarr'
     }
 

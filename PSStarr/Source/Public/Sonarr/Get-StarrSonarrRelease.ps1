@@ -94,14 +94,14 @@ function Get-StarrSonarrRelease {
     )
 
     $request = @{
-        Endpoint = "release"
-        Method = 'GET'
+        Endpoint            = 'release'
+        Method              = 'GET'
         ExpectedApplication = 'Sonarr'
     }
 
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        EpisodeId = 'episodeId'
-        SeriesId = 'seriesId'
+        EpisodeId    = 'episodeId'
+        SeriesId     = 'seriesId'
         SeasonNumber = 'seasonNumber'
     }
 

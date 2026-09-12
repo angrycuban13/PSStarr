@@ -109,12 +109,12 @@ function Get-StarrCalendar {
         Endpoint = $endpoint
     }
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        Start = 'start'
-        End = 'end'
-        Unmonitored = 'unmonitored'
-        Tags = 'tags'
-        IncludeSeries = 'includeSeries'
-        IncludeEpisodeFile = 'includeEpisodeFile'
+        Start                = 'start'
+        End                  = 'end'
+        Unmonitored          = 'unmonitored'
+        Tags                 = 'tags'
+        IncludeSeries        = 'includeSeries'
+        IncludeEpisodeFile   = 'includeEpisodeFile'
         IncludeEpisodeImages = 'includeEpisodeImages'
     }
 

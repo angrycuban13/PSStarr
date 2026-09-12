@@ -184,21 +184,21 @@ function Get-StarrQueue {
         Endpoint = $endpoint
     }
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        Page = 'page'
-        PageSize = 'pageSize'
-        SortKey = 'sortKey'
-        SortDirection = 'sortDirection'
-        IncludeUnknownMovieItems = 'includeUnknownMovieItems'
-        IncludeMovie = 'includeMovie'
-        MovieIdFilter = 'movieIds'
+        Page                      = 'page'
+        PageSize                  = 'pageSize'
+        SortKey                   = 'sortKey'
+        SortDirection             = 'sortDirection'
+        IncludeUnknownMovieItems  = 'includeUnknownMovieItems'
+        IncludeMovie              = 'includeMovie'
+        MovieIdFilter             = 'movieIds'
         IncludeUnknownSeriesItems = 'includeUnknownSeriesItems'
-        IncludeSeries = 'includeSeries'
-        IncludeEpisode = 'includeEpisode'
-        SeriesIdFilter = 'seriesIds'
-        Protocol = 'protocol'
-        Languages = 'languages'
-        Quality = 'quality'
-        Status = 'status'
+        IncludeSeries             = 'includeSeries'
+        IncludeEpisode            = 'includeEpisode'
+        SeriesIdFilter            = 'seriesIds'
+        Protocol                  = 'protocol'
+        Languages                 = 'languages'
+        Quality                   = 'quality'
+        Status                    = 'status'
     }
 
     if ($query.Count -gt 0) {

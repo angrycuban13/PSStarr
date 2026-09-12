@@ -133,13 +133,13 @@ function Get-StarrBlocklist {
     }
 
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        Page          = 'page'
-        PageSize      = 'pageSize'
-        SortKey       = 'sortKey'
-        SortDirection = 'sortDirection'
+        Page           = 'page'
+        PageSize       = 'pageSize'
+        SortKey        = 'sortKey'
+        SortDirection  = 'sortDirection'
         MovieIdFilter  = 'movieIds'
         SeriesIdFilter = 'seriesIds'
-        Protocols     = 'protocols'
+        Protocols      = 'protocols'
     }
 
     if ($PSBoundParameters.ContainsKey('MovieId')) {

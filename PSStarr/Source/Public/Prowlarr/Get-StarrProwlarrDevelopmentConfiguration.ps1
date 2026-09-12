@@ -59,10 +59,10 @@ function Get-StarrProwlarrDevelopmentConfiguration {
     )
 
     $request = @{
-        Endpoint = 'config/development'
-        Method = 'GET'
+        Endpoint            = 'config/development'
+        Method              = 'GET'
         ExpectedApplication = 'Prowlarr'
-        ApiVersion = 'v1'
+        ApiVersion          = 'v1'
     }
 
     if ($PSBoundParameters.ContainsKey('ConfigurationId')) {

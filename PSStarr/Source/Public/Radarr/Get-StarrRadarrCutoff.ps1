@@ -98,11 +98,11 @@ function Get-StarrRadarrCutoff {
         Endpoint = $endpoint
     }
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        Page = 'page'
-        PageSize = 'pageSize'
-        SortKey = 'sortKey'
+        Page          = 'page'
+        PageSize      = 'pageSize'
+        SortKey       = 'sortKey'
         SortDirection = 'sortDirection'
-        Monitored = 'monitored'
+        Monitored     = 'monitored'
     }
 
     if ($query.Count -gt 0) {

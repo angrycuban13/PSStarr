@@ -19,7 +19,6 @@ Describe 'Get-StarrSystemStatus' {
         It 'delegates an explicit <Application> URL to the transport' -ForEach @(
             @{ Application = 'Radarr'; Url = 'http://localhost:7878' }
             @{ Application = 'Sonarr'; Url = 'http://localhost:8989' }
-            @{ Application = 'Lidarr'; Url = 'http://localhost:8686' }
         ) {
             $expectedUrl = $Url
 

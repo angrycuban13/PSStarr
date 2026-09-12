@@ -93,7 +93,7 @@ function Get-StarrSonarrEpisodeFile {
         }
 
         $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-            SeriesId = 'seriesId'
+            SeriesId            = 'seriesId'
             EpisodeFileIdFilter = 'episodeFileIds'
         }
 

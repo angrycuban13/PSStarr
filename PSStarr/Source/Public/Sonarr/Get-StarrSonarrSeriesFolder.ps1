@@ -59,8 +59,8 @@ function Get-StarrSonarrSeriesFolder {
     )
 
     $request = @{
-        Endpoint = "series/$SeriesId/folder"
-        Method = 'GET'
+        Endpoint            = "series/$SeriesId/folder"
+        Method              = 'GET'
         ExpectedApplication = 'Sonarr'
     }
 

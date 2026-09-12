@@ -82,8 +82,8 @@ function Get-StarrRadarrImportListMovie {
 
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
         IncludeRecommendations = 'includeRecommendations'
-        IncludeTrending = 'includeTrending'
-        IncludePopular = 'includePopular'
+        IncludeTrending        = 'includeTrending'
+        IncludePopular         = 'includePopular'
     }
 
     if ($query.Count -gt 0) {

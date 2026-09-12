@@ -170,24 +170,24 @@ function Get-StarrProwlarrHistory {
     )
 
     $request = @{
-        Endpoint = 'history'
-        Method = 'GET'
+        Endpoint            = 'history'
+        Method              = 'GET'
         ExpectedApplication = 'Prowlarr'
-        ApiVersion = 'v1'
+        ApiVersion          = 'v1'
     }
 
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        Page = 'page'
-        PageSize = 'pageSize'
-        SortKey = 'sortKey'
-        SortDirection = 'sortDirection'
-        EventTypeId = 'eventType'
-        Successful = 'successful'
-        DownloadId = 'downloadId'
+        Page            = 'page'
+        PageSize        = 'pageSize'
+        SortKey         = 'sortKey'
+        SortDirection   = 'sortDirection'
+        EventTypeId     = 'eventType'
+        Successful      = 'successful'
+        DownloadId      = 'downloadId'
         IndexerIdFilter = 'indexerIds'
-        IndexerId = 'indexerId'
-        EventType = 'eventType'
-        Limit = 'limit'
+        IndexerId       = 'indexerId'
+        EventType       = 'eventType'
+        Limit           = 'limit'
     }
 
     if ($PSBoundParameters.ContainsKey('Since')) {
