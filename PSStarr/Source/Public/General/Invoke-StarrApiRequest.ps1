@@ -249,6 +249,20 @@ function Invoke-StarrApiRequest {
     try {
         $response = Invoke-RestMethod @parameters
 
+        if ($normalizedEndpoint -eq 'log' -and $null -ne $response -and $null -ne $response.PSObject.Properties['records']) {
+            foreach ($record in @($response.records)) {
+                if ($null -eq $record) {
+                    continue
+                }
+
+                foreach ($property in $record.PSObject.Properties) {
+                    if ($property.Value -is [System.String]) {
+                        $property.Value = Protect-StarrSensitiveText -Text $property.Value -SensitiveValue @($ApiKey)
+                    }
+                }
+            }
+        }
+
         foreach ($responseItem in $response) {
             $responseItem
         }
