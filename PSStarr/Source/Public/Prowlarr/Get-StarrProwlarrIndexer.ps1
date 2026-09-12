@@ -1,25 +1,28 @@
-function Get-StarrProwlarrIndexerStatus {
+function Get-StarrProwlarrIndexer {
     <#
     .SYNOPSIS
-        Retrieves Prowlarr indexer failure and backoff records.
+        Retrieves every configured Prowlarr indexer or one indexer by ID.
 
     .DESCRIPTION
-        This function retrieves Prowlarr failure and backoff state through API v1. It does not return every configured indexer; use Get-StarrProwlarrIndexer for that inventory. An empty result normally means Prowlarr has no recorded indexer failures or temporary disablements.
+        This function reads Prowlarr indexer resources through API v1. Unlike Get-StarrProwlarrIndexerStatus, the list route returns configured indexers regardless of failure state. Recognizable provider credentials are redacted from returned resources.
 
     .PARAMETER Name
-        The saved Prowlarr instance name. When omitted, the only matching instance is used.
+        The optional saved Prowlarr instance name. The matching instance is inferred when omitted.
 
     .PARAMETER Url
-        The absolute base URL of the instance.
+        The absolute Prowlarr base URL.
 
     .PARAMETER ApiKey
-        The API key used to authenticate with the instance.
+        The API key used to authenticate.
+
+    .PARAMETER IndexerId
+        The positive identifier of one configured indexer.
 
     .EXAMPLE
-        Get-StarrProwlarrIndexerStatus -Name Main
+        Get-StarrProwlarrIndexer -Name ProwlarrMain
 
     .EXAMPLE
-        Get-StarrProwlarrIndexerStatus -Url 'http://localhost:9696' -ApiKey '<api-key>'
+        Get-StarrProwlarrIndexer -Url 'http://localhost:9696' -ApiKey '<api-key>' -IndexerId 4
 
     .INPUTS
         None.
@@ -29,7 +32,7 @@ function Get-StarrProwlarrIndexerStatus {
     .OUTPUTS
         [System.Object]
 
-        This function returns indexer failure and backoff records.
+        This function returns sanitized Prowlarr indexer resources.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
     [OutputType([System.Object])]
@@ -47,14 +50,23 @@ function Get-StarrProwlarrIndexerStatus {
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $ApiKey
+        $ApiKey,
+
+        [Parameter()]
+        [ValidateRange(1, [System.Int32]::MaxValue)]
+        [System.Int32]
+        $IndexerId
     )
 
     $request = @{
-        Endpoint            = 'indexerstatus'
+        Endpoint            = 'indexer'
         Method              = 'GET'
         ApiVersion          = 'v1'
         ExpectedApplication = 'Prowlarr'
+    }
+
+    if ($PSBoundParameters.ContainsKey('IndexerId')) {
+        $request.Endpoint = "indexer/$IndexerId"
     }
 
     if ($PSCmdlet.ParameterSetName -eq 'Explicit') {

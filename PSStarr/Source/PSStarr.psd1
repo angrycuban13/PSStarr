@@ -9,31 +9,31 @@
 @{
 
     # Script module or binary module file associated with this manifest.
-    RootModule        = 'PSStarr.psm1'
+    RootModule           = 'PSStarr.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '1.0.0'
+    ModuleVersion        = '1.0.0'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
 
     # ID used to uniquely identify this module
-    GUID              = '06cf630d-08c5-491c-901a-fdc6413c671b'
+    GUID                 = '06cf630d-08c5-491c-901a-fdc6413c671b'
 
     # Author of this module
-    Author            = 'AngryCuban13'
+    Author               = 'AngryCuban13'
 
     # Company or vendor of this module
-    CompanyName       = 'AngryCuban13'
+    CompanyName          = 'AngryCuban13'
 
     # Copyright statement for this module
-    Copyright         = '(c) AngryCuban13. All rights reserved.'
+    Copyright            = '(c) AngryCuban13. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description       = 'A PowerShell 7 client module for Radarr, Sonarr, and Prowlarr APIs.'
+    Description          = 'A PowerShell 7 client module for Radarr, Sonarr, and Prowlarr APIs.'
 
     # Minimum version of the PowerShell engine required by this module
-    PowerShellVersion = '7.0'
+    PowerShellVersion    = '7.0'
 
     # Name of the PowerShell host required by this module
     # PowerShellHostName = ''
@@ -51,7 +51,7 @@
     # ProcessorArchitecture = ''
 
     # Modules that must be imported into the global environment prior to importing this module
-    RequiredModules   = @(
+    RequiredModules      = @(
         @{ ModuleName = 'Configuration'; ModuleVersion = '1.6.0' }
     )
 
@@ -71,16 +71,16 @@
     # NestedModules = @()
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = @()
+    FunctionsToExport    = @()
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-    CmdletsToExport   = @()
+    CmdletsToExport      = @()
 
     # Variables to export from this module
     # VariablesToExport = @()
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport   = @()
+    AliasesToExport      = @()
 
     # DSC resources to export from this module
     # DscResourcesToExport = @()
@@ -92,12 +92,12 @@
     # FileList = @()
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
-    PrivateData       = @{
+    PrivateData          = @{
 
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags = @('Radarr', 'Sonarr', 'Prowlarr', 'API', 'PowerShell')
+            Tags       = @('Radarr', 'Sonarr', 'Prowlarr', 'API', 'PowerShell')
 
             # A URL to the license for this module.
             # LicenseUri = ''

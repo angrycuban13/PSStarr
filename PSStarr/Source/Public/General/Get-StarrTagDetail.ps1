@@ -1,10 +1,10 @@
 function Get-StarrTagDetail {
     <#
     .SYNOPSIS
-        Retrieves tag details from a Starr instance.
+        Retrieves tag usage records using the legacy command name.
 
     .DESCRIPTION
-        This function retrieves tag details from an inferred or named Starr instance, or from an explicit URL and API key.
+        This function retrieves relationships between tags and tagged resources. The name is retained for compatibility; Get-StarrTagUsage communicates the endpoint behavior more clearly. Use Get-StarrTag to retrieve tag definitions.
 
     .PARAMETER Name
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.

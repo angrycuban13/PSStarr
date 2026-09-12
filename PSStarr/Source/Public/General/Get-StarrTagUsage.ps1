@@ -1,25 +1,28 @@
-function Get-StarrProwlarrIndexerStatus {
+function Get-StarrTagUsage {
     <#
     .SYNOPSIS
-        Retrieves Prowlarr indexer failure and backoff records.
+        Retrieves resources associated with application tags.
 
     .DESCRIPTION
-        This function retrieves Prowlarr failure and backoff state through API v1. It does not return every configured indexer; use Get-StarrProwlarrIndexer for that inventory. An empty result normally means Prowlarr has no recorded indexer failures or temporary disablements.
+        This function reads tag usage records from the tag/detail endpoint. It reports relationships to tagged resources; use Get-StarrTag to retrieve tag definitions.
 
     .PARAMETER Name
-        The saved Prowlarr instance name. When omitted, the only matching instance is used.
+        The optional saved Starr instance name. The instance is inferred when omitted.
 
     .PARAMETER Url
-        The absolute base URL of the instance.
+        The absolute Starr application base URL.
 
     .PARAMETER ApiKey
-        The API key used to authenticate with the instance.
+        The API key used to authenticate.
+
+    .PARAMETER TagId
+        The positive identifier used to limit usage records to one tag.
 
     .EXAMPLE
-        Get-StarrProwlarrIndexerStatus -Name Main
+        Get-StarrTagUsage -Name RadarrMain
 
     .EXAMPLE
-        Get-StarrProwlarrIndexerStatus -Url 'http://localhost:9696' -ApiKey '<api-key>'
+        Get-StarrTagUsage -Url 'http://localhost:8989' -ApiKey '<api-key>' -TagId 3
 
     .INPUTS
         None.
@@ -29,7 +32,7 @@ function Get-StarrProwlarrIndexerStatus {
     .OUTPUTS
         [System.Object]
 
-        This function returns indexer failure and backoff records.
+        This function returns tag usage response objects.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
     [OutputType([System.Object])]
@@ -47,14 +50,21 @@ function Get-StarrProwlarrIndexerStatus {
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $ApiKey
+        $ApiKey,
+
+        [Parameter()]
+        [ValidateRange(1, [System.Int32]::MaxValue)]
+        [System.Int32]
+        $TagId
     )
 
     $request = @{
-        Endpoint            = 'indexerstatus'
-        Method              = 'GET'
-        ApiVersion          = 'v1'
-        ExpectedApplication = 'Prowlarr'
+        Endpoint = 'tag/detail'
+        Method   = 'GET'
+    }
+
+    if ($PSBoundParameters.ContainsKey('TagId')) {
+        $request.Endpoint = "tag/detail/$TagId"
     }
 
     if ($PSCmdlet.ParameterSetName -eq 'Explicit') {
