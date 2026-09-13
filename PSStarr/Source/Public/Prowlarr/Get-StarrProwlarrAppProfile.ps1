@@ -6,7 +6,7 @@ function Get-StarrProwlarrAppProfile {
     .DESCRIPTION
         This function retrieves application profiles that control how Prowlarr synchronizes indexers with connected applications.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved Prowlarr instance name. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -19,10 +19,10 @@ function Get-StarrProwlarrAppProfile {
         The positive resource identifier for an individual lookup.
 
     .EXAMPLE
-        Get-StarrProwlarrAppProfile -Name Main
+        Get-StarrProwlarrAppProfile -InstanceName Main
 
     .EXAMPLE
-        Get-StarrProwlarrAppProfile -Name Main -AppProfileId 1
+        Get-StarrProwlarrAppProfile -InstanceName Main -AppProfileId 1
 
     .EXAMPLE
         Get-StarrProwlarrAppProfile -Url 'http://localhost:9696' -ApiKey '<api-key>'
@@ -41,9 +41,10 @@ function Get-StarrProwlarrAppProfile {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -76,8 +77,8 @@ function Get-StarrProwlarrAppProfile {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

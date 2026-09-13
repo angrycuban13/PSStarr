@@ -6,7 +6,7 @@ function Get-StarrRadarrImportListExclusion {
     .DESCRIPTION
         This function retrieves one page of Radarr import-list exclusions or an individual exclusion by its internal ID. Paging metadata is preserved. It does not fetch all pages or use the deprecated unpaged route.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved instance name. When omitted, the only matching Radarr instance is used.
 
     .PARAMETER Url
@@ -31,10 +31,10 @@ function Get-StarrRadarrImportListExclusion {
         The result sort direction.
 
     .EXAMPLE
-        Get-StarrRadarrImportListExclusion -Name 'Main' -Page 2 -PageSize 20
+        Get-StarrRadarrImportListExclusion -InstanceName 'Main' -Page 2 -PageSize 20
 
     .EXAMPLE
-        Get-StarrRadarrImportListExclusion -Name 'Main' -ExclusionId 7
+        Get-StarrRadarrImportListExclusion -InstanceName 'Main' -ExclusionId 7
 
     .EXAMPLE
         Get-StarrRadarrImportListExclusion -Url 'http://localhost:7878' -ApiKey '<api-key>'
@@ -54,9 +54,10 @@ function Get-StarrRadarrImportListExclusion {
     param(
         [Parameter(ParameterSetName = 'NamedPage')]
         [Parameter(ParameterSetName = 'NamedId')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitPage')]
         [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitId')]
@@ -127,8 +128,8 @@ function Get-StarrRadarrImportListExclusion {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

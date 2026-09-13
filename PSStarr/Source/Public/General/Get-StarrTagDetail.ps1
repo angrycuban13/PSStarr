@@ -6,7 +6,7 @@ function Get-StarrTagDetail {
     .DESCRIPTION
         This function retrieves relationships between tags and tagged resources. The name is retained for compatibility; Get-StarrTagUsage communicates the endpoint behavior more clearly. Use Get-StarrTag to retrieve tag definitions.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -25,7 +25,7 @@ function Get-StarrTagDetail {
         Get-StarrTagDetail
 
     .EXAMPLE
-        Get-StarrTagDetail -Name 'Main'
+        Get-StarrTagDetail -InstanceName 'Main'
 
     .EXAMPLE
         Get-StarrTagDetail -Url 'http://localhost:7878' -ApiKey '<api-key>'
@@ -44,9 +44,10 @@ function Get-StarrTagDetail {
     [OutputType([System.Object])]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -85,8 +86,8 @@ function Get-StarrTagDetail {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

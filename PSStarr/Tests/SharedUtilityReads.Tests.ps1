@@ -13,10 +13,10 @@ InModuleScope PSStarr {
         }
 
         It 'delegates the correct named GET request' {
-            (& $Command -Name Main).ok | Should -BeTrue
+            (& $Command -InstanceName Main).ok | Should -BeTrue
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                $Endpoint -eq $Resource -and $Name -eq 'Main' -and
+                $Endpoint -eq $Resource -and $InstanceName -eq 'Main' -and
                 $Method -eq 'GET' -and [bool]$Unversioned -eq $IsUnversioned
             }
         }
@@ -29,7 +29,7 @@ InModuleScope PSStarr {
                 $Url -eq 'http://localhost:8989/base' -and $ApiKey -eq 'fixture-key'
             }
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                [string]::IsNullOrEmpty($Name) -and [string]::IsNullOrEmpty($Url)
+                [string]::IsNullOrEmpty($InstanceName) -and [string]::IsNullOrEmpty($Url)
             }
         }
     }
@@ -40,7 +40,7 @@ InModuleScope PSStarr {
         }
 
         It 'maps filters and preserves the paging envelope' {
-            $result = Get-StarrLogEntry -Name Main -Page 2 -PageSize 25 -SortKey time -SortDirection descending -Level error
+            $result = Get-StarrLogEntry -InstanceName Main -Page 2 -PageSize 25 -SortKey time -SortDirection descending -Level error
 
             $result.page | Should -Be 2
             $result.records.Count | Should -Be 0
@@ -51,16 +51,16 @@ InModuleScope PSStarr {
         }
 
         It 'does not pass omitted filters' {
-            Get-StarrLogEntry -Name Main
+            Get-StarrLogEntry -InstanceName Main
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter { $null -eq $Query }
         }
 
         It 'rejects invalid paging and blank filters' {
-            { Get-StarrLogEntry -Name Main -Page 0 } | Should -Throw
-            { Get-StarrLogEntry -Name Main -PageSize -1 } | Should -Throw
-            { Get-StarrLogEntry -Name Main -Level ' ' } | Should -Throw
-            { Get-StarrLogEntry -Name Main -SortKey ' ' } | Should -Throw
+            { Get-StarrLogEntry -InstanceName Main -Page 0 } | Should -Throw
+            { Get-StarrLogEntry -InstanceName Main -PageSize -1 } | Should -Throw
+            { Get-StarrLogEntry -InstanceName Main -Level ' ' } | Should -Throw
+            { Get-StarrLogEntry -InstanceName Main -SortKey ' ' } | Should -Throw
             Should -Invoke Invoke-StarrApiRequest -Times 0
         }
     }
@@ -89,7 +89,7 @@ InModuleScope PSStarr {
                 @{ Instances = @{ Main = @{ Application = 'Sonarr'; Url = 'http://localhost:8989'; ApiKey = 'fixture-key' } } }
             }
 
-            $result = Invoke-StarrApiRequest -Name Main -Endpoint log
+            $result = Invoke-StarrApiRequest -InstanceName Main -Endpoint log
 
             $result.page | Should -Be 1
             $result.records.Count | Should -Be 1

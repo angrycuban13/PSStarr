@@ -20,7 +20,7 @@ InModuleScope PSStarr {
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $Endpoint -eq $ResourcePath -and $Method -eq 'POST' -and $ApiVersion -eq 'v3' -and
-                $Name -eq 'Main' -and $Body -is [System.Collections.Hashtable] -and
+                $InstanceName -eq 'Main' -and $Body -is [System.Collections.Hashtable] -and
                 $Body.Count -eq 1 -and $Body[$BodyProperty] -eq $Value
             }
         }
@@ -44,7 +44,7 @@ InModuleScope PSStarr {
             & $Command @arguments
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                [string]::IsNullOrEmpty($Name) -and [string]::IsNullOrEmpty($Url)
+                [string]::IsNullOrEmpty($InstanceName) -and [string]::IsNullOrEmpty($Url)
             }
         }
 
@@ -94,7 +94,7 @@ InModuleScope PSStarr {
                 isNewMovie = $false
             }
 
-            $result = Start-StarrCommand -Name Main -CommandName RefreshMovie -Arguments $commandArguments -Confirm:$false
+            $result = Start-StarrCommand -InstanceName Main -CommandName RefreshMovie -Arguments $commandArguments -Confirm:$false
 
             $result.status | Should -Be 'queued'
             $commandArguments.ContainsKey('name') | Should -BeFalse
@@ -115,7 +115,7 @@ InModuleScope PSStarr {
         }
 
         It 'supports an explicitly empty argument map' {
-            Start-StarrCommand -Name Main -CommandName RefreshMovie -Arguments @{} -Confirm:$false
+            Start-StarrCommand -InstanceName Main -CommandName RefreshMovie -Arguments @{} -Confirm:$false
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $Body.Count -eq 1 -and $Body.name -eq 'RefreshMovie'

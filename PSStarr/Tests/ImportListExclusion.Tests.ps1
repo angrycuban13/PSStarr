@@ -18,13 +18,13 @@ InModuleScope PSStarr {
         }
 
         It 'selects the paged route and preserves metadata' {
-            $result = & $Command -Name Main -Page 2 -PageSize 20 -SortKey $SortField -SortDirection descending
+            $result = & $Command -InstanceName Main -Page 2 -PageSize 20 -SortKey $SortField -SortDirection descending
 
             $result.page | Should -Be 2
             $result.records[0].id | Should -Be 7
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $Endpoint -eq "$Resource/paged" -and $ExpectedApplication -eq $Application -and
-                $Method -eq 'GET' -and $Name -eq 'Main' -and $Query.page -eq 2 -and
+                $Method -eq 'GET' -and $InstanceName -eq 'Main' -and $Query.page -eq 2 -and
                 $Query.pageSize -eq 20 -and $Query.sortKey -eq $SortField -and
                 $Query.sortDirection -eq 'descending'
             }
@@ -35,7 +35,7 @@ InModuleScope PSStarr {
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $Endpoint -eq "$Resource/paged" -and $null -eq $Query -and
-                [string]::IsNullOrEmpty($Name) -and $ExpectedApplication -eq $Application
+                [string]::IsNullOrEmpty($InstanceName) -and $ExpectedApplication -eq $Application
             }
         }
 
@@ -53,10 +53,10 @@ InModuleScope PSStarr {
         }
 
         It 'supports named ID lookup' {
-            & $Command -Name Main -ExclusionId 7
+            & $Command -InstanceName Main -ExclusionId 7
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                $Endpoint -eq "$Resource/7" -and $Name -eq 'Main'
+                $Endpoint -eq "$Resource/7" -and $InstanceName -eq 'Main'
             }
         }
 
@@ -69,16 +69,16 @@ InModuleScope PSStarr {
         }
 
         It 'rejects mixing ID and page arguments' {
-            { & $Command -Name Main -ExclusionId 7 -Page 2 } | Should -Throw
+            { & $Command -InstanceName Main -ExclusionId 7 -Page 2 } | Should -Throw
             Should -Invoke Invoke-StarrApiRequest -Times 0
         }
 
         It 'rejects invalid identifiers, paging, and sorting' {
-            { & $Command -Name Main -ExclusionId 0 } | Should -Throw
-            { & $Command -Name Main -Page 0 } | Should -Throw
-            { & $Command -Name Main -PageSize -1 } | Should -Throw
-            { & $Command -Name Main -SortKey notAField } | Should -Throw
-            { & $Command -Name Main -SortDirection sideways } | Should -Throw
+            { & $Command -InstanceName Main -ExclusionId 0 } | Should -Throw
+            { & $Command -InstanceName Main -Page 0 } | Should -Throw
+            { & $Command -InstanceName Main -PageSize -1 } | Should -Throw
+            { & $Command -InstanceName Main -SortKey notAField } | Should -Throw
+            { & $Command -InstanceName Main -SortDirection sideways } | Should -Throw
             Should -Invoke Invoke-StarrApiRequest -Times 0
         }
     }

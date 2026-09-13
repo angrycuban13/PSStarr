@@ -6,7 +6,7 @@ function Get-StarrRadarrParse {
     .DESCRIPTION
         This function asks Radarr to parse a release title and return recognized movie information without adding or downloading the movie.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -19,7 +19,7 @@ function Get-StarrRadarrParse {
         The release title to parse.
 
     .EXAMPLE
-        Get-StarrRadarrParse -Name 'Main' -Title 'Example.Movie.2024.1080p'
+        Get-StarrRadarrParse -InstanceName 'Main' -Title 'Example.Movie.2024.1080p'
 
     .EXAMPLE
         Get-StarrRadarrParse -Url 'http://localhost:7878' -ApiKey '<api-key>' -Title 'Example.Movie.2024.1080p'
@@ -38,9 +38,10 @@ function Get-StarrRadarrParse {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -77,8 +78,8 @@ function Get-StarrRadarrParse {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

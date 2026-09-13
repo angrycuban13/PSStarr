@@ -19,7 +19,7 @@ Describe 'Invoke-StarrApiRequest' {
 
         It 'resolves a named instance' {
             Mock Get-StarrConfiguration { @{ Instances = @{ Main = @{ Application = 'Radarr'; Url = 'http://localhost:7878/'; ApiKey = 'fake' } } } }
-            Invoke-StarrApiRequest -Name Main -Endpoint system/status
+            Invoke-StarrApiRequest -InstanceName Main -Endpoint system/status
             Should -Invoke Invoke-RestMethod -Times 1 -ParameterFilter { $Uri -eq 'http://localhost:7878/api/v3/system/status' }
         }
 
@@ -30,7 +30,7 @@ Describe 'Invoke-StarrApiRequest' {
 
         It 'rejects a named instance of the wrong application' {
             Mock Get-StarrConfiguration { @{ Instances = @{ Main = @{ Application = 'Sonarr'; Url = 'http://localhost:8989'; ApiKey = 'fake' } } } }
-            { Invoke-StarrApiRequest -Name Main -Endpoint movie -ExpectedApplication Radarr -ErrorAction Stop } | Should -Throw "*not 'Radarr'*"
+            { Invoke-StarrApiRequest -InstanceName Main -Endpoint movie -ExpectedApplication Radarr -ErrorAction Stop } | Should -Throw "*not 'Radarr'*"
             Should -Invoke Invoke-RestMethod -Times 0
         }
 
@@ -147,7 +147,7 @@ Describe 'Invoke-StarrApiRequest instance inference' {
                 }
             }
 
-            { Invoke-StarrApiRequest -Endpoint movie -ExpectedApplication Radarr -ErrorAction Stop } | Should -Throw '*Multiple Starr instances*Specify Name*'
+            { Invoke-StarrApiRequest -Endpoint movie -ExpectedApplication Radarr -ErrorAction Stop } | Should -Throw '*Multiple Starr instances*Specify InstanceName*'
 
             Should -Invoke Invoke-RestMethod -Times 0
             Should -Invoke Write-PSStarrLogEntry -Times 0

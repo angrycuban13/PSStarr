@@ -6,7 +6,7 @@ function Get-StarrHistory {
     .DESCRIPTION
         This function retrieves paged history or history scoped by date, Radarr movie, or Sonarr series using documented filters.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -79,10 +79,10 @@ function Get-StarrHistory {
         Get-StarrHistory
 
     .EXAMPLE
-        Get-StarrHistory -Name 'RadarrMain' -MovieId 42 -EventType grabbed
+        Get-StarrHistory -InstanceName 'RadarrMain' -MovieId 42 -EventType grabbed
 
     .EXAMPLE
-        Get-StarrHistory -Name 'SonarrMain' -SeriesId 7 -SeasonNumber 2
+        Get-StarrHistory -InstanceName 'SonarrMain' -SeriesId 7 -SeasonNumber 2
 
     .INPUTS
         None.
@@ -98,9 +98,10 @@ function Get-StarrHistory {
     [OutputType([System.Object])]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -255,20 +256,20 @@ function Get-StarrHistory {
 
     $allowedParameters = @{
         Paged = @(
-            'Name', 'Url', 'ApiKey', 'Application', 'Page', 'PageSize', 'SortKey',
+            'InstanceName', 'Url', 'ApiKey', 'Application', 'Page', 'PageSize', 'SortKey',
             'SortDirection', 'EventTypeId', 'DownloadId', 'MovieIdFilter',
             'SeriesIdFilter', 'EpisodeId', 'LanguageIdFilter', 'QualityIdFilter',
             'IncludeMovie', 'IncludeSeries', 'IncludeEpisode'
         )
         Since = @(
-            'Name', 'Url', 'ApiKey', 'Application', 'Since', 'EventType', 'IncludeMovie',
+            'InstanceName', 'Url', 'ApiKey', 'Application', 'Since', 'EventType', 'IncludeMovie',
             'IncludeSeries', 'IncludeEpisode'
         )
         Movie = @(
-            'Name', 'Url', 'ApiKey', 'Application', 'MovieId', 'EventType', 'IncludeMovie'
+            'InstanceName', 'Url', 'ApiKey', 'Application', 'MovieId', 'EventType', 'IncludeMovie'
         )
         Series = @(
-            'Name', 'Url', 'ApiKey', 'Application', 'SeriesId', 'SeasonNumber', 'EventType',
+            'InstanceName', 'Url', 'ApiKey', 'Application', 'SeriesId', 'SeasonNumber', 'EventType',
             'IncludeSeries', 'IncludeEpisode'
         )
     }
@@ -347,8 +348,8 @@ function Get-StarrHistory {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

@@ -6,7 +6,7 @@ function Get-StarrSonarrManualImport {
     .DESCRIPTION
         This function inspects candidate files on the Sonarr host without importing them. Folder/download inspection and existing series inspection are separate operations. This GET may scan server storage and take time.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved instance name. When omitted, the matching instance is inferred.
 
     .PARAMETER Url
@@ -31,13 +31,13 @@ function Get-StarrSonarrManualImport {
         The optional season within the selected series, including zero for specials.
 
     .EXAMPLE
-        Get-StarrSonarrManualImport -Name Main -Folder '/downloads/example'
+        Get-StarrSonarrManualImport -InstanceName Main -Folder '/downloads/example'
 
     .EXAMPLE
         Get-StarrSonarrManualImport -Url 'http://localhost:8989' -ApiKey '<api-key>' -Folder '/downloads/example'
 
     .EXAMPLE
-        Get-StarrSonarrManualImport -Name Main -SeriesId 42 -SeasonNumber 0
+        Get-StarrSonarrManualImport -InstanceName Main -SeriesId 42 -SeasonNumber 0
 
         Inspects existing files for the specials season without importing them.
 
@@ -56,9 +56,10 @@ function Get-StarrSonarrManualImport {
     param(
         [Parameter(ParameterSetName = 'NamedFolder')]
         [Parameter(ParameterSetName = 'NamedSeries')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitFolder')]
         [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitSeries')]
@@ -124,8 +125,8 @@ function Get-StarrSonarrManualImport {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

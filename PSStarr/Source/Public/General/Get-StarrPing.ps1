@@ -6,7 +6,7 @@ function Get-StarrPing {
     .DESCRIPTION
         This function retrieves ping response using an inferred or named instance, or explicit connection credentials.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.
 
     .PARAMETER Url
@@ -19,7 +19,7 @@ function Get-StarrPing {
         The expected application type. This filters inferred instances and validates named or explicit targets.
 
     .EXAMPLE
-        Get-StarrPing -Name 'Main'
+        Get-StarrPing -InstanceName 'Main'
 
     .EXAMPLE
         Get-StarrPing -Url 'http://localhost:8989' -ApiKey '<api-key>'
@@ -38,9 +38,10 @@ function Get-StarrPing {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -72,8 +73,8 @@ function Get-StarrPing {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

@@ -6,7 +6,7 @@ function Get-StarrLogEntry {
     .DESCRIPTION
         This function retrieves application log records from an inferred or named Starr instance, or from an explicit URL and API key. Returns one page with paging metadata. Log content can contain sensitive operational details; protect the returned data. The current connection API key is redacted from text fields, but other secrets cannot be identified reliably.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -37,7 +37,7 @@ function Get-StarrLogEntry {
         Get-StarrLogEntry
 
     .EXAMPLE
-        Get-StarrLogEntry -Name 'Main'
+        Get-StarrLogEntry -InstanceName 'Main'
 
     .EXAMPLE
         Get-StarrLogEntry -Url 'http://localhost:7878' -ApiKey '<api-key>'
@@ -56,9 +56,10 @@ function Get-StarrLogEntry {
     [OutputType([System.Object])]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -127,8 +128,8 @@ function Get-StarrLogEntry {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

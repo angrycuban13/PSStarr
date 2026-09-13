@@ -15,7 +15,7 @@ Describe 'GET endpoint pipeline support' {
         It 'accepts a Sonarr series when retrieving episodes' {
             [pscustomobject]@{
                 Id = 123
-            } | Get-StarrSonarrEpisode -Name 'Main'
+            } | Get-StarrSonarrEpisode -InstanceName 'Main'
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter {
                 $ExpectedApplication -eq 'Sonarr' -and
@@ -27,7 +27,7 @@ Describe 'GET endpoint pipeline support' {
         It 'accepts a Sonarr series when retrieving episode files' {
             [pscustomobject]@{
                 Id = 123
-            } | Get-StarrSonarrEpisodeFile -Name 'Main'
+            } | Get-StarrSonarrEpisodeFile -InstanceName 'Main'
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter {
                 $ExpectedApplication -eq 'Sonarr' -and
@@ -39,7 +39,7 @@ Describe 'GET endpoint pipeline support' {
         It 'accepts a Radarr movie when retrieving movie files' {
             [pscustomobject]@{
                 Id = 123
-            } | Get-StarrRadarrMovieFile -Name 'Main'
+            } | Get-StarrRadarrMovieFile -InstanceName 'Main'
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter {
                 $ExpectedApplication -eq 'Radarr' -and
@@ -52,7 +52,7 @@ Describe 'GET endpoint pipeline support' {
         It 'accepts a Radarr movie when retrieving credits' {
             [pscustomobject]@{
                 Id = 123
-            } | Get-StarrRadarrCredit -Name 'Main'
+            } | Get-StarrRadarrCredit -InstanceName 'Main'
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter {
                 $ExpectedApplication -eq 'Radarr' -and
@@ -64,7 +64,7 @@ Describe 'GET endpoint pipeline support' {
         It 'accepts a Radarr movie when retrieving alternative titles' {
             [pscustomobject]@{
                 Id = 123
-            } | Get-StarrRadarrAlternativeTitle -Name 'Main'
+            } | Get-StarrRadarrAlternativeTitle -InstanceName 'Main'
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter {
                 $ExpectedApplication -eq 'Radarr' -and
@@ -76,7 +76,7 @@ Describe 'GET endpoint pipeline support' {
         It 'accepts a Radarr movie when retrieving extra files' {
             [pscustomobject]@{
                 Id = 123
-            } | Get-StarrRadarrExtraFile -Name 'Main'
+            } | Get-StarrRadarrExtraFile -InstanceName 'Main'
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter {
                 $ExpectedApplication -eq 'Radarr' -and
@@ -88,7 +88,7 @@ Describe 'GET endpoint pipeline support' {
         It 'accepts a Radarr movie when calculating its folder' {
             [pscustomobject]@{
                 Id = 123
-            } | Get-StarrRadarrMovieFolder -Name 'Main'
+            } | Get-StarrRadarrMovieFolder -InstanceName 'Main'
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter {
                 $ExpectedApplication -eq 'Radarr' -and
@@ -99,7 +99,7 @@ Describe 'GET endpoint pipeline support' {
         It 'accepts a Radarr movie when previewing renames' {
             [pscustomobject]@{
                 Id = 123
-            } | Get-StarrRadarrRenamePreview -Name 'Main'
+            } | Get-StarrRadarrRenamePreview -InstanceName 'Main'
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter {
                 $ExpectedApplication -eq 'Radarr' -and
@@ -112,7 +112,7 @@ Describe 'GET endpoint pipeline support' {
         It 'accepts a Radarr movie when searching releases' {
             [pscustomobject]@{
                 Id = 123
-            } | Get-StarrRadarrRelease -Name 'Main'
+            } | Get-StarrRadarrRelease -InstanceName 'Main'
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter {
                 $ExpectedApplication -eq 'Radarr' -and
@@ -124,7 +124,7 @@ Describe 'GET endpoint pipeline support' {
         It 'accepts a Sonarr series when calculating its folder' {
             [pscustomobject]@{
                 Id = 123
-            } | Get-StarrSonarrSeriesFolder -Name 'Main'
+            } | Get-StarrSonarrSeriesFolder -InstanceName 'Main'
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter {
                 $ExpectedApplication -eq 'Sonarr' -and
@@ -135,7 +135,7 @@ Describe 'GET endpoint pipeline support' {
         It 'accepts a Sonarr series when previewing renames' {
             [pscustomobject]@{
                 Id = 123
-            } | Get-StarrSonarrRenamePreview -Name 'Main'
+            } | Get-StarrSonarrRenamePreview -InstanceName 'Main'
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter {
                 $ExpectedApplication -eq 'Sonarr' -and
@@ -147,7 +147,7 @@ Describe 'GET endpoint pipeline support' {
         It 'accepts a Sonarr episode when searching releases' {
             [pscustomobject]@{
                 Id = 123
-            } | Get-StarrSonarrRelease -Name 'Main'
+            } | Get-StarrSonarrRelease -InstanceName 'Main'
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter {
                 $ExpectedApplication -eq 'Sonarr' -and
@@ -164,7 +164,7 @@ Describe 'GET endpoint pipeline support' {
                 [pscustomobject]@{
                     Id = 456
                 }
-            ) | Get-StarrSonarrEpisodeFile -Name 'Main'
+            ) | Get-StarrSonarrEpisodeFile -InstanceName 'Main'
 
             Should -Invoke Invoke-StarrApiRequest -Times 2 -Exactly
         }

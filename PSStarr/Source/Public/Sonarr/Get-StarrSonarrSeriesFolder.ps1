@@ -6,7 +6,7 @@ function Get-StarrSonarrSeriesFolder {
     .DESCRIPTION
         This function retrieves the folder name calculated by Sonarr for a series. It does not create or rename a folder.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved instance name. When omitted, the matching instance is inferred.
 
     .PARAMETER Url
@@ -19,7 +19,7 @@ function Get-StarrSonarrSeriesFolder {
         The positive Sonarr series identifier. This parameter accepts an Id property from the pipeline.
 
     .EXAMPLE
-        Get-StarrSonarrSeriesFolder -Name Main -SeriesId 42
+        Get-StarrSonarrSeriesFolder -InstanceName Main -SeriesId 42
 
     .EXAMPLE
         Get-StarrSonarrSeriesFolder -Url 'http://localhost:8989' -ApiKey '<api-key>' -SeriesId 42
@@ -41,9 +41,10 @@ function Get-StarrSonarrSeriesFolder {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -73,8 +74,8 @@ function Get-StarrSonarrSeriesFolder {
             $request.Url = $Url
             $request.ApiKey = $ApiKey
         }
-        elseif ($PSBoundParameters.ContainsKey('Name')) {
-            $request.Name = $Name
+        elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+            $request.InstanceName = $InstanceName
         }
 
         Invoke-StarrApiRequest @request

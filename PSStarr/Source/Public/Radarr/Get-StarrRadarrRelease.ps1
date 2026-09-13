@@ -6,7 +6,7 @@ function Get-StarrRadarrRelease {
     .DESCRIPTION
         This function retrieves available releases through Radarr. A movie identifier performs an indexer search; omitting it fetches RSS releases. These requests can contact indexers and update server caches, but do not download releases.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -19,13 +19,13 @@ function Get-StarrRadarrRelease {
         The movie identifier to search; omit to fetch RSS releases. This parameter accepts an Id property from the pipeline.
 
     .EXAMPLE
-        Get-StarrRadarrRelease -Name 'Main' -MovieId 42
+        Get-StarrRadarrRelease -InstanceName 'Main' -MovieId 42
 
     .EXAMPLE
         Get-StarrRadarrRelease -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieId 42
 
     .EXAMPLE
-        Get-StarrRadarrRelease -Name 'Main'
+        Get-StarrRadarrRelease -InstanceName 'Main'
 
         Fetches RSS releases instead of searching for a specific movie.
 
@@ -46,9 +46,10 @@ function Get-StarrRadarrRelease {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -87,8 +88,8 @@ function Get-StarrRadarrRelease {
             $request.Url = $Url
             $request.ApiKey = $ApiKey
         }
-        elseif ($PSBoundParameters.ContainsKey('Name')) {
-            $request.Name = $Name
+        elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+            $request.InstanceName = $InstanceName
         }
 
         Invoke-StarrApiRequest @request

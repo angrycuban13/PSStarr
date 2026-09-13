@@ -6,7 +6,7 @@ function Get-StarrRadarrBlocklist {
     .DESCRIPTION
         This function exposes only Radarr blocklist parameters, including the movie-scoped route.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved Radarr instance name.
 
     .PARAMETER Url
@@ -37,10 +37,10 @@ function Get-StarrRadarrBlocklist {
         Limits results by download protocol.
 
     .EXAMPLE
-        Get-StarrRadarrBlocklist -Name RadarrMain
+        Get-StarrRadarrBlocklist -InstanceName RadarrMain
 
     .EXAMPLE
-        Get-StarrRadarrBlocklist -Name RadarrMain -MovieIdFilter 42,43
+        Get-StarrRadarrBlocklist -InstanceName RadarrMain -MovieIdFilter 42,43
 
     .INPUTS
         None.
@@ -56,9 +56,10 @@ function Get-StarrRadarrBlocklist {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]

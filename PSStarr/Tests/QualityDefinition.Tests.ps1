@@ -13,11 +13,11 @@ Describe 'Quality definition GET wrappers' {
             @{ Command = 'Get-StarrQualityDefinitionLimit'; Path = 'qualitydefinition/limits' }
         ) {
             $expectedPath = $Path
-            $result = & $Command -Name Main
+            $result = & $Command -InstanceName Main
 
             $result.id | Should -Be 1
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                $Endpoint -eq $expectedPath -and $Name -eq 'Main' -and $Method -eq 'GET'
+                $Endpoint -eq $expectedPath -and $InstanceName -eq 'Main' -and $Method -eq 'GET'
             }
         }
 
@@ -39,12 +39,12 @@ Describe 'Quality definition GET wrappers' {
             & $Command
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                [string]::IsNullOrEmpty($Name) -and [string]::IsNullOrEmpty($Url)
+                [string]::IsNullOrEmpty($InstanceName) -and [string]::IsNullOrEmpty($Url)
             }
         }
 
         It 'uses the individual definition path' {
-            Get-StarrQualityDefinition -Name Main -QualityDefinitionId 7
+            Get-StarrQualityDefinition -InstanceName Main -QualityDefinitionId 7
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $Endpoint -eq 'qualitydefinition/7' -and $Method -eq 'GET'
@@ -55,7 +55,7 @@ Describe 'Quality definition GET wrappers' {
             @{ Id = 0 }
             @{ Id = -1 }
         ) {
-            { Get-StarrQualityDefinition -Name Main -QualityDefinitionId $Id } | Should -Throw
+            { Get-StarrQualityDefinition -InstanceName Main -QualityDefinitionId $Id } | Should -Throw
             Should -Invoke Invoke-StarrApiRequest -Times 0
         }
 
@@ -65,7 +65,7 @@ Describe 'Quality definition GET wrappers' {
                 [pscustomobject]@{ id = 2 }
             }
 
-            $result = @(Get-StarrQualityDefinition -Name Main)
+            $result = @(Get-StarrQualityDefinition -InstanceName Main)
 
             $result.Count | Should -Be 2
             $result[1].id | Should -Be 2
@@ -74,7 +74,7 @@ Describe 'Quality definition GET wrappers' {
         It 'preserves an empty collection' {
             Mock Invoke-StarrApiRequest {}
 
-            @(Get-StarrQualityDefinition -Name Main).Count | Should -Be 0
+            @(Get-StarrQualityDefinition -InstanceName Main).Count | Should -Be 0
         }
     }
 }

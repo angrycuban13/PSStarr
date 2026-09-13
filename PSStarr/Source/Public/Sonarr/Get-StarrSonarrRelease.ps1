@@ -6,7 +6,7 @@ function Get-StarrSonarrRelease {
     .DESCRIPTION
         This function retrieves RSS release results when no selector is given, or searches indexers for one episode or a complete series/season pair. This GET can contact indexers, consume quotas, take time, and populate server caches. It does not download releases.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved instance name. When omitted, the matching instance is inferred.
 
     .PARAMETER Url
@@ -25,18 +25,18 @@ function Get-StarrSonarrRelease {
         The season to search, including zero for specials. SeriesId must also be supplied.
 
     .EXAMPLE
-        Get-StarrSonarrRelease -Name Main -EpisodeId 42
+        Get-StarrSonarrRelease -InstanceName Main -EpisodeId 42
 
     .EXAMPLE
         Get-StarrSonarrRelease -Url 'http://localhost:8989' -ApiKey '<api-key>' -EpisodeId 42
 
     .EXAMPLE
-        Get-StarrSonarrRelease -Name Main
+        Get-StarrSonarrRelease -InstanceName Main
 
         Fetches RSS release results from the configured indexers without downloading.
 
     .EXAMPLE
-        Get-StarrSonarrRelease -Name Main -SeriesId 42 -SeasonNumber 0
+        Get-StarrSonarrRelease -InstanceName Main -SeriesId 42 -SeasonNumber 0
 
         Searches indexers for the specials season of series 42.
 
@@ -59,9 +59,10 @@ function Get-StarrSonarrRelease {
         [Parameter(ParameterSetName = 'NamedRss')]
         [Parameter(ParameterSetName = 'NamedEpisode')]
         [Parameter(ParameterSetName = 'NamedSeason')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitRss')]
         [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitEpisode')]
@@ -118,8 +119,8 @@ function Get-StarrSonarrRelease {
             $request.Url = $Url
             $request.ApiKey = $ApiKey
         }
-        elseif ($PSBoundParameters.ContainsKey('Name')) {
-            $request.Name = $Name
+        elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+            $request.InstanceName = $InstanceName
         }
 
         Invoke-StarrApiRequest @request

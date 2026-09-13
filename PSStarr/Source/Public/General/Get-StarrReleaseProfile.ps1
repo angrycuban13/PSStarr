@@ -6,7 +6,7 @@ function Get-StarrReleaseProfile {
     .DESCRIPTION
         This function retrieves release profile settings using an inferred or named instance, or explicit connection credentials.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.
 
     .PARAMETER Url
@@ -22,10 +22,10 @@ function Get-StarrReleaseProfile {
         The positive resource identifier for an individual release profile.
 
     .EXAMPLE
-        Get-StarrReleaseProfile -Name 'Main'
+        Get-StarrReleaseProfile -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrReleaseProfile -Name 'Main' -ReleaseProfileId 1
+        Get-StarrReleaseProfile -InstanceName 'Main' -ReleaseProfileId 1
 
     .EXAMPLE
         Get-StarrReleaseProfile -Url 'http://localhost:8989' -ApiKey '<api-key>'
@@ -44,9 +44,10 @@ function Get-StarrReleaseProfile {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -86,8 +87,8 @@ function Get-StarrReleaseProfile {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

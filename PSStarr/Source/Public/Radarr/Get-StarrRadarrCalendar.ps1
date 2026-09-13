@@ -6,7 +6,7 @@ function Get-StarrRadarrCalendar {
     .DESCRIPTION
         This function exposes only Radarr calendar parameters and provides typed tag-identifier filtering.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved Radarr instance name.
 
     .PARAMETER Url
@@ -28,10 +28,10 @@ function Get-StarrRadarrCalendar {
         Limits results to the supplied tag identifiers.
 
     .EXAMPLE
-        Get-StarrRadarrCalendar -Name RadarrMain
+        Get-StarrRadarrCalendar -InstanceName RadarrMain
 
     .EXAMPLE
-        Get-StarrRadarrCalendar -Name RadarrMain -Start (Get-Date) -TagIdFilter 2,5
+        Get-StarrRadarrCalendar -InstanceName RadarrMain -Start (Get-Date) -TagIdFilter 2,5
 
     .INPUTS
         None.
@@ -47,9 +47,10 @@ function Get-StarrRadarrCalendar {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]

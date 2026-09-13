@@ -6,7 +6,7 @@ function Get-StarrSonarrNamingExample {
     .DESCRIPTION
         This function retrieves filename examples using saved Sonarr naming settings or a supplied configuration. Custom fields require NamingConfigId greater than zero; otherwise Sonarr ignores them. Custom configuration is not merged with saved settings. This function does not save settings or rename files.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved instance name. When omitted, the matching instance is inferred.
 
     .PARAMETER Url
@@ -52,13 +52,13 @@ function Get-StarrSonarrNamingExample {
         The SpecialsFolderFormat template used in the preview.
 
     .EXAMPLE
-        Get-StarrSonarrNamingExample -Name Main
+        Get-StarrSonarrNamingExample -InstanceName Main
 
     .EXAMPLE
         Get-StarrSonarrNamingExample -Url 'http://localhost:8989' -ApiKey '<api-key>'
 
     .EXAMPLE
-        Get-StarrSonarrNamingExample -Name Main -NamingConfigId 1 -RenameEpisodes $true -ReplaceIllegalCharacters $true -ColonReplacementFormat 0 -MultiEpisodeStyle 0 -StandardEpisodeFormat '{Series Title} - S{season:00}E{episode:00}' -DailyEpisodeFormat '{Series Title} - {Air-Date}' -AnimeEpisodeFormat '{Series Title} - S{season:00}E{episode:00}' -SeriesFolderFormat '{Series Title}' -SeasonFolderFormat 'Season {season:00}' -SpecialsFolderFormat 'Specials'
+        Get-StarrSonarrNamingExample -InstanceName Main -NamingConfigId 1 -RenameEpisodes $true -ReplaceIllegalCharacters $true -ColonReplacementFormat 0 -MultiEpisodeStyle 0 -StandardEpisodeFormat '{Series Title} - S{season:00}E{episode:00}' -DailyEpisodeFormat '{Series Title} - {Air-Date}' -AnimeEpisodeFormat '{Series Title} - S{season:00}E{episode:00}' -SeriesFolderFormat '{Series Title}' -SeasonFolderFormat 'Season {season:00}' -SpecialsFolderFormat 'Specials'
 
         Previews a supplied configuration without saving it. Sonarr uses its model defaults for omitted fields, not the saved configuration.
 
@@ -77,9 +77,10 @@ function Get-StarrSonarrNamingExample {
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Parameter(ParameterSetName = 'NamedCustom')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitCustom')]
@@ -193,8 +194,8 @@ function Get-StarrSonarrNamingExample {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

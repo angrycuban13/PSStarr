@@ -6,7 +6,7 @@ function Get-StarrRadarrMovieFolder {
     .DESCRIPTION
         This function retrieves the computed folder name for a movie using Radarr naming settings. It does not list files, create folders, or move movies.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -19,7 +19,7 @@ function Get-StarrRadarrMovieFolder {
         The movie identifier whose folder name is calculated. This parameter accepts an Id property from the pipeline.
 
     .EXAMPLE
-        Get-StarrRadarrMovieFolder -Name 'Main' -MovieId 42
+        Get-StarrRadarrMovieFolder -InstanceName 'Main' -MovieId 42
 
     .EXAMPLE
         Get-StarrRadarrMovieFolder -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieId 42
@@ -41,9 +41,10 @@ function Get-StarrRadarrMovieFolder {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -74,8 +75,8 @@ function Get-StarrRadarrMovieFolder {
             $request.Url = $Url
             $request.ApiKey = $ApiKey
         }
-        elseif ($PSBoundParameters.ContainsKey('Name')) {
-            $request.Name = $Name
+        elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+            $request.InstanceName = $InstanceName
         }
 
         Invoke-StarrApiRequest @request

@@ -6,7 +6,7 @@ function Get-StarrRadarrRenamePreview {
     .DESCRIPTION
         This function retrieves proposed movie-file renames without changing filenames. Radarr inspects the selected movies to calculate naming previews.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -19,7 +19,7 @@ function Get-StarrRadarrRenamePreview {
         One or more movie identifiers whose rename previews are requested. This parameter accepts an Id property from the pipeline.
 
     .EXAMPLE
-        Get-StarrRadarrRenamePreview -Name 'Main' -MovieIdFilter 42,43
+        Get-StarrRadarrRenamePreview -InstanceName 'Main' -MovieIdFilter 42,43
 
     .EXAMPLE
         Get-StarrRadarrRenamePreview -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieIdFilter 42,43
@@ -41,9 +41,10 @@ function Get-StarrRadarrRenamePreview {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -82,8 +83,8 @@ function Get-StarrRadarrRenamePreview {
             $request.Url = $Url
             $request.ApiKey = $ApiKey
         }
-        elseif ($PSBoundParameters.ContainsKey('Name')) {
-            $request.Name = $Name
+        elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+            $request.InstanceName = $InstanceName
         }
 
         Invoke-StarrApiRequest @request

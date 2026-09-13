@@ -6,7 +6,7 @@ function Get-StarrSonarrQueueDetail {
     .DESCRIPTION
         This function exposes only the queue-detail parameters supported by Sonarr.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved Sonarr instance name.
 
     .PARAMETER Url
@@ -28,10 +28,10 @@ function Get-StarrSonarrQueueDetail {
         Includes episode resources in queue-detail records.
 
     .EXAMPLE
-        Get-StarrSonarrQueueDetail -Name SonarrMain
+        Get-StarrSonarrQueueDetail -InstanceName SonarrMain
 
     .EXAMPLE
-        Get-StarrSonarrQueueDetail -Name SonarrMain -SeriesId 42 -IncludeEpisode $true
+        Get-StarrSonarrQueueDetail -InstanceName SonarrMain -SeriesId 42 -IncludeEpisode $true
 
     .INPUTS
         None.
@@ -47,9 +47,10 @@ function Get-StarrSonarrQueueDetail {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]

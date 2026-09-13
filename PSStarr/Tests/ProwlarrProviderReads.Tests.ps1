@@ -21,12 +21,12 @@ InModuleScope PSStarr {
         }
 
         It 'uses Prowlarr v1 GET and preserves list results' {
-            $result = @(& $Command -Name Main)
+            $result = @(& $Command -InstanceName Main)
 
             $result.Count | Should -Be 2
             $result[1].id | Should -Be 2
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                $Endpoint -eq $ResourcePath -and $Name -eq 'Main' -and $Method -eq 'GET' -and
+                $Endpoint -eq $ResourcePath -and $InstanceName -eq 'Main' -and $Method -eq 'GET' -and
                 $ApiVersion -eq 'v1' -and $ExpectedApplication -eq 'Prowlarr'
             }
         }
@@ -44,13 +44,13 @@ InModuleScope PSStarr {
             & $Command
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                [string]::IsNullOrEmpty($Name) -and [string]::IsNullOrEmpty($Url) -and
+                [string]::IsNullOrEmpty($InstanceName) -and [string]::IsNullOrEmpty($Url) -and
                 $ExpectedApplication -eq 'Prowlarr'
             }
         }
 
         It 'validates credentials before transport' {
-            { & $Command -Name ' ' } | Should -Throw
+            { & $Command -InstanceName ' ' } | Should -Throw
             { & $Command -Url 'ftp://localhost' -ApiKey fixture-key } | Should -Throw
             { & $Command -Url 'http://localhost:9696' -ApiKey ' ' } | Should -Throw
             Should -Invoke Invoke-StarrApiRequest -Times 0
@@ -59,7 +59,7 @@ InModuleScope PSStarr {
         It 'returns no objects for empty responses' {
             Mock Invoke-StarrApiRequest {}
 
-            @(& $Command -Name Main).Count | Should -Be 0
+            @(& $Command -InstanceName Main).Count | Should -Be 0
         }
 
         if ($IdParameter) {
@@ -113,7 +113,7 @@ InModuleScope PSStarr {
 
             Mock Invoke-StarrApiRequest { $script:providerFixture }
 
-            $result = & $Command -Name Main
+            $result = & $Command -InstanceName Main
 
             $result.fields.Count | Should -Be 4
             $result.fields[0].value | Should -Be '[REDACTED]'

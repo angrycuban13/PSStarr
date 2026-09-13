@@ -6,7 +6,7 @@ function New-StarrTag {
     .DESCRIPTION
         This function creates a tag through API v3 using the shared transport. It supports confirmation and WhatIf.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.
 
     .PARAMETER Url
@@ -19,7 +19,7 @@ function New-StarrTag {
         The nonblank label for the new tag.
 
     .EXAMPLE
-        New-StarrTag -Name Main -Label 'reviewed'
+        New-StarrTag -InstanceName Main -Label 'reviewed'
 
     .EXAMPLE
         New-StarrTag -Url 'http://localhost:8989' -ApiKey '<api-key>' -Label 'reviewed' -WhatIf
@@ -38,9 +38,10 @@ function New-StarrTag {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -61,8 +62,8 @@ function New-StarrTag {
     $target = if ($PSCmdlet.ParameterSetName -eq 'Explicit') {
         $Url
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $InstanceName
     }
     else {
         'the inferred Starr instance'
@@ -87,8 +88,8 @@ function New-StarrTag {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

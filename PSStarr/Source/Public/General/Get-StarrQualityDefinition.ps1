@@ -6,7 +6,7 @@ function Get-StarrQualityDefinition {
     .DESCRIPTION
         This function retrieves quality definition settings using an inferred or named instance, or explicit connection credentials.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.
 
     .PARAMETER Url
@@ -22,10 +22,10 @@ function Get-StarrQualityDefinition {
         The positive resource identifier for an individual quality definition.
 
     .EXAMPLE
-        Get-StarrQualityDefinition -Name 'Main'
+        Get-StarrQualityDefinition -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrQualityDefinition -Name 'Main' -QualityDefinitionId 1
+        Get-StarrQualityDefinition -InstanceName 'Main' -QualityDefinitionId 1
 
     .EXAMPLE
         Get-StarrQualityDefinition -Url 'http://localhost:8989' -ApiKey '<api-key>'
@@ -44,9 +44,10 @@ function Get-StarrQualityDefinition {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -86,8 +87,8 @@ function Get-StarrQualityDefinition {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

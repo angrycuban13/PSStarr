@@ -49,46 +49,46 @@ Describe 'GET endpoint wrappers' {
         ) {
             $expectedEndpoint = $Endpoint
             $expectedApp = Get-Variable -Name App -ValueOnly -ErrorAction SilentlyContinue
-            & $Command -Name Main
+            & $Command -InstanceName Main
             Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter {
-                $Name -eq 'Main' -and $Endpoint -eq $expectedEndpoint -and
+                $InstanceName -eq 'Main' -and $Endpoint -eq $expectedEndpoint -and
                 ([string]::IsNullOrEmpty($expectedApp) -or $ExpectedApplication -eq $expectedApp)
             }
         }
 
         It 'uses an ID path in resource wrappers' {
-            Get-StarrTag -Name Main -TagId 12
+            Get-StarrTag -InstanceName Main -TagId 12
             Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter { $Endpoint -eq 'tag/12' }
         }
 
         It 'uses the Radarr movie blocklist subresource' {
-            Get-StarrBlocklist -Name Main -MovieId 42
+            Get-StarrBlocklist -InstanceName Main -MovieId 42
             Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter {
                 $Endpoint -eq 'blocklist/movie' -and $Query.MovieId -eq 42 -and $ExpectedApplication -eq 'Radarr'
             }
         }
 
         It 'uses application-specific history subresources' {
-            Get-StarrHistory -Name Main -SeriesId 7
+            Get-StarrHistory -InstanceName Main -SeriesId 7
             Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter {
                 $Endpoint -eq 'history/series' -and $Query.SeriesId -eq 7 -and $ExpectedApplication -eq 'Sonarr'
             }
         }
 
         It 'uses the unversioned API info endpoint' {
-            Get-StarrApiInfo -Name Main
+            Get-StarrApiInfo -InstanceName Main
             Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter { $Endpoint -eq 'api' -and $Unversioned }
         }
 
         It 'selects the Radarr IMDb lookup endpoint' {
-            Get-StarrRadarrMovieLookup -Name Main -ImdbId tt1234567
+            Get-StarrRadarrMovieLookup -InstanceName Main -ImdbId tt1234567
             Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter {
                 $Endpoint -eq 'movie/lookup/imdb' -and $Query.ImdbId -eq 'tt1234567' -and $ExpectedApplication -eq 'Radarr'
             }
         }
 
         It 'delegates Sonarr series lookup' {
-            Get-StarrSonarrSeriesLookup -Name Main -Term 'Example'
+            Get-StarrSonarrSeriesLookup -InstanceName Main -Term 'Example'
             Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter {
                 $Endpoint -eq 'series/lookup' -and $Query.Term -eq 'Example' -and $ExpectedApplication -eq 'Sonarr'
             }

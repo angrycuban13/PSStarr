@@ -6,7 +6,7 @@ function Get-StarrRadarrHistory {
     .DESCRIPTION
         This function retrieves paged Radarr history, history since a timestamp, or history for one movie without exposing Sonarr-only parameters.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved Radarr instance name.
 
     .PARAMETER Url
@@ -55,10 +55,10 @@ function Get-StarrRadarrHistory {
         Includes movie resources in history records.
 
     .EXAMPLE
-        Get-StarrRadarrHistory -Name RadarrMain -Page 1 -PageSize 50
+        Get-StarrRadarrHistory -InstanceName RadarrMain -Page 1 -PageSize 50
 
     .EXAMPLE
-        Get-StarrRadarrHistory -Name RadarrMain -MovieId 42 -EventType grabbed
+        Get-StarrRadarrHistory -InstanceName RadarrMain -MovieId 42 -EventType grabbed
 
     .INPUTS
         None.
@@ -74,9 +74,10 @@ function Get-StarrRadarrHistory {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]

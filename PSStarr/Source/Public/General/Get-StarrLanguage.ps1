@@ -6,7 +6,7 @@ function Get-StarrLanguage {
     .DESCRIPTION
         This function retrieves language settings using an inferred or named instance, or explicit connection credentials.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.
 
     .PARAMETER Url
@@ -22,10 +22,10 @@ function Get-StarrLanguage {
         The positive resource identifier for an individual language.
 
     .EXAMPLE
-        Get-StarrLanguage -Name 'Main'
+        Get-StarrLanguage -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrLanguage -Name 'Main' -LanguageId 1
+        Get-StarrLanguage -InstanceName 'Main' -LanguageId 1
 
     .EXAMPLE
         Get-StarrLanguage -Url 'http://localhost:8989' -ApiKey '<api-key>'
@@ -44,9 +44,10 @@ function Get-StarrLanguage {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -86,8 +87,8 @@ function Get-StarrLanguage {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

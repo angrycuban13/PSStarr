@@ -6,7 +6,7 @@ function Get-StarrProwlarrIndexerCategory {
     .DESCRIPTION
         This function retrieves the category hierarchy available from configured Prowlarr indexers.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved Prowlarr instance name. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -16,7 +16,7 @@ function Get-StarrProwlarrIndexerCategory {
         The API key used to authenticate with the instance.
 
     .EXAMPLE
-        Get-StarrProwlarrIndexerCategory -Name Main
+        Get-StarrProwlarrIndexerCategory -InstanceName Main
 
     .EXAMPLE
         Get-StarrProwlarrIndexerCategory -Url 'http://localhost:9696' -ApiKey '<api-key>'
@@ -35,9 +35,10 @@ function Get-StarrProwlarrIndexerCategory {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -61,8 +62,8 @@ function Get-StarrProwlarrIndexerCategory {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

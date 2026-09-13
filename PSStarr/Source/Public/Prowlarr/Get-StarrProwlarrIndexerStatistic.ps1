@@ -6,7 +6,7 @@ function Get-StarrProwlarrIndexerStatistic {
     .DESCRIPTION
         This function retrieves Prowlarr indexer statistics without changing settings. An unbounded date range can require a large server-side statistics query. Indexer, protocol, and tag filters are sent as comma-separated strings as required by this endpoint.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved Prowlarr instance name. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -31,7 +31,7 @@ function Get-StarrProwlarrIndexerStatistic {
         Existing tag labels or numeric tag identifiers to include. Commas within a tag are not accepted.
 
     .EXAMPLE
-        Get-StarrProwlarrIndexerStatistic -Name 'Main' -IndexerIdFilter 1,2 -Protocol Torrent -Tag movies
+        Get-StarrProwlarrIndexerStatistic -InstanceName 'Main' -IndexerIdFilter 1,2 -Protocol Torrent -Tag movies
 
     .EXAMPLE
         Get-StarrProwlarrIndexerStatistic -Url 'http://localhost:9696' -ApiKey '<api-key>'
@@ -50,9 +50,10 @@ function Get-StarrProwlarrIndexerStatistic {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -134,8 +135,8 @@ function Get-StarrProwlarrIndexerStatistic {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

@@ -17,11 +17,11 @@ InModuleScope PSStarr {
         }
 
         It 'routes a named connection and returns the response' {
-            (& $Command -Name Main @Arguments).marker | Should -Be 'fixture'
+            (& $Command -InstanceName Main @Arguments).marker | Should -Be 'fixture'
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $Endpoint -eq $EndpointPath -and $Method -eq 'GET' -and
-                $ExpectedApplication -eq 'Sonarr' -and $Name -eq 'Main'
+                $ExpectedApplication -eq 'Sonarr' -and $InstanceName -eq 'Main'
             }
         }
 
@@ -38,12 +38,12 @@ InModuleScope PSStarr {
             & $Command @Arguments
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                [string]::IsNullOrEmpty($Name) -and $ExpectedApplication -eq 'Sonarr'
+                [string]::IsNullOrEmpty($InstanceName) -and $ExpectedApplication -eq 'Sonarr'
             }
         }
 
         It 'validates credentials before transport' {
-            { & $Command -Name ' ' @Arguments } | Should -Throw
+            { & $Command -InstanceName ' ' @Arguments } | Should -Throw
             { & $Command -Url 'ftp://localhost' -ApiKey fixture-key @Arguments } | Should -Throw
             { & $Command -Url 'http://localhost:8989' -ApiKey ' ' @Arguments } | Should -Throw
             Should -Invoke Invoke-StarrApiRequest -Times 0

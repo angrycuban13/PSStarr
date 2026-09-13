@@ -6,7 +6,7 @@ function Get-StarrSonarrCutoffUnmet {
     .DESCRIPTION
         This function retrieves wanted Sonarr episodes whose downloaded files have not met the configured quality-profile cutoff, or one cutoff-unmet record by episode ID.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -46,7 +46,7 @@ function Get-StarrSonarrCutoffUnmet {
         Get-StarrSonarrCutoffUnmet
 
     .EXAMPLE
-        Get-StarrSonarrCutoffUnmet -Name 'Main'
+        Get-StarrSonarrCutoffUnmet -InstanceName 'Main'
 
     .EXAMPLE
         Get-StarrSonarrCutoffUnmet -Url 'http://localhost:8989' -ApiKey '<api-key>'
@@ -65,9 +65,10 @@ function Get-StarrSonarrCutoffUnmet {
     [OutputType([System.Object])]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -149,8 +150,8 @@ function Get-StarrSonarrCutoffUnmet {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

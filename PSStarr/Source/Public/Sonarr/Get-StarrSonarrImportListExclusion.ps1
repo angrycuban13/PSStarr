@@ -6,7 +6,7 @@ function Get-StarrSonarrImportListExclusion {
     .DESCRIPTION
         This function retrieves one page of Sonarr import-list exclusions or an individual exclusion by its internal ID. Paging metadata is preserved. It does not fetch all pages or use the deprecated unpaged route.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved instance name. When omitted, the only matching Sonarr instance is used.
 
     .PARAMETER Url
@@ -31,10 +31,10 @@ function Get-StarrSonarrImportListExclusion {
         The result sort direction.
 
     .EXAMPLE
-        Get-StarrSonarrImportListExclusion -Name 'Main' -Page 2 -PageSize 20
+        Get-StarrSonarrImportListExclusion -InstanceName 'Main' -Page 2 -PageSize 20
 
     .EXAMPLE
-        Get-StarrSonarrImportListExclusion -Name 'Main' -ExclusionId 7
+        Get-StarrSonarrImportListExclusion -InstanceName 'Main' -ExclusionId 7
 
     .EXAMPLE
         Get-StarrSonarrImportListExclusion -Url 'http://localhost:8989' -ApiKey '<api-key>'
@@ -54,9 +54,10 @@ function Get-StarrSonarrImportListExclusion {
     param(
         [Parameter(ParameterSetName = 'NamedPage')]
         [Parameter(ParameterSetName = 'NamedId')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitPage')]
         [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitId')]
@@ -127,8 +128,8 @@ function Get-StarrSonarrImportListExclusion {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

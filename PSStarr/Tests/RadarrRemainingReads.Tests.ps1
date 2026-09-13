@@ -20,7 +20,7 @@ InModuleScope PSStarr {
         }
 
         It 'maps the route and every supplied query parameter without altering results' {
-            $result = @(& $Command -Name Main @Arguments)
+            $result = @(& $Command -InstanceName Main @Arguments)
 
             $result.Count | Should -Be 2
             $result[1].id | Should -Be 2
@@ -41,7 +41,7 @@ InModuleScope PSStarr {
                 }
 
                 $Endpoint -eq $Resource -and $Method -eq 'GET' -and
-                $ExpectedApplication -eq 'Radarr' -and $Name -eq 'Main' -and $matchesQuery
+                $ExpectedApplication -eq 'Radarr' -and $InstanceName -eq 'Main' -and $matchesQuery
             }
         }
 
@@ -56,12 +56,12 @@ InModuleScope PSStarr {
             & $Command @Arguments
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                [string]::IsNullOrEmpty($Name) -and [string]::IsNullOrEmpty($Url) -and $ExpectedApplication -eq 'Radarr'
+                [string]::IsNullOrEmpty($InstanceName) -and [string]::IsNullOrEmpty($Url) -and $ExpectedApplication -eq 'Radarr'
             }
         }
 
         It 'rejects invalid connection inputs before transport' {
-            { & $Command -Name ' ' @Arguments } | Should -Throw
+            { & $Command -InstanceName ' ' @Arguments } | Should -Throw
             { & $Command -Url 'ftp://localhost' -ApiKey fixture-key @Arguments } | Should -Throw
             { & $Command -Url 'http://localhost:7878' -ApiKey ' ' @Arguments } | Should -Throw
             Should -Invoke Invoke-StarrApiRequest -Times 0
@@ -70,7 +70,7 @@ InModuleScope PSStarr {
         It 'preserves empty responses' {
             Mock Invoke-StarrApiRequest {}
 
-            @(& $Command -Name Main @Arguments).Count | Should -Be 0
+            @(& $Command -InstanceName Main @Arguments).Count | Should -Be 0
         }
     }
 
@@ -80,10 +80,10 @@ InModuleScope PSStarr {
         }
 
         It 'leaves optional filters and saved naming settings to the server' {
-            Get-StarrRadarrImportListMovie -Name Main
-            Get-StarrRadarrManualImport -Name Main
-            Get-StarrRadarrRelease -Name Main
-            Get-StarrRadarrNamingExample -Name Main
+            Get-StarrRadarrImportListMovie -InstanceName Main
+            Get-StarrRadarrManualImport -InstanceName Main
+            Get-StarrRadarrRelease -InstanceName Main
+            Get-StarrRadarrNamingExample -InstanceName Main
 
             Should -Invoke Invoke-StarrApiRequest -Times 4 -Exactly -ParameterFilter {
                 $null -eq $Query -and $Method -eq 'GET'

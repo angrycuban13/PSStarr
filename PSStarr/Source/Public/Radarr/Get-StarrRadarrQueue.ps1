@@ -6,7 +6,7 @@ function Get-StarrRadarrQueue {
     .DESCRIPTION
         This function exposes only the queue parameters supported by Radarr and delegates the request to the shared queue implementation.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved Radarr instance name.
 
     .PARAMETER Url
@@ -49,10 +49,10 @@ function Get-StarrRadarrQueue {
         Limits results by queue status.
 
     .EXAMPLE
-        Get-StarrRadarrQueue -Name RadarrMain
+        Get-StarrRadarrQueue -InstanceName RadarrMain
 
     .EXAMPLE
-        Get-StarrRadarrQueue -Name RadarrMain -MovieIdFilter 42,43 -IncludeMovie $true
+        Get-StarrRadarrQueue -InstanceName RadarrMain -MovieIdFilter 42,43 -IncludeMovie $true
 
     .INPUTS
         None.
@@ -68,9 +68,10 @@ function Get-StarrRadarrQueue {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]

@@ -76,38 +76,38 @@ Describe 'Documented GET query parameters' {
         }
 
         It 'validates positive resource identifiers' {
-            { Get-StarrSonarrEpisode -Name Main -SeriesId 0 } | Should -Throw
+            { Get-StarrSonarrEpisode -InstanceName Main -SeriesId 0 } | Should -Throw
 
             Should -Invoke Invoke-StarrApiRequest -Times 0
         }
 
         It 'rejects mixed Radarr and Sonarr queue filters' {
-            { Get-StarrQueue -Name Main -MovieIdFilter 1 -SeriesIdFilter 2 } | Should -Throw '*cannot be combined*'
+            { Get-StarrQueue -InstanceName Main -MovieIdFilter 1 -SeriesIdFilter 2 } | Should -Throw '*cannot be combined*'
 
             Should -Invoke Invoke-StarrApiRequest -Times 0
         }
 
         It 'serializes calendar date ranges as ISO 8601 values' {
-            Get-StarrCalendar -Name Main -Start ([datetime]'2026-01-01T01:02:03') -End ([datetime]'2026-01-02T04:05:06')
+            Get-StarrCalendar -InstanceName Main -Start ([datetime]'2026-01-01T01:02:03') -End ([datetime]'2026-01-02T04:05:06')
 
             $script:lastRequest.Query.start | Should -Be ([datetime]'2026-01-01T01:02:03').ToString('o')
             $script:lastRequest.Query.end | Should -Be ([datetime]'2026-01-02T04:05:06').ToString('o')
         }
 
         It 'rejects paged-only parameters on since history' {
-            { Get-StarrHistory -Name Main -Since ([datetime]'2026-01-01') -Page 2 } | Should -Throw '*Since history does not support: Page*'
+            { Get-StarrHistory -InstanceName Main -Since ([datetime]'2026-01-01') -Page 2 } | Should -Throw '*Since history does not support: Page*'
 
             Should -Invoke Invoke-StarrApiRequest -Times 0
         }
 
         It 'rejects named event types on paged history' {
-            { Get-StarrHistory -Name Main -EventType grabbed } | Should -Throw '*Paged history does not support: EventType*'
+            { Get-StarrHistory -InstanceName Main -EventType grabbed } | Should -Throw '*Paged history does not support: EventType*'
 
             Should -Invoke Invoke-StarrApiRequest -Times 0
         }
 
         It 'rejects paged filters on movie history' {
-            { Get-StarrHistory -Name Main -MovieId 42 -DownloadId fixture } | Should -Throw '*Movie history does not support: DownloadId*'
+            { Get-StarrHistory -InstanceName Main -MovieId 42 -DownloadId fixture } | Should -Throw '*Movie history does not support: DownloadId*'
 
             Should -Invoke Invoke-StarrApiRequest -Times 0
         }

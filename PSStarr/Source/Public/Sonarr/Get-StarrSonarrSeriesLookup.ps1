@@ -6,7 +6,7 @@ function Get-StarrSonarrSeriesLookup {
     .DESCRIPTION
         This function searches Sonarr metadata providers by term or TVDB ID. It returns candidates and does not add series.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The name of the saved Starr instance.
 
     .PARAMETER Url
@@ -19,7 +19,7 @@ function Get-StarrSonarrSeriesLookup {
         The lookup search term.
 
     .EXAMPLE
-        Get-StarrSonarrSeriesLookup -Name 'RadarrMain' -Term 'example'
+        Get-StarrSonarrSeriesLookup -InstanceName 'RadarrMain' -Term 'example'
 
     .EXAMPLE
         Get-StarrSonarrSeriesLookup -Url 'http://localhost:7878' -ApiKey '<api-key>' -Term 'example'
@@ -38,9 +38,10 @@ function Get-StarrSonarrSeriesLookup {
     [OutputType([System.Object])]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [string]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -70,8 +71,8 @@ function Get-StarrSonarrSeriesLookup {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

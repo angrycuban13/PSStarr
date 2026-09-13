@@ -6,7 +6,7 @@ function Get-StarrQualityProfileSchema {
     .DESCRIPTION
         This function retrieves quality-profile schemas from an inferred or named Starr instance, or from an explicit URL and API key.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -22,7 +22,7 @@ function Get-StarrQualityProfileSchema {
         Get-StarrQualityProfileSchema
 
     .EXAMPLE
-        Get-StarrQualityProfileSchema -Name 'Main'
+        Get-StarrQualityProfileSchema -InstanceName 'Main'
 
     .EXAMPLE
         Get-StarrQualityProfileSchema -Url 'http://localhost:7878' -ApiKey '<api-key>'
@@ -41,9 +41,10 @@ function Get-StarrQualityProfileSchema {
     [OutputType([System.Object])]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -74,8 +75,8 @@ function Get-StarrQualityProfileSchema {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

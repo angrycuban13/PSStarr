@@ -6,7 +6,7 @@ function Get-StarrSonarrQueue {
     .DESCRIPTION
         This function exposes only the queue parameters supported by Sonarr and delegates the request to the shared queue implementation.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved Sonarr instance name.
 
     .PARAMETER Url
@@ -52,10 +52,10 @@ function Get-StarrSonarrQueue {
         Limits results by queue status.
 
     .EXAMPLE
-        Get-StarrSonarrQueue -Name SonarrMain
+        Get-StarrSonarrQueue -InstanceName SonarrMain
 
     .EXAMPLE
-        Get-StarrSonarrQueue -Name SonarrMain -SeriesIdFilter 42,43 -IncludeEpisode $true
+        Get-StarrSonarrQueue -InstanceName SonarrMain -SeriesIdFilter 42,43 -IncludeEpisode $true
 
     .INPUTS
         None.
@@ -71,9 +71,10 @@ function Get-StarrSonarrQueue {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]

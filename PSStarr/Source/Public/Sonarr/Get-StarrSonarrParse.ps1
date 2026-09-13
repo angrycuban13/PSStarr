@@ -6,7 +6,7 @@ function Get-StarrSonarrParse {
     .DESCRIPTION
         This function asks Sonarr to parse a release title. When Path is supplied, Sonarr parses the path instead, but still requires Title. No import or download is performed.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved instance name. When omitted, the matching instance is inferred.
 
     .PARAMETER Url
@@ -22,13 +22,13 @@ function Get-StarrSonarrParse {
         The Path value sent to Sonarr.
 
     .EXAMPLE
-        Get-StarrSonarrParse -Name Main -Title 'Example.Show.S01E01.1080p'
+        Get-StarrSonarrParse -InstanceName Main -Title 'Example.Show.S01E01.1080p'
 
     .EXAMPLE
         Get-StarrSonarrParse -Url 'http://localhost:8989' -ApiKey '<api-key>' -Title 'Example.Show.S01E01.1080p'
 
     .EXAMPLE
-        Get-StarrSonarrParse -Name Main -Title 'Example.Show.S01E01' -Path '/media/Example.Show.S01E01.mkv'
+        Get-StarrSonarrParse -InstanceName Main -Title 'Example.Show.S01E01' -Path '/media/Example.Show.S01E01.mkv'
 
         Parses a server path while retaining the required title in the response.
 
@@ -46,9 +46,10 @@ function Get-StarrSonarrParse {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -90,8 +91,8 @@ function Get-StarrSonarrParse {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

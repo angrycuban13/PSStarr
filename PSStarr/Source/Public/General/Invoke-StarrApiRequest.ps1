@@ -6,7 +6,7 @@ function Invoke-StarrApiRequest {
     .DESCRIPTION
         This function resolves a Starr instance, constructs an authenticated API request, invokes it, and returns the deserialized response.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The name of the saved Starr instance.
 
     .PARAMETER Url
@@ -40,7 +40,7 @@ function Invoke-StarrApiRequest {
         Builds the request without an API version segment.
 
     .EXAMPLE
-        Invoke-StarrApiRequest -Name 'RadarrMain' -Endpoint 'health'
+        Invoke-StarrApiRequest -InstanceName 'RadarrMain' -Endpoint 'health'
 
     .EXAMPLE
         Invoke-StarrApiRequest -Url 'http://localhost:7878' -ApiKey '<api-key>' -Endpoint 'health'
@@ -59,9 +59,10 @@ function Invoke-StarrApiRequest {
     [OutputType([System.Object])]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -135,23 +136,23 @@ function Invoke-StarrApiRequest {
         catch {
             $message = "Unable to load the saved Starr instance configuration. $($_.Exception.Message)"
             $exception = [System.InvalidOperationException]::new($message, $_.Exception)
-            $errorRecord = New-StarrErrorRecord -Exception $exception -Category ReadError -ErrorId 'StarrConfigurationReadFailed' -TargetObject $Name -Activity $MyInvocation.MyCommand.Name
+            $errorRecord = New-StarrErrorRecord -Exception $exception -Category ReadError -ErrorId 'StarrConfigurationReadFailed' -TargetObject $InstanceName -Activity $MyInvocation.MyCommand.Name
 
             Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -LogMessage $message
             return
         }
 
-        if ($PSBoundParameters.ContainsKey('Name')) {
-            if (-not $configuration.Instances.Contains($Name)) {
-                $message = "Starr instance '$Name' was not found."
+        if ($PSBoundParameters.ContainsKey('InstanceName')) {
+            if (-not $configuration.Instances.Contains($InstanceName)) {
+                $message = "Starr instance '$InstanceName' was not found."
                 $exception = [System.Management.Automation.ItemNotFoundException]::new($message)
-                $errorRecord = New-StarrErrorRecord -Exception $exception -Category ObjectNotFound -ErrorId 'StarrInstanceNotFound' -TargetObject $Name -Activity $MyInvocation.MyCommand.Name -RecommendedAction 'Create the instance with Set-PSStarrInstance or specify an existing instance name.'
+                $errorRecord = New-StarrErrorRecord -Exception $exception -Category ObjectNotFound -ErrorId 'StarrInstanceNotFound' -TargetObject $InstanceName -Activity $MyInvocation.MyCommand.Name -RecommendedAction 'Create the instance with Set-PSStarrInstance or specify an existing instance name.'
 
                 Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -NoLog
                 return
             }
 
-            $instanceName = $Name
+            $instanceName = $InstanceName
         }
         else {
             $instanceNames = @($configuration.Instances.Keys | Sort-Object)
@@ -182,9 +183,9 @@ function Invoke-StarrApiRequest {
 
             if ($instanceNames.Count -gt 1) {
                 $candidateList = $instanceNames -join ', '
-                $message = "Multiple Starr instances match this request: $candidateList. Specify Name."
+                $message = "Multiple Starr instances match this request: $candidateList. Specify InstanceName."
                 $exception = [System.InvalidOperationException]::new($message)
-                $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrInstanceAmbiguous' -TargetObject $instanceNames -Activity $MyInvocation.MyCommand.Name -RecommendedAction 'Specify the desired instance with Name.'
+                $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrInstanceAmbiguous' -TargetObject $instanceNames -Activity $MyInvocation.MyCommand.Name -RecommendedAction 'Specify the desired instance with InstanceName.'
 
                 Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -NoLog
                 return
@@ -199,7 +200,7 @@ function Invoke-StarrApiRequest {
 
         if ($PSBoundParameters.ContainsKey('ExpectedApplication') -and $ExpectedApplication -notcontains $instance.Application) {
             $message = "Starr instance '$instanceName' is '$($instance.Application)', not '$expectedApplicationLabel'."
-            $exception = [System.ArgumentException]::new($message, 'Name')
+            $exception = [System.ArgumentException]::new($message, 'InstanceName')
             $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrApplicationMismatch' -TargetObject $instanceName -Activity $MyInvocation.MyCommand.Name -RecommendedAction "Specify an instance configured for $expectedApplicationLabel."
 
             Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -NoLog

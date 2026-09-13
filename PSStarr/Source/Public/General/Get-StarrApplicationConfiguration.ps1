@@ -6,7 +6,7 @@ function Get-StarrApplicationConfiguration {
     .DESCRIPTION
         This function retrieves a supported application configuration section, not PSStarr's saved connections. Metadata is Radarr-only; Prowlarr supports DownloadClient, Host, and Ui through this command. Host credentials are always replaced with [REDACTED]; returned host settings must not be submitted as a configuration update.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.
 
     .PARAMETER Url
@@ -25,10 +25,10 @@ function Get-StarrApplicationConfiguration {
         The positive identifier for the configuration resource. Omit this to retrieve the current section.
 
     .EXAMPLE
-        Get-StarrApplicationConfiguration -Name Main -Section Naming
+        Get-StarrApplicationConfiguration -InstanceName Main -Section Naming
 
     .EXAMPLE
-        Get-StarrApplicationConfiguration -Name Main -Section Host -ConfigurationId 1
+        Get-StarrApplicationConfiguration -InstanceName Main -Section Host -ConfigurationId 1
 
     .EXAMPLE
         Get-StarrApplicationConfiguration -Url 'http://localhost:7878' -ApiKey '<api-key>' -Section Metadata
@@ -47,9 +47,10 @@ function Get-StarrApplicationConfiguration {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -112,8 +113,8 @@ function Get-StarrApplicationConfiguration {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     $result = Invoke-StarrApiRequest @request

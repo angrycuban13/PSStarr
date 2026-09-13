@@ -6,7 +6,7 @@ function Get-StarrImportList {
     .DESCRIPTION
         This function retrieves import list settings using an inferred or named instance, or explicit connection credentials.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.
 
     .PARAMETER Url
@@ -22,10 +22,10 @@ function Get-StarrImportList {
         The positive resource identifier for an individual import list.
 
     .EXAMPLE
-        Get-StarrImportList -Name 'Main'
+        Get-StarrImportList -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrImportList -Name 'Main' -ImportListId 1
+        Get-StarrImportList -InstanceName 'Main' -ImportListId 1
 
     .EXAMPLE
         Get-StarrImportList -Url 'http://localhost:8989' -ApiKey '<api-key>'
@@ -44,9 +44,10 @@ function Get-StarrImportList {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -86,8 +87,8 @@ function Get-StarrImportList {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

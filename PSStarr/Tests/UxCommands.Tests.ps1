@@ -137,9 +137,9 @@ Describe 'Application discrimination on unversioned and configuration reads' {
         It 'rejects unsupported configuration sections before transport' {
             Mock Invoke-StarrApiRequest { @() }
 
-            { Get-StarrApplicationConfiguration -Name ProwlarrMain -Application Prowlarr -Section Naming } |
+            { Get-StarrApplicationConfiguration -InstanceName ProwlarrMain -Application Prowlarr -Section Naming } |
                 Should -Throw -ErrorId 'StarrConfigurationSectionNotSupported,Get-StarrApplicationConfiguration'
-            { Get-StarrApplicationConfiguration -Name SonarrMain -Application Sonarr -Section Metadata } |
+            { Get-StarrApplicationConfiguration -InstanceName SonarrMain -Application Sonarr -Section Metadata } |
                 Should -Throw -ErrorId 'StarrConfigurationSectionNotSupported,Get-StarrApplicationConfiguration'
 
             Should -Invoke Invoke-StarrApiRequest -Times 0
@@ -168,10 +168,10 @@ Describe 'Discoverable Prowlarr and tag reads' {
         }
 
         It 'retrieves all configured Prowlarr indexers through API v1' {
-            Get-StarrProwlarrIndexer -Name ProwlarrMain
+            Get-StarrProwlarrIndexer -InstanceName ProwlarrMain
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                $Name -eq 'ProwlarrMain' -and $Endpoint -eq 'indexer' -and
+                $InstanceName -eq 'ProwlarrMain' -and $Endpoint -eq 'indexer' -and
                 $ApiVersion -eq 'v1' -and $ExpectedApplication -eq 'Prowlarr'
             }
         }
@@ -186,10 +186,10 @@ Describe 'Discoverable Prowlarr and tag reads' {
         }
 
         It 'retrieves tag usage with the descriptive command name' {
-            Get-StarrTagUsage -Name Main -TagId 3
+            Get-StarrTagUsage -InstanceName Main -TagId 3
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                $Name -eq 'Main' -and $Endpoint -eq 'tag/detail/3'
+                $InstanceName -eq 'Main' -and $Endpoint -eq 'tag/detail/3'
             }
         }
     }
@@ -202,26 +202,26 @@ Describe 'Typed consumer commands' {
         }
 
         It 'starts a Radarr movie search with a typed body' {
-            Start-StarrRadarrMovieSearch -Name RadarrMain -MovieId 42,43 -Confirm:$false
+            Start-StarrRadarrMovieSearch -InstanceName RadarrMain -MovieId 42,43 -Confirm:$false
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                $Name -eq 'RadarrMain' -and $Endpoint -eq 'command' -and
+                $InstanceName -eq 'RadarrMain' -and $Endpoint -eq 'command' -and
                 $Method -eq 'POST' -and $ExpectedApplication -eq 'Radarr' -and
                 $Body.name -eq 'MoviesSearch' -and @($Body.movieIds).Count -eq 2
             }
         }
 
         It 'starts a Sonarr series search with a typed body' {
-            Start-StarrSonarrSeriesSearch -Name SonarrMain -SeriesId 42 -Confirm:$false
+            Start-StarrSonarrSeriesSearch -InstanceName SonarrMain -SeriesId 42 -Confirm:$false
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                $Name -eq 'SonarrMain' -and $ExpectedApplication -eq 'Sonarr' -and
+                $InstanceName -eq 'SonarrMain' -and $ExpectedApplication -eq 'Sonarr' -and
                 $Body.name -eq 'SeriesSearch' -and $Body.seriesId -eq 42
             }
         }
 
         It 'starts a Radarr movie rename with a typed body' {
-            Start-StarrRadarrMovieRename -Name RadarrMain -MovieId 42 -Confirm:$false
+            Start-StarrRadarrMovieRename -InstanceName RadarrMain -MovieId 42 -Confirm:$false
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $ExpectedApplication -eq 'Radarr' -and $Body.name -eq 'RenameMovie' -and
@@ -230,7 +230,7 @@ Describe 'Typed consumer commands' {
         }
 
         It 'starts a Sonarr episode-file rename with a typed body' {
-            Start-StarrSonarrEpisodeFileRename -Name SonarrMain -SeriesId 42 -EpisodeFileId 100,101 -Confirm:$false
+            Start-StarrSonarrEpisodeFileRename -InstanceName SonarrMain -SeriesId 42 -EpisodeFileId 100,101 -Confirm:$false
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $ExpectedApplication -eq 'Sonarr' -and $Body.name -eq 'RenameFiles' -and
@@ -258,19 +258,19 @@ Describe 'Application-specific queue commands' {
         }
 
         It 'forwards only Radarr queue parameters with a Radarr discriminator' {
-            Get-StarrRadarrQueue -Name RadarrMain -MovieIdFilter 42,43 -IncludeMovie $true
+            Get-StarrRadarrQueue -InstanceName RadarrMain -MovieIdFilter 42,43 -IncludeMovie $true
 
             Should -Invoke Get-StarrQueue -Times 1 -Exactly -ParameterFilter {
-                $Name -eq 'RadarrMain' -and $Application -eq 'Radarr' -and
+                $InstanceName -eq 'RadarrMain' -and $Application -eq 'Radarr' -and
                 @($MovieIdFilter).Count -eq 2 -and $IncludeMovie
             }
         }
 
         It 'forwards only Sonarr queue parameters with a Sonarr discriminator' {
-            Get-StarrSonarrQueue -Name SonarrMain -SeriesIdFilter 42,43 -IncludeEpisode $true
+            Get-StarrSonarrQueue -InstanceName SonarrMain -SeriesIdFilter 42,43 -IncludeEpisode $true
 
             Should -Invoke Get-StarrQueue -Times 1 -Exactly -ParameterFilter {
-                $Name -eq 'SonarrMain' -and $Application -eq 'Sonarr' -and
+                $InstanceName -eq 'SonarrMain' -and $Application -eq 'Sonarr' -and
                 @($SeriesIdFilter).Count -eq 2 -and $IncludeEpisode
             }
         }
@@ -292,7 +292,7 @@ Describe 'Application-specific calendar commands' {
         It 'serializes typed tag IDs for the shared calendar route' {
             Mock Invoke-StarrApiRequest { @() }
 
-            Get-StarrCalendar -Name RadarrMain -Application Radarr -TagIdFilter 2,5
+            Get-StarrCalendar -InstanceName RadarrMain -Application Radarr -TagIdFilter 2,5
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $ExpectedApplication -eq 'Radarr' -and $Query.tags -eq '2,5'
@@ -302,7 +302,7 @@ Describe 'Application-specific calendar commands' {
         It 'rejects both calendar tag-filter forms together' {
             Mock Invoke-StarrApiRequest { @() }
 
-            { Get-StarrCalendar -Name RadarrMain -Tags '2,5' -TagIdFilter 2,5 } |
+            { Get-StarrCalendar -InstanceName RadarrMain -Tags '2,5' -TagIdFilter 2,5 } |
                 Should -Throw -ErrorId 'StarrCalendarTagFilterConflict,Get-StarrCalendar'
 
             Should -Invoke Invoke-StarrApiRequest -Times 0
@@ -311,7 +311,7 @@ Describe 'Application-specific calendar commands' {
         It 'forwards the Radarr calendar surface with a Radarr discriminator' {
             Mock Get-StarrCalendar { @() }
 
-            Get-StarrRadarrCalendar -Name RadarrMain -TagIdFilter 2,5
+            Get-StarrRadarrCalendar -InstanceName RadarrMain -TagIdFilter 2,5
 
             Should -Invoke Get-StarrCalendar -Times 1 -Exactly -ParameterFilter {
                 $Application -eq 'Radarr' -and @($TagIdFilter).Count -eq 2
@@ -321,7 +321,7 @@ Describe 'Application-specific calendar commands' {
         It 'forwards the Sonarr calendar surface with a Sonarr discriminator' {
             Mock Get-StarrCalendar { @() }
 
-            Get-StarrSonarrCalendar -Name SonarrMain -IncludeSeries $true
+            Get-StarrSonarrCalendar -InstanceName SonarrMain -IncludeSeries $true
 
             Should -Invoke Get-StarrCalendar -Times 1 -Exactly -ParameterFilter {
                 $Application -eq 'Sonarr' -and $IncludeSeries
@@ -340,7 +340,7 @@ Describe 'Application-specific queue-detail and blocklist commands' {
         It 'forwards Radarr queue-detail parameters without Sonarr fields' {
             Mock Get-StarrQueueDetail { @() }
 
-            Get-StarrRadarrQueueDetail -Name RadarrMain -MovieId 42
+            Get-StarrRadarrQueueDetail -InstanceName RadarrMain -MovieId 42
 
             Should -Invoke Get-StarrQueueDetail -Times 1 -Exactly -ParameterFilter {
                 $Application -eq 'Radarr' -and $MovieId -eq 42
@@ -351,7 +351,7 @@ Describe 'Application-specific queue-detail and blocklist commands' {
         It 'forwards Sonarr queue-detail parameters without Radarr fields' {
             Mock Get-StarrQueueDetail { @() }
 
-            Get-StarrSonarrQueueDetail -Name SonarrMain -SeriesId 42 -EpisodeIdFilter 10,11
+            Get-StarrSonarrQueueDetail -InstanceName SonarrMain -SeriesId 42 -EpisodeIdFilter 10,11
 
             Should -Invoke Get-StarrQueueDetail -Times 1 -Exactly -ParameterFilter {
                 $Application -eq 'Sonarr' -and $SeriesId -eq 42 -and @($EpisodeIdFilter).Count -eq 2
@@ -362,7 +362,7 @@ Describe 'Application-specific queue-detail and blocklist commands' {
         It 'forwards Radarr blocklist parameters without Sonarr fields' {
             Mock Get-StarrBlocklist { @() }
 
-            Get-StarrRadarrBlocklist -Name RadarrMain -MovieIdFilter 42,43
+            Get-StarrRadarrBlocklist -InstanceName RadarrMain -MovieIdFilter 42,43
 
             Should -Invoke Get-StarrBlocklist -Times 1 -Exactly -ParameterFilter {
                 $Application -eq 'Radarr' -and @($MovieIdFilter).Count -eq 2
@@ -373,7 +373,7 @@ Describe 'Application-specific queue-detail and blocklist commands' {
         It 'forwards Sonarr blocklist parameters without Radarr fields' {
             Mock Get-StarrBlocklist { @() }
 
-            Get-StarrSonarrBlocklist -Name SonarrMain -SeriesIdFilter 42,43
+            Get-StarrSonarrBlocklist -InstanceName SonarrMain -SeriesIdFilter 42,43
 
             Should -Invoke Get-StarrBlocklist -Times 1 -Exactly -ParameterFilter {
                 $Application -eq 'Sonarr' -and @($SeriesIdFilter).Count -eq 2
@@ -384,7 +384,7 @@ Describe 'Application-specific queue-detail and blocklist commands' {
         It 'rejects an explicit application that contradicts queue-detail parameters' {
             Mock Invoke-StarrApiRequest { @() }
 
-            { Get-StarrQueueDetail -Name Main -Application Radarr -SeriesId 42 } |
+            { Get-StarrQueueDetail -InstanceName Main -Application Radarr -SeriesId 42 } |
                 Should -Throw -ErrorId 'StarrApplicationParameterMismatch,Get-StarrQueueDetail'
 
             Should -Invoke Invoke-StarrApiRequest -Times 0
@@ -393,7 +393,7 @@ Describe 'Application-specific queue-detail and blocklist commands' {
         It 'rejects an explicit application that contradicts blocklist parameters' {
             Mock Invoke-StarrApiRequest { @() }
 
-            { Get-StarrBlocklist -Name Main -Application Sonarr -MovieIdFilter 42 } |
+            { Get-StarrBlocklist -InstanceName Main -Application Sonarr -MovieIdFilter 42 } |
                 Should -Throw -ErrorId 'StarrApplicationParameterMismatch,Get-StarrBlocklist'
 
             Should -Invoke Invoke-StarrApiRequest -Times 0
@@ -402,7 +402,7 @@ Describe 'Application-specific queue-detail and blocklist commands' {
         It 'routes shared history by an explicit application discriminator' {
             Mock Invoke-StarrApiRequest { @() }
 
-            Get-StarrHistory -Name Main -Application Sonarr -Page 1
+            Get-StarrHistory -InstanceName Main -Application Sonarr -Page 1
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $ExpectedApplication -eq 'Sonarr' -and $Endpoint -eq 'history'
@@ -412,7 +412,7 @@ Describe 'Application-specific queue-detail and blocklist commands' {
         It 'rejects an explicit application that contradicts history parameters' {
             Mock Invoke-StarrApiRequest { @() }
 
-            { Get-StarrHistory -Name Main -Application Radarr -SeriesIdFilter 42 } |
+            { Get-StarrHistory -InstanceName Main -Application Radarr -SeriesIdFilter 42 } |
                 Should -Throw -ErrorId 'StarrApplicationParameterMismatch,Get-StarrHistory'
 
             Should -Invoke Invoke-StarrApiRequest -Times 0
@@ -427,7 +427,7 @@ Describe 'Application-specific history commands' {
         }
 
         It 'forwards Radarr movie history with a Radarr discriminator' {
-            Get-StarrRadarrHistory -Name RadarrMain -MovieId 42 -EventType movieFileRenamed
+            Get-StarrRadarrHistory -InstanceName RadarrMain -MovieId 42 -EventType movieFileRenamed
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $ExpectedApplication -eq 'Radarr' -and $Endpoint -eq 'history/movie' -and
@@ -436,7 +436,7 @@ Describe 'Application-specific history commands' {
         }
 
         It 'routes Radarr paged history filters' {
-            Get-StarrRadarrHistory -Name RadarrMain -Page 2 -PageSize 25 -MovieIdFilter 42,43 -EventTypeId 1,3 -IncludeMovie $true
+            Get-StarrRadarrHistory -InstanceName RadarrMain -Page 2 -PageSize 25 -MovieIdFilter 42,43 -EventTypeId 1,3 -IncludeMovie $true
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $ExpectedApplication -eq 'Radarr' -and $Endpoint -eq 'history' -and
@@ -448,7 +448,7 @@ Describe 'Application-specific history commands' {
         It 'routes Radarr history since a timestamp using ISO 8601' {
             $since = [datetime]'2026-09-13T08:30:00Z'
 
-            Get-StarrRadarrHistory -Name RadarrMain -Since $since -EventType grabbed
+            Get-StarrRadarrHistory -InstanceName RadarrMain -Since $since -EventType grabbed
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $ExpectedApplication -eq 'Radarr' -and $Endpoint -eq 'history/since' -and
@@ -457,7 +457,7 @@ Describe 'Application-specific history commands' {
         }
 
         It 'forwards Sonarr series history with a Sonarr discriminator' {
-            Get-StarrSonarrHistory -Name SonarrMain -SeriesId 42 -SeasonNumber 2
+            Get-StarrSonarrHistory -InstanceName SonarrMain -SeriesId 42 -SeasonNumber 2
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $ExpectedApplication -eq 'Sonarr' -and $Endpoint -eq 'history/series' -and
@@ -466,7 +466,7 @@ Describe 'Application-specific history commands' {
         }
 
         It 'routes Sonarr paged history filters' {
-            Get-StarrSonarrHistory -Name SonarrMain -Page 2 -SeriesIdFilter 42,43 -EpisodeId 9 -IncludeEpisode $true
+            Get-StarrSonarrHistory -InstanceName SonarrMain -Page 2 -SeriesIdFilter 42,43 -EpisodeId 9 -IncludeEpisode $true
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $ExpectedApplication -eq 'Sonarr' -and $Endpoint -eq 'history' -and
@@ -478,7 +478,7 @@ Describe 'Application-specific history commands' {
         It 'routes Sonarr history since a timestamp' {
             $since = [datetime]'2026-09-13T08:30:00Z'
 
-            Get-StarrSonarrHistory -Name SonarrMain -Since $since -IncludeSeries $true
+            Get-StarrSonarrHistory -InstanceName SonarrMain -Since $since -IncludeSeries $true
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $ExpectedApplication -eq 'Sonarr' -and $Endpoint -eq 'history/since' -and
@@ -498,8 +498,8 @@ Describe 'Application-specific history commands' {
         }
 
         It 'uses application-specific named event validation' {
-            { Get-StarrRadarrHistory -Name RadarrMain -MovieId 42 -EventType episodeFileRenamed } | Should -Throw
-            { Get-StarrSonarrHistory -Name SonarrMain -SeriesId 42 -EventType movieFileRenamed } | Should -Throw
+            { Get-StarrRadarrHistory -InstanceName RadarrMain -MovieId 42 -EventType episodeFileRenamed } | Should -Throw
+            { Get-StarrSonarrHistory -InstanceName SonarrMain -SeriesId 42 -EventType movieFileRenamed } | Should -Throw
 
             Should -Invoke Invoke-StarrApiRequest -Times 0
         }
@@ -513,7 +513,7 @@ Describe 'Semantically named cutoff-unmet commands' {
         }
 
         It 'retrieves Radarr cutoff-unmet records with the descriptive name' {
-            Get-StarrRadarrCutoffUnmet -Name RadarrMain -Page 2 -Monitored $true
+            Get-StarrRadarrCutoffUnmet -InstanceName RadarrMain -Page 2 -Monitored $true
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $ExpectedApplication -eq 'Radarr' -and $Endpoint -eq 'wanted/cutoff' -and
@@ -522,7 +522,7 @@ Describe 'Semantically named cutoff-unmet commands' {
         }
 
         It 'preserves the legacy Radarr cutoff command' {
-            Get-StarrRadarrCutoff -Name RadarrMain -PageSize 25
+            Get-StarrRadarrCutoff -InstanceName RadarrMain -PageSize 25
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $ExpectedApplication -eq 'Radarr' -and $Endpoint -eq 'wanted/cutoff' -and $Query.pageSize -eq 25
@@ -530,7 +530,7 @@ Describe 'Semantically named cutoff-unmet commands' {
         }
 
         It 'retrieves one Sonarr cutoff-unmet episode with the descriptive name' {
-            Get-StarrSonarrCutoffUnmet -Name SonarrMain -EpisodeId 42 -IncludeSeries $true
+            Get-StarrSonarrCutoffUnmet -InstanceName SonarrMain -EpisodeId 42 -IncludeSeries $true
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $ExpectedApplication -eq 'Sonarr' -and $Endpoint -eq 'wanted/cutoff/42' -and $Query.includeSeries
@@ -538,7 +538,7 @@ Describe 'Semantically named cutoff-unmet commands' {
         }
 
         It 'preserves the legacy Sonarr cutoff command' {
-            Get-StarrSonarrCutoff -Name SonarrMain -Page 3
+            Get-StarrSonarrCutoff -InstanceName SonarrMain -Page 3
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $ExpectedApplication -eq 'Sonarr' -and $Endpoint -eq 'wanted/cutoff' -and $Query.page -eq 3
@@ -554,7 +554,7 @@ Describe 'Consistent filter and range parameters' {
         }
 
         It 'exposes ID-specific language and quality filter names on queue commands' {
-            Get-StarrRadarrQueue -Name RadarrMain -LanguageIdFilter 1,2 -QualityIdFilter 3,4 -SortDirection default
+            Get-StarrRadarrQueue -InstanceName RadarrMain -LanguageIdFilter 1,2 -QualityIdFilter 3,4 -SortDirection default
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $ExpectedApplication -eq 'Radarr' -and @($Query.languages).Count -eq 2 -and
@@ -563,7 +563,7 @@ Describe 'Consistent filter and range parameters' {
         }
 
         It 'retains the legacy queue filter names as aliases' {
-            Get-StarrSonarrQueue -Name SonarrMain -Languages 1 -Quality 3
+            Get-StarrSonarrQueue -InstanceName SonarrMain -Languages 1 -Quality 3
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 @($Query.languages)[0] -eq 1 -and @($Query.quality)[0] -eq 3
@@ -571,7 +571,7 @@ Describe 'Consistent filter and range parameters' {
         }
 
         It 'exposes ID-specific language and quality filter names on history commands' {
-            Get-StarrSonarrHistory -Name SonarrMain -LanguageIdFilter 1,2 -QualityIdFilter 3,4
+            Get-StarrSonarrHistory -InstanceName SonarrMain -LanguageIdFilter 1,2 -QualityIdFilter 3,4
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $ExpectedApplication -eq 'Sonarr' -and @($Query.languages).Count -eq 2 -and @($Query.quality).Count -eq 2
@@ -579,7 +579,7 @@ Describe 'Consistent filter and range parameters' {
         }
 
         It 'accepts non-date Prowlarr history sort keys allowed by the API contract' {
-            Get-StarrProwlarrHistory -Name ProwlarrMain -SortKey indexerId
+            Get-StarrProwlarrHistory -InstanceName ProwlarrMain -SortKey indexerId
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $ExpectedApplication -eq 'Prowlarr' -and $Query.sortKey -eq 'indexerId'
@@ -587,7 +587,7 @@ Describe 'Consistent filter and range parameters' {
         }
 
         It 'accepts the complete Prowlarr download-protocol enum' {
-            Get-StarrProwlarrIndexerStatistic -Name ProwlarrMain -Protocol Unknown
+            Get-StarrProwlarrIndexerStatistic -InstanceName ProwlarrMain -Protocol Unknown
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $ExpectedApplication -eq 'Prowlarr' -and $Query.protocols -eq 'Unknown'
@@ -595,14 +595,14 @@ Describe 'Consistent filter and range parameters' {
         }
 
         It 'rejects reversed calendar date ranges before transport' {
-            { Get-StarrCalendar -Name RadarrMain -Start ([datetime]'2026-09-14') -End ([datetime]'2026-09-13') } |
+            { Get-StarrCalendar -InstanceName RadarrMain -Start ([datetime]'2026-09-14') -End ([datetime]'2026-09-13') } |
                 Should -Throw -ErrorId 'StarrDateRangeInvalid,Get-StarrCalendar'
 
             Should -Invoke Invoke-StarrApiRequest -Times 0
         }
 
         It 'rejects reversed Prowlarr statistics date ranges before transport' {
-            { Get-StarrProwlarrIndexerStatistic -Name ProwlarrMain -StartDate ([datetime]'2026-09-14') -EndDate ([datetime]'2026-09-13') } |
+            { Get-StarrProwlarrIndexerStatistic -InstanceName ProwlarrMain -StartDate ([datetime]'2026-09-14') -EndDate ([datetime]'2026-09-13') } |
                 Should -Throw -ErrorId 'StarrDateRangeInvalid,Get-StarrProwlarrIndexerStatistic'
 
             Should -Invoke Invoke-StarrApiRequest -Times 0

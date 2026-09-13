@@ -6,7 +6,7 @@ function Get-StarrRadarrCutoff {
     .DESCRIPTION
         This function preserves the original command name and delegates to Get-StarrRadarrCutoffUnmet, which more clearly describes the returned wanted records.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved Radarr instance name.
 
     .PARAMETER Url
@@ -31,10 +31,10 @@ function Get-StarrRadarrCutoff {
         Limits results by monitored state.
 
     .EXAMPLE
-        Get-StarrRadarrCutoff -Name RadarrMain
+        Get-StarrRadarrCutoff -InstanceName RadarrMain
 
     .EXAMPLE
-        Get-StarrRadarrCutoff -Name RadarrMain -Page 2 -PageSize 50
+        Get-StarrRadarrCutoff -InstanceName RadarrMain -Page 2 -PageSize 50
 
     .INPUTS
         None.
@@ -50,9 +50,10 @@ function Get-StarrRadarrCutoff {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]

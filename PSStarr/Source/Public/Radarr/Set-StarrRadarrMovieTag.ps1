@@ -6,7 +6,7 @@ function Set-StarrRadarrMovieTag {
     .DESCRIPTION
         This function adds or removes selected tags without replacing other movie tags or changing other movie settings. It delegates the bulk update to the shared HTTP transport.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -25,7 +25,7 @@ function Set-StarrRadarrMovieTag {
         Whether to add or remove the selected tags. Other tags are preserved.
 
     .EXAMPLE
-        Set-StarrRadarrMovieTag -Name 'Main' -MovieId 42,43 -TagId 2 -ApplyTags Add
+        Set-StarrRadarrMovieTag -InstanceName 'Main' -MovieId 42,43 -TagId 2 -ApplyTags Add
 
     .EXAMPLE
         Set-StarrRadarrMovieTag -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieId 42 -TagId 2 -ApplyTags Remove -WhatIf
@@ -44,9 +44,10 @@ function Set-StarrRadarrMovieTag {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -97,8 +98,8 @@ function Set-StarrRadarrMovieTag {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

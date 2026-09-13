@@ -6,7 +6,7 @@ function Get-StarrSonarrCutoff {
     .DESCRIPTION
         This function preserves the original command name and delegates to Get-StarrSonarrCutoffUnmet, which more clearly describes the returned wanted records.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved Sonarr instance name.
 
     .PARAMETER Url
@@ -43,10 +43,10 @@ function Get-StarrSonarrCutoff {
         Limits results by monitored state.
 
     .EXAMPLE
-        Get-StarrSonarrCutoff -Name SonarrMain
+        Get-StarrSonarrCutoff -InstanceName SonarrMain
 
     .EXAMPLE
-        Get-StarrSonarrCutoff -Name SonarrMain -EpisodeId 42
+        Get-StarrSonarrCutoff -InstanceName SonarrMain -EpisodeId 42
 
     .INPUTS
         None.
@@ -62,9 +62,10 @@ function Get-StarrSonarrCutoff {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]

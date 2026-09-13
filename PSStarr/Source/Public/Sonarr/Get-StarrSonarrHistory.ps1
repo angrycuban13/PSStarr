@@ -6,7 +6,7 @@ function Get-StarrSonarrHistory {
     .DESCRIPTION
         This function retrieves paged Sonarr history, history since a timestamp, or history for one series without exposing Radarr-only parameters.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved Sonarr instance name.
 
     .PARAMETER Url
@@ -64,10 +64,10 @@ function Get-StarrSonarrHistory {
         Includes episode resources in history records.
 
     .EXAMPLE
-        Get-StarrSonarrHistory -Name SonarrMain -Page 1 -PageSize 50
+        Get-StarrSonarrHistory -InstanceName SonarrMain -Page 1 -PageSize 50
 
     .EXAMPLE
-        Get-StarrSonarrHistory -Name SonarrMain -SeriesId 42 -SeasonNumber 2
+        Get-StarrSonarrHistory -InstanceName SonarrMain -SeriesId 42 -SeasonNumber 2
 
     .INPUTS
         None.
@@ -83,9 +83,10 @@ function Get-StarrSonarrHistory {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]

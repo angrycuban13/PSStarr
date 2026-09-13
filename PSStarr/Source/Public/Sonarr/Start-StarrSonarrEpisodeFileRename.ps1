@@ -6,7 +6,7 @@ function Start-StarrSonarrEpisodeFileRename {
     .DESCRIPTION
         This function submits the typed RenameFiles command to Sonarr API v3. Use Get-StarrSonarrRenamePreview first to inspect proposed filenames. A successful response means Sonarr accepted the asynchronous command.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved Sonarr instance name. The matching instance is inferred when omitted.
 
     .PARAMETER Url
@@ -22,7 +22,7 @@ function Start-StarrSonarrEpisodeFileRename {
         One or more positive episode-file identifiers to rename.
 
     .EXAMPLE
-        Start-StarrSonarrEpisodeFileRename -Name SonarrMain -SeriesId 42 -EpisodeFileId 100,101
+        Start-StarrSonarrEpisodeFileRename -InstanceName SonarrMain -SeriesId 42 -EpisodeFileId 100,101
 
     .EXAMPLE
         Start-StarrSonarrEpisodeFileRename -Url 'http://localhost:8989' -ApiKey '<api-key>' -SeriesId 42 -EpisodeFileId 100 -WhatIf
@@ -41,9 +41,10 @@ function Start-StarrSonarrEpisodeFileRename {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -88,8 +89,8 @@ function Start-StarrSonarrEpisodeFileRename {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

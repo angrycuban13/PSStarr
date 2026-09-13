@@ -6,7 +6,7 @@ function Get-StarrSonarrRenamePreview {
     .DESCRIPTION
         This function retrieves proposed episode-file renames for a series. This is a preview only and does not rename files.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved instance name. When omitted, the matching instance is inferred.
 
     .PARAMETER Url
@@ -22,13 +22,13 @@ function Get-StarrSonarrRenamePreview {
         The season to inspect, including zero for specials. Omit to inspect all seasons.
 
     .EXAMPLE
-        Get-StarrSonarrRenamePreview -Name Main -SeriesId 42
+        Get-StarrSonarrRenamePreview -InstanceName Main -SeriesId 42
 
     .EXAMPLE
         Get-StarrSonarrRenamePreview -Url 'http://localhost:8989' -ApiKey '<api-key>' -SeriesId 42
 
     .EXAMPLE
-        Get-StarrSonarrRenamePreview -Name Main -SeriesId 42 -SeasonNumber 0
+        Get-StarrSonarrRenamePreview -InstanceName Main -SeriesId 42 -SeasonNumber 0
 
         Previews renames for specials only.
 
@@ -49,9 +49,10 @@ function Get-StarrSonarrRenamePreview {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -95,8 +96,8 @@ function Get-StarrSonarrRenamePreview {
             $request.Url = $Url
             $request.ApiKey = $ApiKey
         }
-        elseif ($PSBoundParameters.ContainsKey('Name')) {
-            $request.Name = $Name
+        elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+            $request.InstanceName = $InstanceName
         }
 
         Invoke-StarrApiRequest @request

@@ -6,7 +6,7 @@ function Get-StarrProwlarrIndexerStatus {
     .DESCRIPTION
         This function retrieves Prowlarr failure and backoff state through API v1. It does not return every configured indexer; use Get-StarrProwlarrIndexer for that inventory. An empty result normally means Prowlarr has no recorded indexer failures or temporary disablements.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved Prowlarr instance name. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -16,7 +16,7 @@ function Get-StarrProwlarrIndexerStatus {
         The API key used to authenticate with the instance.
 
     .EXAMPLE
-        Get-StarrProwlarrIndexerStatus -Name Main
+        Get-StarrProwlarrIndexerStatus -InstanceName Main
 
     .EXAMPLE
         Get-StarrProwlarrIndexerStatus -Url 'http://localhost:9696' -ApiKey '<api-key>'
@@ -35,9 +35,10 @@ function Get-StarrProwlarrIndexerStatus {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -61,8 +62,8 @@ function Get-StarrProwlarrIndexerStatus {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

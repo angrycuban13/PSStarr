@@ -6,7 +6,7 @@ function Get-StarrMetadataProvider {
     .DESCRIPTION
         This function retrieves metadata provider settings using an inferred or named instance, or explicit connection credentials.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.
 
     .PARAMETER Url
@@ -22,10 +22,10 @@ function Get-StarrMetadataProvider {
         The positive resource identifier for an individual metadata provider.
 
     .EXAMPLE
-        Get-StarrMetadataProvider -Name 'Main'
+        Get-StarrMetadataProvider -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrMetadataProvider -Name 'Main' -MetadataProviderId 1
+        Get-StarrMetadataProvider -InstanceName 'Main' -MetadataProviderId 1
 
     .EXAMPLE
         Get-StarrMetadataProvider -Url 'http://localhost:8989' -ApiKey '<api-key>'
@@ -44,9 +44,10 @@ function Get-StarrMetadataProvider {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -86,8 +87,8 @@ function Get-StarrMetadataProvider {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

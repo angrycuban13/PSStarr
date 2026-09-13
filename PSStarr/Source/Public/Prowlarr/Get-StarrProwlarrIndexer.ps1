@@ -6,7 +6,7 @@ function Get-StarrProwlarrIndexer {
     .DESCRIPTION
         This function reads Prowlarr indexer resources through API v1. Unlike Get-StarrProwlarrIndexerStatus, the list route returns configured indexers regardless of failure state. Recognizable provider credentials are redacted from returned resources.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved Prowlarr instance name. The matching instance is inferred when omitted.
 
     .PARAMETER Url
@@ -19,7 +19,7 @@ function Get-StarrProwlarrIndexer {
         The positive identifier of one configured indexer.
 
     .EXAMPLE
-        Get-StarrProwlarrIndexer -Name ProwlarrMain
+        Get-StarrProwlarrIndexer -InstanceName ProwlarrMain
 
     .EXAMPLE
         Get-StarrProwlarrIndexer -Url 'http://localhost:9696' -ApiKey '<api-key>' -IndexerId 4
@@ -38,9 +38,10 @@ function Get-StarrProwlarrIndexer {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -73,8 +74,8 @@ function Get-StarrProwlarrIndexer {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

@@ -6,7 +6,7 @@ function Set-StarrRadarrCollectionMonitoring {
     .DESCRIPTION
         This function sets monitoring on selected collections without directly changing existing movie monitoring or other collection settings. Radarr queues a collection refresh after this update; enabling monitoring can trigger configured collection automation.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -22,7 +22,7 @@ function Set-StarrRadarrCollectionMonitoring {
         The explicit monitoring state to apply to the selected collections.
 
     .EXAMPLE
-        Set-StarrRadarrCollectionMonitoring -Name 'Main' -CollectionId 42,43 -Monitored $true
+        Set-StarrRadarrCollectionMonitoring -InstanceName 'Main' -CollectionId 42,43 -Monitored $true
 
     .EXAMPLE
         Set-StarrRadarrCollectionMonitoring -Url 'http://localhost:7878' -ApiKey '<api-key>' -CollectionId 42 -Monitored $false -WhatIf
@@ -41,9 +41,10 @@ function Set-StarrRadarrCollectionMonitoring {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -86,8 +87,8 @@ function Set-StarrRadarrCollectionMonitoring {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

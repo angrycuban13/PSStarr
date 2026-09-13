@@ -6,7 +6,7 @@ function Get-StarrRadarrMovieLookup {
     .DESCRIPTION
         This function searches Radarr metadata providers by term, IMDb ID, or TMDB ID. It returns candidates and does not add movies.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The name of the saved Starr instance.
 
     .PARAMETER Url
@@ -25,7 +25,7 @@ function Get-StarrRadarrMovieLookup {
         The TMDB movie identifier.
 
     .EXAMPLE
-        Get-StarrRadarrMovieLookup -Name 'RadarrMain' -Term 'example'
+        Get-StarrRadarrMovieLookup -InstanceName 'RadarrMain' -Term 'example'
 
     .EXAMPLE
         Get-StarrRadarrMovieLookup -Url 'http://localhost:7878' -ApiKey '<api-key>' -Term 'example'
@@ -46,9 +46,10 @@ function Get-StarrRadarrMovieLookup {
         [Parameter(Mandatory = $false, ParameterSetName = 'NamedTerm')]
         [Parameter(Mandatory = $false, ParameterSetName = 'NamedImdb')]
         [Parameter(Mandatory = $false, ParameterSetName = 'NamedTmdb')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [string]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitTerm')]
         [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitImdb')]
@@ -109,8 +110,8 @@ function Get-StarrRadarrMovieLookup {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

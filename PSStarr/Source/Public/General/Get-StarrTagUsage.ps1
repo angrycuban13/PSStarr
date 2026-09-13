@@ -6,7 +6,7 @@ function Get-StarrTagUsage {
     .DESCRIPTION
         This function reads tag usage records from the tag/detail endpoint. It reports relationships to tagged resources; use Get-StarrTag to retrieve tag definitions.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved Starr instance name. The instance is inferred when omitted.
 
     .PARAMETER Url
@@ -22,7 +22,7 @@ function Get-StarrTagUsage {
         The positive identifier used to limit usage records to one tag.
 
     .EXAMPLE
-        Get-StarrTagUsage -Name RadarrMain
+        Get-StarrTagUsage -InstanceName RadarrMain
 
     .EXAMPLE
         Get-StarrTagUsage -Url 'http://localhost:8989' -ApiKey '<api-key>' -TagId 3
@@ -41,9 +41,10 @@ function Get-StarrTagUsage {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -83,8 +84,8 @@ function Get-StarrTagUsage {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

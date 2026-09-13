@@ -6,7 +6,7 @@ function Get-StarrProwlarrAppProfileSchema {
     .DESCRIPTION
         This function retrieves the schema used to configure Prowlarr application profiles.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved Prowlarr instance name. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -16,7 +16,7 @@ function Get-StarrProwlarrAppProfileSchema {
         The API key used to authenticate with the instance.
 
     .EXAMPLE
-        Get-StarrProwlarrAppProfileSchema -Name Main
+        Get-StarrProwlarrAppProfileSchema -InstanceName Main
 
     .EXAMPLE
         Get-StarrProwlarrAppProfileSchema -Url 'http://localhost:9696' -ApiKey '<api-key>'
@@ -35,9 +35,10 @@ function Get-StarrProwlarrAppProfileSchema {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -61,8 +62,8 @@ function Get-StarrProwlarrAppProfileSchema {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

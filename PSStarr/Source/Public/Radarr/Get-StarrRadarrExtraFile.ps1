@@ -6,7 +6,7 @@ function Get-StarrRadarrExtraFile {
     .DESCRIPTION
         This function retrieves Radarr extra-file records through the shared transport. It returns file information, not file contents.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -19,7 +19,7 @@ function Get-StarrRadarrExtraFile {
         The positive Radarr movie identifier used to filter records. This parameter accepts an Id property from the pipeline.
 
     .EXAMPLE
-        Get-StarrRadarrExtraFile -Name 'Main' -MovieId 42
+        Get-StarrRadarrExtraFile -InstanceName 'Main' -MovieId 42
 
     .EXAMPLE
         Get-StarrRadarrExtraFile -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieId 42
@@ -41,9 +41,10 @@ function Get-StarrRadarrExtraFile {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'NamedList')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitList')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -82,8 +83,8 @@ function Get-StarrRadarrExtraFile {
             $request.Url = $Url
             $request.ApiKey = $ApiKey
         }
-        elseif ($PSBoundParameters.ContainsKey('Name')) {
-            $request.Name = $Name
+        elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+            $request.InstanceName = $InstanceName
         }
 
         Invoke-StarrApiRequest @request

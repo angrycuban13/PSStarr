@@ -6,7 +6,7 @@ function Get-StarrSonarrBlocklist {
     .DESCRIPTION
         This function exposes only the paged blocklist parameters supported by Sonarr.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved Sonarr instance name.
 
     .PARAMETER Url
@@ -34,10 +34,10 @@ function Get-StarrSonarrBlocklist {
         Limits results by download protocol.
 
     .EXAMPLE
-        Get-StarrSonarrBlocklist -Name SonarrMain
+        Get-StarrSonarrBlocklist -InstanceName SonarrMain
 
     .EXAMPLE
-        Get-StarrSonarrBlocklist -Name SonarrMain -SeriesIdFilter 42,43
+        Get-StarrSonarrBlocklist -InstanceName SonarrMain -SeriesIdFilter 42,43
 
     .INPUTS
         None.
@@ -53,9 +53,10 @@ function Get-StarrSonarrBlocklist {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]

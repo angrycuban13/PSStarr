@@ -6,7 +6,7 @@ function Get-StarrProwlarrApplicationSchema {
     .DESCRIPTION
         This function retrieves provider definitions used when configuring application integrations in Prowlarr. Provider secret values are redacted; do not submit returned objects as updates.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved Prowlarr instance name. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -16,7 +16,7 @@ function Get-StarrProwlarrApplicationSchema {
         The API key used to authenticate with the instance.
 
     .EXAMPLE
-        Get-StarrProwlarrApplicationSchema -Name Main
+        Get-StarrProwlarrApplicationSchema -InstanceName Main
 
     .EXAMPLE
         Get-StarrProwlarrApplicationSchema -Url 'http://localhost:9696' -ApiKey '<api-key>'
@@ -35,9 +35,10 @@ function Get-StarrProwlarrApplicationSchema {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -61,8 +62,8 @@ function Get-StarrProwlarrApplicationSchema {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     foreach ($resource in (Invoke-StarrApiRequest @request)) {

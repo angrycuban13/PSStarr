@@ -6,7 +6,7 @@ function Get-StarrRadarrQueueDetail {
     .DESCRIPTION
         This function exposes only the queue-detail parameters supported by Radarr.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved Radarr instance name.
 
     .PARAMETER Url
@@ -22,10 +22,10 @@ function Get-StarrRadarrQueueDetail {
         Includes movie resources in queue-detail records.
 
     .EXAMPLE
-        Get-StarrRadarrQueueDetail -Name RadarrMain
+        Get-StarrRadarrQueueDetail -InstanceName RadarrMain
 
     .EXAMPLE
-        Get-StarrRadarrQueueDetail -Name RadarrMain -MovieId 42 -IncludeMovie $true
+        Get-StarrRadarrQueueDetail -InstanceName RadarrMain -MovieId 42 -IncludeMovie $true
 
     .INPUTS
         None.
@@ -41,9 +41,10 @@ function Get-StarrRadarrQueueDetail {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]

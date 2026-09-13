@@ -6,7 +6,7 @@ function Get-StarrRadarrImportListMovie {
     .DESCRIPTION
         This function retrieves discovered movies from enabled import lists. Optional recommendation, trending, and popular results can cause Radarr to contact external metadata services; this command does not add movies.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -25,7 +25,7 @@ function Get-StarrRadarrImportListMovie {
         Includes popular movies.
 
     .EXAMPLE
-        Get-StarrRadarrImportListMovie -Name 'Main' -IncludeTrending $true
+        Get-StarrRadarrImportListMovie -InstanceName 'Main' -IncludeTrending $true
 
     .EXAMPLE
         Get-StarrRadarrImportListMovie -Url 'http://localhost:7878' -ApiKey '<api-key>' -IncludeTrending $true
@@ -44,9 +44,10 @@ function Get-StarrRadarrImportListMovie {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -94,8 +95,8 @@ function Get-StarrRadarrImportListMovie {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

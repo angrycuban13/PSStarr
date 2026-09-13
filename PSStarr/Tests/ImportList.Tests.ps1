@@ -13,11 +13,11 @@ Describe 'Import list GET wrappers' {
             @{ Command = 'Get-StarrImportListSchema'; Path = 'importlist/schema' }
         ) {
             $expectedPath = $Path
-            $result = & $Command -Name Main
+            $result = & $Command -InstanceName Main
 
             $result.id | Should -Be 1
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                $Endpoint -eq $expectedPath -and $Name -eq 'Main' -and $Method -eq 'GET'
+                $Endpoint -eq $expectedPath -and $InstanceName -eq 'Main' -and $Method -eq 'GET'
             }
         }
 
@@ -39,12 +39,12 @@ Describe 'Import list GET wrappers' {
             & $Command
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                [string]::IsNullOrEmpty($Name) -and [string]::IsNullOrEmpty($Url)
+                [string]::IsNullOrEmpty($InstanceName) -and [string]::IsNullOrEmpty($Url)
             }
         }
 
         It 'uses the individual import list path' {
-            Get-StarrImportList -Name Main -ImportListId 7
+            Get-StarrImportList -InstanceName Main -ImportListId 7
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $Endpoint -eq 'importlist/7' -and $Method -eq 'GET'
@@ -55,7 +55,7 @@ Describe 'Import list GET wrappers' {
             @{ Id = 0 }
             @{ Id = -1 }
         ) {
-            { Get-StarrImportList -Name Main -ImportListId $Id } | Should -Throw
+            { Get-StarrImportList -InstanceName Main -ImportListId $Id } | Should -Throw
             Should -Invoke Invoke-StarrApiRequest -Times 0
         }
 
@@ -65,7 +65,7 @@ Describe 'Import list GET wrappers' {
                 [pscustomobject]@{ id = 2 }
             }
 
-            $result = @(Get-StarrImportList -Name Main)
+            $result = @(Get-StarrImportList -InstanceName Main)
 
             $result.Count | Should -Be 2
             $result[1].id | Should -Be 2
@@ -74,7 +74,7 @@ Describe 'Import list GET wrappers' {
         It 'preserves an empty collection' {
             Mock Invoke-StarrApiRequest {}
 
-            @(Get-StarrImportList -Name Main).Count | Should -Be 0
+            @(Get-StarrImportList -InstanceName Main).Count | Should -Be 0
         }
     }
 }

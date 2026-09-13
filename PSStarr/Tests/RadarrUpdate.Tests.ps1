@@ -12,10 +12,10 @@ InModuleScope PSStarr {
         }
 
         It 'sends PUT with a named Radarr connection and returns the response' {
-            (& $Command -Name Main @Arguments -Confirm:$false).id | Should -Be 42
+            (& $Command -InstanceName Main @Arguments -Confirm:$false).id | Should -Be 42
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                $Endpoint -eq $Resource -and $Method -eq 'PUT' -and $ExpectedApplication -eq 'Radarr' -and $Name -eq 'Main'
+                $Endpoint -eq $Resource -and $Method -eq 'PUT' -and $ExpectedApplication -eq 'Radarr' -and $InstanceName -eq 'Main'
             }
         }
 
@@ -29,19 +29,19 @@ InModuleScope PSStarr {
             & $Command @Arguments -Confirm:$false
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                [string]::IsNullOrEmpty($Name) -and [string]::IsNullOrEmpty($Url)
+                [string]::IsNullOrEmpty($InstanceName) -and [string]::IsNullOrEmpty($Url)
             }
         }
 
         It 'does not invoke transport under WhatIf' {
-            @(& $Command -Name Main @Arguments -WhatIf).Count | Should -Be 0
+            @(& $Command -InstanceName Main @Arguments -WhatIf).Count | Should -Be 0
             & $Command -Url 'http://localhost:7878' -ApiKey fixture-key @Arguments -WhatIf
 
             Should -Invoke Invoke-StarrApiRequest -Times 0
         }
 
         It 'validates connection values before transport' {
-            { & $Command -Name ' ' @Arguments } | Should -Throw
+            { & $Command -InstanceName ' ' @Arguments } | Should -Throw
             { & $Command -Url 'ftp://localhost' -ApiKey fixture-key @Arguments } | Should -Throw
             { & $Command -Url 'http://localhost:7878' -ApiKey ' ' @Arguments } | Should -Throw
             Should -Invoke Invoke-StarrApiRequest -Times 0

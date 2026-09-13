@@ -19,12 +19,12 @@ InModuleScope PSStarr {
         }
 
         It 'uses the correct GET endpoint and preserves list results' {
-            $result = @(& $Command -Name Main)
+            $result = @(& $Command -InstanceName Main)
 
             $result.Count | Should -Be 2
             $result[1].id | Should -Be 2
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                $Endpoint -eq $EndpointPath -and $Method -eq 'GET' -and $Name -eq 'Main'
+                $Endpoint -eq $EndpointPath -and $Method -eq 'GET' -and $InstanceName -eq 'Main'
             }
         }
 
@@ -40,12 +40,12 @@ InModuleScope PSStarr {
             & $Command
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                [string]::IsNullOrEmpty($Name) -and [string]::IsNullOrEmpty($Url)
+                [string]::IsNullOrEmpty($InstanceName) -and [string]::IsNullOrEmpty($Url)
             }
         }
 
         It 'validates connection parameters before requesting data' {
-            { & $Command -Name ' ' } | Should -Throw
+            { & $Command -InstanceName ' ' } | Should -Throw
             { & $Command -Url 'ftp://localhost' -ApiKey fixture-key } | Should -Throw
             { & $Command -Url 'http://localhost:8989' -ApiKey ' ' } | Should -Throw
             Should -Invoke Invoke-StarrApiRequest -Times 0

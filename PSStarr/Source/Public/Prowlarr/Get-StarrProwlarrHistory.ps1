@@ -6,7 +6,7 @@ function Get-StarrProwlarrHistory {
     .DESCRIPTION
         This function retrieves one page of history, history since a timestamp, or history for one indexer through Prowlarr API v1. Selectors and filters for different routes cannot be mixed. Returned history can contain private search terms and download identifiers.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved Prowlarr instance name. The matching instance is inferred when omitted.
 
     .PARAMETER Url
@@ -52,10 +52,10 @@ function Get-StarrProwlarrHistory {
         The maximum number of records returned for one indexer.
 
     .EXAMPLE
-        Get-StarrProwlarrHistory -Name Main -Page 2 -PageSize 50 -Successful $false
+        Get-StarrProwlarrHistory -InstanceName Main -Page 2 -PageSize 50 -Successful $false
 
     .EXAMPLE
-        Get-StarrProwlarrHistory -Name Main -Since ([datetime]'2026-01-01T00:00:00Z') -EventType indexerQuery
+        Get-StarrProwlarrHistory -InstanceName Main -Since ([datetime]'2026-01-01T00:00:00Z') -EventType indexerQuery
 
     .EXAMPLE
         Get-StarrProwlarrHistory -Url 'http://localhost:9696' -ApiKey '<api-key>' -IndexerId 7 -Limit 20
@@ -76,9 +76,10 @@ function Get-StarrProwlarrHistory {
         [Parameter(ParameterSetName = 'NamedPaged')]
         [Parameter(ParameterSetName = 'NamedSince')]
         [Parameter(ParameterSetName = 'NamedIndexer')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitPaged')]
         [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitSince')]
@@ -206,8 +207,8 @@ function Get-StarrProwlarrHistory {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

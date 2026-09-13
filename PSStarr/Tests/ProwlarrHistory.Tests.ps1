@@ -9,13 +9,13 @@ InModuleScope PSStarr {
         }
 
         It 'preserves the paging envelope without fetching additional pages' {
-            $result = Get-StarrProwlarrHistory -Name Main -Page 2 -PageSize 50 -SortKey date -SortDirection descending -EventTypeId 0,2 -Successful $false -DownloadId fixture-download -IndexerIdFilter 3,4
+            $result = Get-StarrProwlarrHistory -InstanceName Main -Page 2 -PageSize 50 -SortKey date -SortDirection descending -EventTypeId 0,2 -Successful $false -DownloadId fixture-download -IndexerIdFilter 3,4
 
             $result.totalRecords | Should -Be 1
             $result.records[0].id | Should -Be 42
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $Endpoint -eq 'history' -and $Method -eq 'GET' -and $ExpectedApplication -eq 'Prowlarr' -and
-                $ApiVersion -eq 'v1' -and $Name -eq 'Main' -and $Query.page -eq 2 -and $Query.pageSize -eq 50 -and
+                $ApiVersion -eq 'v1' -and $InstanceName -eq 'Main' -and $Query.page -eq 2 -and $Query.pageSize -eq 50 -and
                 $Query.sortKey -eq 'date' -and $Query.sortDirection -eq 'descending' -and
                 ($Query.eventType -join ',') -eq '0,2' -and $Query.successful -eq $false -and
                 $Query.downloadId -eq 'fixture-download' -and ($Query.indexerIds -join ',') -eq '3,4' -and $Query.Count -eq 8
@@ -27,13 +27,13 @@ InModuleScope PSStarr {
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $Endpoint -eq 'history' -and $ApiVersion -eq 'v1' -and $ExpectedApplication -eq 'Prowlarr' -and
-                $null -eq $Query -and [string]::IsNullOrEmpty($Name)
+                $null -eq $Query -and [string]::IsNullOrEmpty($InstanceName)
             }
         }
 
         It 'serializes since timestamps and named event types' {
             $timestamp = [datetime]'2026-01-01T00:00:00Z'
-            Get-StarrProwlarrHistory -Name Main -Since $timestamp -EventType indexerQuery
+            Get-StarrProwlarrHistory -InstanceName Main -Since $timestamp -EventType indexerQuery
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $Endpoint -eq 'history/since' -and $Query.date -eq $timestamp.ToString('o') -and
@@ -64,7 +64,7 @@ InModuleScope PSStarr {
             { Get-StarrProwlarrHistory -Since ([datetime]::UtcNow) -IndexerId 1 } | Should -Throw
             { Get-StarrProwlarrHistory -IndexerId 1 -Successful $false } | Should -Throw
             { Get-StarrProwlarrHistory -IndexerId 1 -EventType grabbed } | Should -Throw
-            { Get-StarrProwlarrHistory -Name ' ' } | Should -Throw
+            { Get-StarrProwlarrHistory -InstanceName ' ' } | Should -Throw
             { Get-StarrProwlarrHistory -Url 'ftp://localhost' -ApiKey fixture-key } | Should -Throw
             { Get-StarrProwlarrHistory -Url 'http://localhost:9696' -ApiKey ' ' } | Should -Throw
             Should -Invoke Invoke-StarrApiRequest -Times 0
@@ -77,11 +77,11 @@ InModuleScope PSStarr {
         }
 
         It 'reads current settings without a query' {
-            (Get-StarrProwlarrDevelopmentConfiguration -Name Main).id | Should -Be 1
+            (Get-StarrProwlarrDevelopmentConfiguration -InstanceName Main).id | Should -Be 1
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $Endpoint -eq 'config/development' -and $Method -eq 'GET' -and
-                $ExpectedApplication -eq 'Prowlarr' -and $ApiVersion -eq 'v1' -and $Name -eq 'Main' -and $null -eq $Query
+                $ExpectedApplication -eq 'Prowlarr' -and $ApiVersion -eq 'v1' -and $InstanceName -eq 'Main' -and $null -eq $Query
             }
         }
 
@@ -97,8 +97,8 @@ InModuleScope PSStarr {
         It 'allows inference and rejects invalid settings identifiers' {
             Get-StarrProwlarrDevelopmentConfiguration
             { Get-StarrProwlarrDevelopmentConfiguration -ConfigurationId 0 } | Should -Throw
-            { Get-StarrProwlarrDevelopmentConfiguration -Name ' ' } | Should -Throw
-            Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter { [string]::IsNullOrEmpty($Name) }
+            { Get-StarrProwlarrDevelopmentConfiguration -InstanceName ' ' } | Should -Throw
+            Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter { [string]::IsNullOrEmpty($InstanceName) }
         }
     }
 }

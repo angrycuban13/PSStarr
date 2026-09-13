@@ -6,7 +6,7 @@ function Start-StarrCommand {
     .DESCRIPTION
         This function submits a command to run asynchronously through API v3 using the shared transport. It supports confirmation and WhatIf. Command names and arguments are application-specific; the server validates them. A successful response means accepted, not completed.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.
 
     .PARAMETER Url
@@ -22,7 +22,7 @@ function Start-StarrCommand {
         Additional command body properties. The reserved name property cannot be supplied here; use CommandName.
 
     .EXAMPLE
-        Start-StarrCommand -Name Main -CommandName 'RefreshMovie' -Arguments @{ movieIds = @(42) }
+        Start-StarrCommand -InstanceName Main -CommandName 'RefreshMovie' -Arguments @{ movieIds = @(42) }
 
     .EXAMPLE
         Start-StarrCommand -Url 'http://localhost:8989' -ApiKey '<api-key>' -CommandName 'RefreshSeries' -WhatIf
@@ -41,9 +41,10 @@ function Start-StarrCommand {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -64,7 +65,7 @@ function Start-StarrCommand {
         [ValidateNotNull()]
         [ValidateScript({
             foreach ($key in $_.Keys) {
-                if ([System.String]$key -ieq 'name') {
+                if ([System.String]$key -ieq 'Name') {
                     throw 'Arguments cannot contain the reserved name property. Use CommandName.'
                 }
             }
@@ -78,8 +79,8 @@ function Start-StarrCommand {
     $target = if ($PSCmdlet.ParameterSetName -eq 'Explicit') {
         $Url
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $InstanceName
     }
     else {
         'the inferred Starr instance'
@@ -110,8 +111,8 @@ function Start-StarrCommand {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

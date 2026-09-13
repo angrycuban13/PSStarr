@@ -6,7 +6,7 @@ function Start-StarrSonarrSeriesSearch {
     .DESCRIPTION
         This function submits one typed SeriesSearch command to Sonarr API v3. A successful response means Sonarr accepted the asynchronous command, not that searching completed.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved Sonarr instance name. The matching instance is inferred when omitted.
 
     .PARAMETER Url
@@ -19,7 +19,7 @@ function Start-StarrSonarrSeriesSearch {
         The positive identifier of the series to search.
 
     .EXAMPLE
-        Start-StarrSonarrSeriesSearch -Name SonarrMain -SeriesId 42
+        Start-StarrSonarrSeriesSearch -InstanceName SonarrMain -SeriesId 42
 
     .EXAMPLE
         Start-StarrSonarrSeriesSearch -Url 'http://localhost:8989' -ApiKey '<api-key>' -SeriesId 42 -WhatIf
@@ -38,9 +38,10 @@ function Start-StarrSonarrSeriesSearch {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -78,8 +79,8 @@ function Start-StarrSonarrSeriesSearch {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

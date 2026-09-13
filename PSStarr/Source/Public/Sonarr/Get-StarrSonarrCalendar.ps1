@@ -6,7 +6,7 @@ function Get-StarrSonarrCalendar {
     .DESCRIPTION
         This function exposes only Sonarr calendar parameters and provides typed tag-identifier filtering.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved Sonarr instance name.
 
     .PARAMETER Url
@@ -37,10 +37,10 @@ function Get-StarrSonarrCalendar {
         Includes episode images in calendar records.
 
     .EXAMPLE
-        Get-StarrSonarrCalendar -Name SonarrMain
+        Get-StarrSonarrCalendar -InstanceName SonarrMain
 
     .EXAMPLE
-        Get-StarrSonarrCalendar -Name SonarrMain -Start (Get-Date) -IncludeSeries $true
+        Get-StarrSonarrCalendar -InstanceName SonarrMain -Start (Get-Date) -IncludeSeries $true
 
     .INPUTS
         None.
@@ -56,9 +56,10 @@ function Get-StarrSonarrCalendar {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]

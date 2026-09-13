@@ -23,17 +23,17 @@ InModuleScope PSStarr {
         }
 
         It 'retrieves the section through a GET request' {
-            $result = Get-StarrApplicationConfiguration -Name Main -Section $Section
+            $result = Get-StarrApplicationConfiguration -InstanceName Main -Section $Section
 
             $result.id | Should -Be 1
             $result.enabled | Should -BeFalse
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                $Endpoint -eq $Path -and $Method -eq 'GET' -and $Name -eq 'Main'
+                $Endpoint -eq $Path -and $Method -eq 'GET' -and $InstanceName -eq 'Main'
             }
         }
 
         It 'retrieves the section by configuration ID' {
-            Get-StarrApplicationConfiguration -Name Main -Section $Section -ConfigurationId 7
+            Get-StarrApplicationConfiguration -InstanceName Main -Section $Section -ConfigurationId 7
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $Endpoint -eq "$Path/7" -and $Method -eq 'GET'
@@ -52,12 +52,12 @@ InModuleScope PSStarr {
             Get-StarrApplicationConfiguration -Section $Section
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                $Endpoint -eq $Path -and [string]::IsNullOrEmpty($Name) -and [string]::IsNullOrEmpty($Url)
+                $Endpoint -eq $Path -and [string]::IsNullOrEmpty($InstanceName) -and [string]::IsNullOrEmpty($Url)
             }
         }
 
         It 'restricts only metadata to Radarr' {
-            Get-StarrApplicationConfiguration -Name Main -Section $Section
+            Get-StarrApplicationConfiguration -InstanceName Main -Section $Section
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 ($Section -eq 'Metadata' -and $ExpectedApplication -eq 'Radarr') -or
@@ -68,7 +68,7 @@ InModuleScope PSStarr {
         It 'rejects invalid IDs and connection values before transport' {
             { Get-StarrApplicationConfiguration -Section $Section -ConfigurationId 0 } | Should -Throw
             { Get-StarrApplicationConfiguration -Section $Section -ConfigurationId -1 } | Should -Throw
-            { Get-StarrApplicationConfiguration -Section $Section -Name ' ' } | Should -Throw
+            { Get-StarrApplicationConfiguration -Section $Section -InstanceName ' ' } | Should -Throw
             { Get-StarrApplicationConfiguration -Section $Section -Url 'ftp://localhost' -ApiKey fixture-key } | Should -Throw
             { Get-StarrApplicationConfiguration -Section $Section -Url 'http://localhost' -ApiKey ' ' } | Should -Throw
             Should -Invoke Invoke-StarrApiRequest -Times 0
@@ -97,7 +97,7 @@ InModuleScope PSStarr {
 
             Mock Invoke-StarrApiRequest { $script:hostFixture }
 
-            $result = Get-StarrApplicationConfiguration -Name Main -Section Host
+            $result = Get-StarrApplicationConfiguration -InstanceName Main -Section Host
 
             foreach ($field in @('apiKey', 'password', 'passwordConfirmation', 'sslCertPassword', 'proxyPassword')) {
                 $result.$field | Should -Be '[REDACTED]'
@@ -112,7 +112,7 @@ InModuleScope PSStarr {
         It 'redacts case-insensitive secret names on the ID route' {
             Mock Invoke-StarrApiRequest { [pscustomobject]@{ APIKEY = 'fixture-key'; id = 1 } }
 
-            $result = Get-StarrApplicationConfiguration -Name Main -Section host -ConfigurationId 1
+            $result = Get-StarrApplicationConfiguration -InstanceName Main -Section host -ConfigurationId 1
 
             $result.APIKEY | Should -Be '[REDACTED]'
         }
@@ -120,7 +120,7 @@ InModuleScope PSStarr {
         It 'returns no fabricated object after an empty host response' {
             Mock Invoke-StarrApiRequest {}
 
-            @(Get-StarrApplicationConfiguration -Name Main -Section Host).Count | Should -Be 0
+            @(Get-StarrApplicationConfiguration -InstanceName Main -Section Host).Count | Should -Be 0
         }
     }
 }

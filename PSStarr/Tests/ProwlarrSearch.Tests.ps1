@@ -12,11 +12,11 @@ InModuleScope PSStarr {
         }
 
         It 'uses Prowlarr API v1 and leaves omitted filters to the server' {
-            (& $Command -Name Main).marker | Should -Be fixture
+            (& $Command -InstanceName Main).marker | Should -Be fixture
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $Endpoint -eq $Resource -and $Method -eq 'GET' -and $ApiVersion -eq 'v1' -and
-                $ExpectedApplication -eq 'Prowlarr' -and $Name -eq 'Main' -and $null -eq $Query
+                $ExpectedApplication -eq 'Prowlarr' -and $InstanceName -eq 'Main' -and $null -eq $Query
             }
         }
 
@@ -31,12 +31,12 @@ InModuleScope PSStarr {
             & $Command
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                [string]::IsNullOrEmpty($Name) -and [string]::IsNullOrEmpty($Url)
+                [string]::IsNullOrEmpty($InstanceName) -and [string]::IsNullOrEmpty($Url)
             }
         }
 
         It 'rejects invalid connections before transport' {
-            { & $Command -Name ' ' } | Should -Throw
+            { & $Command -InstanceName ' ' } | Should -Throw
             { & $Command -Url 'ftp://localhost' -ApiKey fixture-key } | Should -Throw
             { & $Command -Url 'http://localhost:9696' -ApiKey ' ' } | Should -Throw
             Should -Invoke Invoke-StarrApiRequest -Times 0

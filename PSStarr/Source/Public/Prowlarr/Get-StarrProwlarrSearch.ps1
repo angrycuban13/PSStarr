@@ -6,7 +6,7 @@ function Get-StarrProwlarrSearch {
     .DESCRIPTION
         This function searches Prowlarr indexers without downloading releases. This GET can contact indexers, consume quotas, record search history, and populate server caches. Omitting Term requests recent releases according to the selected search type and indexers.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved Prowlarr instance name. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -34,7 +34,7 @@ function Get-StarrProwlarrSearch {
         The zero-based result offset.
 
     .EXAMPLE
-        Get-StarrProwlarrSearch -Name 'Main' -Term 'Example' -IndexerIdFilter 1,2
+        Get-StarrProwlarrSearch -InstanceName 'Main' -Term 'Example' -IndexerIdFilter 1,2
 
     .EXAMPLE
         Get-StarrProwlarrSearch -Url 'http://localhost:9696' -ApiKey '<api-key>'
@@ -53,9 +53,10 @@ function Get-StarrProwlarrSearch {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -124,8 +125,8 @@ function Get-StarrProwlarrSearch {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

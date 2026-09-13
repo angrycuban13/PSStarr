@@ -6,7 +6,7 @@ function Get-StarrBlocklist {
     .DESCRIPTION
         This function retrieves paged blocklist records from Radarr or Sonarr, or the Radarr blocklist for one movie.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -46,10 +46,10 @@ function Get-StarrBlocklist {
         Get-StarrBlocklist
 
     .EXAMPLE
-        Get-StarrBlocklist -Name 'RadarrMain' -MovieIdFilter 12, 34 -PageSize 50
+        Get-StarrBlocklist -InstanceName 'RadarrMain' -MovieIdFilter 12, 34 -PageSize 50
 
     .EXAMPLE
-        Get-StarrBlocklist -Name 'RadarrMain' -MovieId 12
+        Get-StarrBlocklist -InstanceName 'RadarrMain' -MovieId 12
 
     .INPUTS
         None.
@@ -65,9 +65,10 @@ function Get-StarrBlocklist {
     [OutputType([System.Object])]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -182,8 +183,8 @@ function Get-StarrBlocklist {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

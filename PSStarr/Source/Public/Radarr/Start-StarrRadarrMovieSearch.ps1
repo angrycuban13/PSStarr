@@ -6,7 +6,7 @@ function Start-StarrRadarrMovieSearch {
     .DESCRIPTION
         This function submits the typed MoviesSearch command to Radarr API v3. A successful response means Radarr accepted the asynchronous command, not that searching completed.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved Radarr instance name. The matching instance is inferred when omitted.
 
     .PARAMETER Url
@@ -19,7 +19,7 @@ function Start-StarrRadarrMovieSearch {
         One or more positive movie identifiers to search.
 
     .EXAMPLE
-        Start-StarrRadarrMovieSearch -Name RadarrMain -MovieId 42,43
+        Start-StarrRadarrMovieSearch -InstanceName RadarrMain -MovieId 42,43
 
     .EXAMPLE
         Start-StarrRadarrMovieSearch -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieId 42 -WhatIf
@@ -38,9 +38,10 @@ function Start-StarrRadarrMovieSearch {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -79,8 +80,8 @@ function Start-StarrRadarrMovieSearch {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

@@ -6,7 +6,7 @@ function Start-StarrRadarrMovieRename {
     .DESCRIPTION
         This function submits the typed RenameMovie command to Radarr API v3. Use Get-StarrRadarrRenamePreview first to inspect proposed filenames. A successful response means Radarr accepted the asynchronous command.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved Radarr instance name. The matching instance is inferred when omitted.
 
     .PARAMETER Url
@@ -19,7 +19,7 @@ function Start-StarrRadarrMovieRename {
         One or more positive movie identifiers whose files Radarr should rename.
 
     .EXAMPLE
-        Start-StarrRadarrMovieRename -Name RadarrMain -MovieId 42,43
+        Start-StarrRadarrMovieRename -InstanceName RadarrMain -MovieId 42,43
 
     .EXAMPLE
         Start-StarrRadarrMovieRename -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieId 42 -WhatIf
@@ -38,9 +38,10 @@ function Start-StarrRadarrMovieRename {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -79,8 +80,8 @@ function Start-StarrRadarrMovieRename {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

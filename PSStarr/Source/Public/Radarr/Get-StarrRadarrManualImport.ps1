@@ -6,7 +6,7 @@ function Get-StarrRadarrManualImport {
     .DESCRIPTION
         This function inspects import candidates on the Radarr server without importing them. Inspection can scan server disks and read media files. Folder is a server-side path. A MovieId without DownloadId selects existing movie files; Radarr ignores Folder and FilterExistingFiles in that case.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -28,10 +28,10 @@ function Get-StarrRadarrManualImport {
         Whether to omit existing files; omitted values retain the server default of true.
 
     .EXAMPLE
-        Get-StarrRadarrManualImport -Name 'Main' -Folder '/downloads/movies'
+        Get-StarrRadarrManualImport -InstanceName 'Main' -Folder '/downloads/movies'
 
     .EXAMPLE
-        Get-StarrRadarrManualImport -Name 'Main' -MovieId 42
+        Get-StarrRadarrManualImport -InstanceName 'Main' -MovieId 42
 
     .EXAMPLE
         Get-StarrRadarrManualImport -Url 'http://localhost:7878' -ApiKey '<api-key>' -Folder '/downloads/movies'
@@ -50,9 +50,10 @@ function Get-StarrRadarrManualImport {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -109,8 +110,8 @@ function Get-StarrRadarrManualImport {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

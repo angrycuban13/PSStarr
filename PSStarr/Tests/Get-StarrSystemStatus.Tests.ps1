@@ -9,10 +9,10 @@ Describe 'Get-StarrSystemStatus' {
         }
 
         It 'delegates named requests to the transport' {
-            Get-StarrSystemStatus -Name Main
+            Get-StarrSystemStatus -InstanceName Main
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter {
-                $Name -eq 'Main' -and $Endpoint -eq 'system/status'
+                $InstanceName -eq 'Main' -and $Endpoint -eq 'system/status'
             }
         }
 
@@ -31,12 +31,12 @@ Describe 'Get-StarrSystemStatus' {
             }
         }
 
-        It 'delegates an inferred request without binding Name' {
+        It 'delegates an inferred request without binding InstanceName' {
             Get-StarrSystemStatus
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter {
                 $Endpoint -eq 'system/status' -and
-                -not $PSBoundParameters.ContainsKey('Name')
+                -not $PSBoundParameters.ContainsKey('InstanceName')
             }
         }
     }

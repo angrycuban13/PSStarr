@@ -6,7 +6,7 @@ function Get-StarrRadarrNamingExample {
     .DESCRIPTION
         This function previews movie and folder naming without saving settings. With no custom parameters, Radarr uses saved naming settings. Custom previews require NamingConfigId because Radarr otherwise discards query overrides. Supply all relevant custom settings: omitted custom fields use server model defaults rather than merging with saved settings.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -37,7 +37,7 @@ function Get-StarrRadarrNamingExample {
         The naming configuration resource name.
 
     .EXAMPLE
-        Get-StarrRadarrNamingExample -Name 'Main' -NamingConfigId 1 -StandardMovieFormat '{Movie Title} ({Release Year})' -MovieFolderFormat '{Movie Title} ({Release Year})'
+        Get-StarrRadarrNamingExample -InstanceName 'Main' -NamingConfigId 1 -StandardMovieFormat '{Movie Title} ({Release Year})' -MovieFolderFormat '{Movie Title} ({Release Year})'
 
     .EXAMPLE
         Get-StarrRadarrNamingExample -Url 'http://localhost:7878' -ApiKey '<api-key>'
@@ -57,9 +57,10 @@ function Get-StarrRadarrNamingExample {
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Parameter(ParameterSetName = 'NamedCustom')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitCustom')]
@@ -138,8 +139,8 @@ function Get-StarrRadarrNamingExample {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

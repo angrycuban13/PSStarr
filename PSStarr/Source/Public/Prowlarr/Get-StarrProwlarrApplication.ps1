@@ -6,7 +6,7 @@ function Get-StarrProwlarrApplication {
     .DESCRIPTION
         This function retrieves configured application integrations that Prowlarr synchronizes with, such as Radarr or Sonarr. Provider secret values are redacted; do not submit returned objects as updates.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved Prowlarr instance name. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -19,10 +19,10 @@ function Get-StarrProwlarrApplication {
         The positive resource identifier for an individual lookup.
 
     .EXAMPLE
-        Get-StarrProwlarrApplication -Name Main
+        Get-StarrProwlarrApplication -InstanceName Main
 
     .EXAMPLE
-        Get-StarrProwlarrApplication -Name Main -ApplicationId 1
+        Get-StarrProwlarrApplication -InstanceName Main -ApplicationId 1
 
     .EXAMPLE
         Get-StarrProwlarrApplication -Url 'http://localhost:9696' -ApiKey '<api-key>'
@@ -41,9 +41,10 @@ function Get-StarrProwlarrApplication {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -76,8 +77,8 @@ function Get-StarrProwlarrApplication {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     foreach ($resource in (Invoke-StarrApiRequest @request)) {

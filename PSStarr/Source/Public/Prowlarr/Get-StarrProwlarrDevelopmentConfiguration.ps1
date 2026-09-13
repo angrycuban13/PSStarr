@@ -6,7 +6,7 @@ function Get-StarrProwlarrDevelopmentConfiguration {
     .DESCRIPTION
         This function reads Prowlarr development configuration through API v1, optionally using its configuration identifier. It does not change application settings. Returned settings should be treated as private application configuration.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved Prowlarr instance name. The matching instance is inferred when omitted.
 
     .PARAMETER Url
@@ -19,7 +19,7 @@ function Get-StarrProwlarrDevelopmentConfiguration {
         The positive configuration identifier. Omit to read the current configuration.
 
     .EXAMPLE
-        Get-StarrProwlarrDevelopmentConfiguration -Name Main
+        Get-StarrProwlarrDevelopmentConfiguration -InstanceName Main
 
     .EXAMPLE
         Get-StarrProwlarrDevelopmentConfiguration -Url 'http://localhost:9696' -ApiKey '<api-key>' -ConfigurationId 1
@@ -38,9 +38,10 @@ function Get-StarrProwlarrDevelopmentConfiguration {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -73,8 +74,8 @@ function Get-StarrProwlarrDevelopmentConfiguration {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

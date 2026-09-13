@@ -6,7 +6,7 @@ function Get-StarrSonarrCalendarEntry {
     .DESCRIPTION
         This function retrieves one calendar episode by its episode identifier.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The optional saved instance name. When omitted, the matching instance is inferred.
 
     .PARAMETER Url
@@ -19,7 +19,7 @@ function Get-StarrSonarrCalendarEntry {
         The positive Sonarr resource identifier.
 
     .EXAMPLE
-        Get-StarrSonarrCalendarEntry -Name Main -EpisodeId 42
+        Get-StarrSonarrCalendarEntry -InstanceName Main -EpisodeId 42
 
     .EXAMPLE
         Get-StarrSonarrCalendarEntry -Url 'http://localhost:8989' -ApiKey '<api-key>' -EpisodeId 42
@@ -38,9 +38,10 @@ function Get-StarrSonarrCalendarEntry {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -68,8 +69,8 @@ function Get-StarrSonarrCalendarEntry {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     Invoke-StarrApiRequest @request

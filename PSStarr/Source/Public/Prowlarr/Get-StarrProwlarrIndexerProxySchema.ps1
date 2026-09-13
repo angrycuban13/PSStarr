@@ -6,7 +6,7 @@ function Get-StarrProwlarrIndexerProxySchema {
     .DESCRIPTION
         This function retrieves Prowlarr IndexerProxySchema resources through API v1 using the shared transport. Provider secret values are redacted; do not submit returned objects as updates.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved Prowlarr instance name. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -16,7 +16,7 @@ function Get-StarrProwlarrIndexerProxySchema {
         The API key used to authenticate with the instance.
 
     .EXAMPLE
-        Get-StarrProwlarrIndexerProxySchema -Name Main
+        Get-StarrProwlarrIndexerProxySchema -InstanceName Main
 
     .EXAMPLE
         Get-StarrProwlarrIndexerProxySchema -Url 'http://localhost:9696' -ApiKey '<api-key>'
@@ -35,9 +35,10 @@ function Get-StarrProwlarrIndexerProxySchema {
     [OutputType([System.Object])]
     param(
         [Parameter(ParameterSetName = 'Named')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
@@ -61,8 +62,8 @@ function Get-StarrProwlarrIndexerProxySchema {
         $request.Url = $Url
         $request.ApiKey = $ApiKey
     }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
+    elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+        $request.InstanceName = $InstanceName
     }
 
     foreach ($resource in (Invoke-StarrApiRequest @request)) {

@@ -15,13 +15,13 @@ InModuleScope PSStarr {
         }
 
         It 'passes a movie filter and preserves list results' {
-            $result = @(& $Command -Name Main -MovieId 42)
+            $result = @(& $Command -InstanceName Main -MovieId 42)
 
             $result.Count | Should -Be 2
             $result[1].id | Should -Be 2
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $Endpoint -eq $Resource -and $Method -eq 'GET' -and
-                $ExpectedApplication -eq 'Radarr' -and $Name -eq 'Main' -and
+                $ExpectedApplication -eq 'Radarr' -and $InstanceName -eq 'Main' -and
                 $Query.movieId -eq 42 -and $Query.Count -eq 1
             }
         }
@@ -39,13 +39,13 @@ InModuleScope PSStarr {
             & $Command
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                $null -eq $Query -and [string]::IsNullOrEmpty($Name) -and $ExpectedApplication -eq 'Radarr'
+                $null -eq $Query -and [string]::IsNullOrEmpty($InstanceName) -and $ExpectedApplication -eq 'Radarr'
             }
         }
 
         It 'rejects invalid input before sending requests' {
-            { & $Command -Name Main -MovieId 0 } | Should -Throw
-            { & $Command -Name ' ' } | Should -Throw
+            { & $Command -InstanceName Main -MovieId 0 } | Should -Throw
+            { & $Command -InstanceName ' ' } | Should -Throw
             { & $Command -Url 'ftp://localhost' -ApiKey fixture-key } | Should -Throw
             { & $Command -Url 'http://localhost:7878' -ApiKey ' ' } | Should -Throw
             Should -Invoke Invoke-StarrApiRequest -Times 0
@@ -58,7 +58,7 @@ InModuleScope PSStarr {
         }
 
         It 'retrieves an individual title without query filters' {
-            (Get-StarrRadarrAlternativeTitle -Name Main -AlternativeTitleId 7).id | Should -Be 7
+            (Get-StarrRadarrAlternativeTitle -InstanceName Main -AlternativeTitleId 7).id | Should -Be 7
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $Endpoint -eq 'alttitle/7' -and $null -eq $Query -and $ExpectedApplication -eq 'Radarr'
@@ -74,7 +74,7 @@ InModuleScope PSStarr {
         }
 
         It 'maps the movie metadata filter' {
-            Get-StarrRadarrAlternativeTitle -Name Main -MovieMetadataId 12
+            Get-StarrRadarrAlternativeTitle -InstanceName Main -MovieMetadataId 12
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $Endpoint -eq 'alttitle' -and $Query.movieMetadataId -eq 12 -and $Query.Count -eq 1
@@ -82,10 +82,10 @@ InModuleScope PSStarr {
         }
 
         It 'rejects conflicting selectors and invalid IDs' {
-            { Get-StarrRadarrAlternativeTitle -Name Main -AlternativeTitleId 7 -MovieId 42 } | Should -Throw
-            { Get-StarrRadarrAlternativeTitle -Name Main -AlternativeTitleId 7 -MovieMetadataId 12 } | Should -Throw
-            { Get-StarrRadarrAlternativeTitle -Name Main -AlternativeTitleId 0 } | Should -Throw
-            { Get-StarrRadarrAlternativeTitle -Name Main -MovieMetadataId -1 } | Should -Throw
+            { Get-StarrRadarrAlternativeTitle -InstanceName Main -AlternativeTitleId 7 -MovieId 42 } | Should -Throw
+            { Get-StarrRadarrAlternativeTitle -InstanceName Main -AlternativeTitleId 7 -MovieMetadataId 12 } | Should -Throw
+            { Get-StarrRadarrAlternativeTitle -InstanceName Main -AlternativeTitleId 0 } | Should -Throw
+            { Get-StarrRadarrAlternativeTitle -InstanceName Main -MovieMetadataId -1 } | Should -Throw
             Should -Invoke Invoke-StarrApiRequest -Times 0
         }
     }

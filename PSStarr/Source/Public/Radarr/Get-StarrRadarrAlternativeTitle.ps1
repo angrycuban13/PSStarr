@@ -6,7 +6,7 @@ function Get-StarrRadarrAlternativeTitle {
     .DESCRIPTION
         This function retrieves Radarr alternative titles through the shared transport. Use AlternativeTitleId for an individual title, or movie filters for a list.
 
-    .PARAMETER Name
+    .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.
 
     .PARAMETER Url
@@ -25,10 +25,10 @@ function Get-StarrRadarrAlternativeTitle {
         The positive internal alternative-title identifier used for an individual lookup.
 
     .EXAMPLE
-        Get-StarrRadarrAlternativeTitle -Name 'Main' -MovieId 42
+        Get-StarrRadarrAlternativeTitle -InstanceName 'Main' -MovieId 42
 
     .EXAMPLE
-        Get-StarrRadarrAlternativeTitle -Name 'Main' -AlternativeTitleId 7
+        Get-StarrRadarrAlternativeTitle -InstanceName 'Main' -AlternativeTitleId 7
 
     .EXAMPLE
         Get-StarrRadarrAlternativeTitle -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieId 42
@@ -51,9 +51,10 @@ function Get-StarrRadarrAlternativeTitle {
     param(
         [Parameter(ParameterSetName = 'NamedList')]
         [Parameter(ParameterSetName = 'NamedId')]
+        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $Name,
+        $InstanceName,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitList')]
         [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitId')]
@@ -111,8 +112,8 @@ function Get-StarrRadarrAlternativeTitle {
             $request.Url = $Url
             $request.ApiKey = $ApiKey
         }
-        elseif ($PSBoundParameters.ContainsKey('Name')) {
-            $request.Name = $Name
+        elseif ($PSBoundParameters.ContainsKey('InstanceName')) {
+            $request.InstanceName = $InstanceName
         }
 
         Invoke-StarrApiRequest @request
