@@ -15,6 +15,9 @@ function Get-StarrHistory {
     .PARAMETER ApiKey
         The API key used to authenticate with the Starr instance.
 
+    .PARAMETER Application
+        The expected application type. Use an application-specific history command for a narrower parameter surface.
+
     .PARAMETER Since
         Uses the history/since endpoint beginning at this timestamp.
 
@@ -108,6 +111,11 @@ function Get-StarrHistory {
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
         $ApiKey,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('Radarr', 'Sonarr')]
+        [System.String]
+        $Application,
 
         [Parameter(Mandatory = $false)]
         [System.DateTime]
@@ -222,6 +230,14 @@ function Get-StarrHistory {
         $PSCmdlet.ThrowTerminatingError($errorRecord)
     }
 
+    if (($Application -eq 'Radarr' -and @($hasSonarrParameters).Count -gt 0) -or ($Application -eq 'Sonarr' -and $hasRadarrParameters)) {
+        $message = "$Application does not support the supplied application-specific history parameters."
+        $exception = [System.ArgumentException]::new($message)
+        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrApplicationParameterMismatch' -TargetObject $PSBoundParameters -Activity $MyInvocation.MyCommand.Name
+
+        $PSCmdlet.ThrowTerminatingError($errorRecord)
+    }
+
     $route = if ($PSBoundParameters.ContainsKey('Since')) {
         'Since'
     }
@@ -237,20 +253,20 @@ function Get-StarrHistory {
 
     $allowedParameters = @{
         Paged = @(
-            'Name', 'Url', 'ApiKey', 'Page', 'PageSize', 'SortKey',
+            'Name', 'Url', 'ApiKey', 'Application', 'Page', 'PageSize', 'SortKey',
             'SortDirection', 'EventTypeId', 'DownloadId', 'MovieIdFilter',
             'SeriesIdFilter', 'EpisodeId', 'Languages', 'Quality',
             'IncludeMovie', 'IncludeSeries', 'IncludeEpisode'
         )
         Since = @(
-            'Name', 'Url', 'ApiKey', 'Since', 'EventType', 'IncludeMovie',
+            'Name', 'Url', 'ApiKey', 'Application', 'Since', 'EventType', 'IncludeMovie',
             'IncludeSeries', 'IncludeEpisode'
         )
         Movie = @(
-            'Name', 'Url', 'ApiKey', 'MovieId', 'EventType', 'IncludeMovie'
+            'Name', 'Url', 'ApiKey', 'Application', 'MovieId', 'EventType', 'IncludeMovie'
         )
         Series = @(
-            'Name', 'Url', 'ApiKey', 'SeriesId', 'SeasonNumber', 'EventType',
+            'Name', 'Url', 'ApiKey', 'Application', 'SeriesId', 'SeasonNumber', 'EventType',
             'IncludeSeries', 'IncludeEpisode'
         )
     }
@@ -276,6 +292,10 @@ function Get-StarrHistory {
 
     $request = @{
         Endpoint = 'history'
+    }
+
+    if ($PSBoundParameters.ContainsKey('Application')) {
+        $request.ExpectedApplication = $Application
     }
 
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
@@ -314,10 +334,10 @@ function Get-StarrHistory {
         $request.Query = $query
     }
 
-    if ($hasRadarrParameters) {
+    if ($Application -eq 'Radarr' -or $hasRadarrParameters) {
         $request.ExpectedApplication = 'Radarr'
     }
-    elseif (@($hasSonarrParameters).Count -gt 0) {
+    elseif ($Application -eq 'Sonarr' -or @($hasSonarrParameters).Count -gt 0) {
         $request.ExpectedApplication = 'Sonarr'
     }
 

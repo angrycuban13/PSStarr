@@ -15,6 +15,9 @@ function Get-StarrBlocklist {
     .PARAMETER ApiKey
         The API key used to authenticate with the Starr instance.
 
+    .PARAMETER Application
+        The expected application type. Use an application-specific blocklist command for a narrower parameter surface.
+
     .PARAMETER MovieId
         The Radarr movie identifier used with the movie blocklist endpoint.
 
@@ -77,6 +80,11 @@ function Get-StarrBlocklist {
         $ApiKey,
 
         [Parameter(Mandatory = $false)]
+        [ValidateSet('Radarr', 'Sonarr')]
+        [System.String]
+        $Application,
+
+        [Parameter(Mandatory = $false)]
         [ValidateRange(1, [System.Int32]::MaxValue)]
         [System.Int32]
         $MovieId,
@@ -128,8 +136,20 @@ function Get-StarrBlocklist {
         $PSCmdlet.ThrowTerminatingError($errorRecord)
     }
 
+    if (($Application -eq 'Radarr' -and $hasSonarrParameters) -or ($Application -eq 'Sonarr' -and $hasRadarrParameters)) {
+        $message = "$Application does not support the supplied application-specific blocklist parameters."
+        $exception = [System.ArgumentException]::new($message)
+        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrApplicationParameterMismatch' -TargetObject $PSBoundParameters -Activity $MyInvocation.MyCommand.Name
+
+        $PSCmdlet.ThrowTerminatingError($errorRecord)
+    }
+
     $request = @{
         Endpoint = 'blocklist'
+    }
+
+    if ($PSBoundParameters.ContainsKey('Application')) {
+        $request.ExpectedApplication = $Application
     }
 
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
@@ -151,10 +171,10 @@ function Get-StarrBlocklist {
         $request.Query = $query
     }
 
-    if ($hasRadarrParameters) {
+    if ($Application -eq 'Radarr' -or $hasRadarrParameters) {
         $request.ExpectedApplication = 'Radarr'
     }
-    elseif ($hasSonarrParameters) {
+    elseif ($Application -eq 'Sonarr' -or $hasSonarrParameters) {
         $request.ExpectedApplication = 'Sonarr'
     }
 

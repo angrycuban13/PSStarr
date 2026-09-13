@@ -15,6 +15,9 @@ function Get-StarrQueueDetail {
     .PARAMETER ApiKey
         The API key used to authenticate with the Starr instance.
 
+    .PARAMETER Application
+        The expected application type. Use an application-specific queue-detail command for a narrower parameter surface.
+
     .PARAMETER MovieId
         The Radarr movie identifier used to filter results.
 
@@ -71,6 +74,11 @@ function Get-StarrQueueDetail {
         $ApiKey,
 
         [Parameter(Mandatory = $false)]
+        [ValidateSet('Radarr', 'Sonarr')]
+        [System.String]
+        $Application,
+
+        [Parameter(Mandatory = $false)]
         [ValidateRange(1, [System.Int32]::MaxValue)]
         [System.Int32]
         $MovieId,
@@ -108,10 +116,23 @@ function Get-StarrQueueDetail {
 
         $PSCmdlet.ThrowTerminatingError($errorRecord)
     }
+
+    if (($Application -eq 'Radarr' -and @($hasSonarrParameters).Count -gt 0) -or ($Application -eq 'Sonarr' -and @($hasRadarrParameters).Count -gt 0)) {
+        $message = "$Application does not support the supplied application-specific queue-detail parameters."
+        $exception = [System.ArgumentException]::new($message)
+        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrApplicationParameterMismatch' -TargetObject $PSBoundParameters -Activity $MyInvocation.MyCommand.Name
+
+        $PSCmdlet.ThrowTerminatingError($errorRecord)
+    }
+
     $endpoint = 'queue/details'
 
     $request = @{
         Endpoint = $endpoint
+    }
+
+    if ($PSBoundParameters.ContainsKey('Application')) {
+        $request.ExpectedApplication = $Application
     }
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
         MovieId         = 'movieId'
@@ -125,11 +146,11 @@ function Get-StarrQueueDetail {
     if ($query.Count -gt 0) {
         $request.Query = $query
     }
-    if ($PSBoundParameters.ContainsKey('MovieId') -or $PSBoundParameters.ContainsKey('IncludeMovie')) {
+    if ($Application -eq 'Radarr' -or $PSBoundParameters.ContainsKey('MovieId') -or $PSBoundParameters.ContainsKey('IncludeMovie')) {
         $request.ExpectedApplication = 'Radarr'
     }
 
-    if ($PSBoundParameters.ContainsKey('SeriesId') -or $PSBoundParameters.ContainsKey('EpisodeIdFilter') -or $PSBoundParameters.ContainsKey('IncludeSeries') -or $PSBoundParameters.ContainsKey('IncludeEpisode')) {
+    if ($Application -eq 'Sonarr' -or $PSBoundParameters.ContainsKey('SeriesId') -or $PSBoundParameters.ContainsKey('EpisodeIdFilter') -or $PSBoundParameters.ContainsKey('IncludeSeries') -or $PSBoundParameters.ContainsKey('IncludeEpisode')) {
         $request.ExpectedApplication = 'Sonarr'
     }
 

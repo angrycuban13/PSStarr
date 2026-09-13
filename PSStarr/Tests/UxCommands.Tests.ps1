@@ -223,3 +223,88 @@ Describe 'Application-specific calendar commands' {
         }
     }
 }
+
+Describe 'Application-specific queue-detail and blocklist commands' {
+    InModuleScope PSStarr {
+        It 'forwards Radarr queue-detail parameters without Sonarr fields' {
+            Mock Get-StarrQueueDetail { @() }
+
+            Get-StarrRadarrQueueDetail -Name RadarrMain -MovieId 42
+
+            Should -Invoke Get-StarrQueueDetail -Times 1 -Exactly -ParameterFilter {
+                $Application -eq 'Radarr' -and $MovieId -eq 42
+            }
+            (Get-Command Get-StarrRadarrQueueDetail).Parameters.Keys | Should -Not -Contain 'SeriesId'
+        }
+
+        It 'forwards Sonarr queue-detail parameters without Radarr fields' {
+            Mock Get-StarrQueueDetail { @() }
+
+            Get-StarrSonarrQueueDetail -Name SonarrMain -SeriesId 42 -EpisodeIdFilter 10,11
+
+            Should -Invoke Get-StarrQueueDetail -Times 1 -Exactly -ParameterFilter {
+                $Application -eq 'Sonarr' -and $SeriesId -eq 42 -and @($EpisodeIdFilter).Count -eq 2
+            }
+            (Get-Command Get-StarrSonarrQueueDetail).Parameters.Keys | Should -Not -Contain 'MovieId'
+        }
+
+        It 'forwards Radarr blocklist parameters without Sonarr fields' {
+            Mock Get-StarrBlocklist { @() }
+
+            Get-StarrRadarrBlocklist -Name RadarrMain -MovieIdFilter 42,43
+
+            Should -Invoke Get-StarrBlocklist -Times 1 -Exactly -ParameterFilter {
+                $Application -eq 'Radarr' -and @($MovieIdFilter).Count -eq 2
+            }
+            (Get-Command Get-StarrRadarrBlocklist).Parameters.Keys | Should -Not -Contain 'SeriesIdFilter'
+        }
+
+        It 'forwards Sonarr blocklist parameters without Radarr fields' {
+            Mock Get-StarrBlocklist { @() }
+
+            Get-StarrSonarrBlocklist -Name SonarrMain -SeriesIdFilter 42,43
+
+            Should -Invoke Get-StarrBlocklist -Times 1 -Exactly -ParameterFilter {
+                $Application -eq 'Sonarr' -and @($SeriesIdFilter).Count -eq 2
+            }
+            (Get-Command Get-StarrSonarrBlocklist).Parameters.Keys | Should -Not -Contain 'MovieIdFilter'
+        }
+
+        It 'rejects an explicit application that contradicts queue-detail parameters' {
+            Mock Invoke-StarrApiRequest { @() }
+
+            { Get-StarrQueueDetail -Name Main -Application Radarr -SeriesId 42 } |
+                Should -Throw -ErrorId 'StarrApplicationParameterMismatch,Get-StarrQueueDetail'
+
+            Should -Invoke Invoke-StarrApiRequest -Times 0
+        }
+
+        It 'rejects an explicit application that contradicts blocklist parameters' {
+            Mock Invoke-StarrApiRequest { @() }
+
+            { Get-StarrBlocklist -Name Main -Application Sonarr -MovieIdFilter 42 } |
+                Should -Throw -ErrorId 'StarrApplicationParameterMismatch,Get-StarrBlocklist'
+
+            Should -Invoke Invoke-StarrApiRequest -Times 0
+        }
+
+        It 'routes shared history by an explicit application discriminator' {
+            Mock Invoke-StarrApiRequest { @() }
+
+            Get-StarrHistory -Name Main -Application Sonarr -Page 1
+
+            Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
+                $ExpectedApplication -eq 'Sonarr' -and $Endpoint -eq 'history'
+            }
+        }
+
+        It 'rejects an explicit application that contradicts history parameters' {
+            Mock Invoke-StarrApiRequest { @() }
+
+            { Get-StarrHistory -Name Main -Application Radarr -SeriesIdFilter 42 } |
+                Should -Throw -ErrorId 'StarrApplicationParameterMismatch,Get-StarrHistory'
+
+            Should -Invoke Invoke-StarrApiRequest -Times 0
+        }
+    }
+}
