@@ -119,7 +119,7 @@ function Get-StarrProwlarrHistory {
 
         [Parameter(Mandatory = $false, ParameterSetName = 'NamedPaged')]
         [Parameter(Mandatory = $false, ParameterSetName = 'ExplicitPaged')]
-        [ValidateSet('date')]
+        [ValidateNotNullOrWhiteSpace()]
         [System.String]
         $SortKey,
 

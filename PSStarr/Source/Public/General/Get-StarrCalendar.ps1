@@ -121,6 +121,14 @@ function Get-StarrCalendar {
 
     $endpoint = 'calendar'
 
+    if ($PSBoundParameters.ContainsKey('Start') -and $PSBoundParameters.ContainsKey('End') -and $Start -gt $End) {
+        $message = 'Start must be earlier than or equal to End.'
+        $exception = [System.ArgumentException]::new($message)
+        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrDateRangeInvalid' -TargetObject $PSBoundParameters -Activity $MyInvocation.MyCommand.Name
+
+        $PSCmdlet.ThrowTerminatingError($errorRecord)
+    }
+
     if ($PSBoundParameters.ContainsKey('Tags') -and $PSBoundParameters.ContainsKey('TagIdFilter')) {
         $message = 'Tags and TagIdFilter cannot be combined.'
         $exception = [System.ArgumentException]::new($message)

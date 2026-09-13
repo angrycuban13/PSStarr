@@ -45,10 +45,10 @@ function Get-StarrRadarrHistory {
     .PARAMETER MovieIdFilter
         Limits paged history to the supplied movie identifiers.
 
-    .PARAMETER Languages
+    .PARAMETER LanguageIdFilter
         Limits paged history to the supplied language identifiers.
 
-    .PARAMETER Quality
+    .PARAMETER QualityIdFilter
         Limits paged history to the supplied quality identifiers.
 
     .PARAMETER IncludeMovie
@@ -139,13 +139,15 @@ function Get-StarrRadarrHistory {
 
         [Parameter()]
         [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
+        [Alias('Languages')]
         [System.Int32[]]
-        $Languages,
+        $LanguageIdFilter,
 
         [Parameter()]
         [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
+        [Alias('Quality')]
         [System.Int32[]]
-        $Quality,
+        $QualityIdFilter,
 
         [Parameter()]
         [System.Boolean]

@@ -42,10 +42,10 @@ function Get-StarrSonarrQueue {
     .PARAMETER Protocol
         Limits results by download protocol.
 
-    .PARAMETER Languages
+    .PARAMETER LanguageIdFilter
         Limits results by language identifiers.
 
-    .PARAMETER Quality
+    .PARAMETER QualityIdFilter
         Limits results by quality identifiers.
 
     .PARAMETER Status
@@ -101,7 +101,7 @@ function Get-StarrSonarrQueue {
         $SortKey,
 
         [Parameter()]
-        [ValidateSet('ascending', 'descending')]
+        [ValidateSet('default', 'ascending', 'descending')]
         [System.String]
         $SortDirection,
 
@@ -129,13 +129,15 @@ function Get-StarrSonarrQueue {
 
         [Parameter()]
         [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
+        [Alias('Languages')]
         [System.Int32[]]
-        $Languages,
+        $LanguageIdFilter,
 
         [Parameter()]
         [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
+        [Alias('Quality')]
         [System.Int32[]]
-        $Quality,
+        $QualityIdFilter,
 
         [Parameter()]
         [ValidateSet('unknown', 'queued', 'paused', 'downloading', 'completed', 'failed', 'warning', 'delay', 'downloadClientUnavailable', 'fallback')]

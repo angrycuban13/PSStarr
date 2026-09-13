@@ -80,7 +80,7 @@ function Get-StarrProwlarrIndexerStatistic {
 
         [Parameter()]
         [ValidateNotNullOrEmpty()]
-        [ValidateSet('Usenet', 'Torrent')]
+        [ValidateSet('Unknown', 'Usenet', 'Torrent')]
         [System.String[]]
         $Protocol,
 
@@ -90,6 +90,14 @@ function Get-StarrProwlarrIndexerStatistic {
         [System.String[]]
         $Tag
     )
+
+    if ($PSBoundParameters.ContainsKey('StartDate') -and $PSBoundParameters.ContainsKey('EndDate') -and $StartDate -gt $EndDate) {
+        $message = 'StartDate must be earlier than or equal to EndDate.'
+        $exception = [System.ArgumentException]::new($message)
+        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrDateRangeInvalid' -TargetObject $PSBoundParameters -Activity $MyInvocation.MyCommand.Name
+
+        $PSCmdlet.ThrowTerminatingError($errorRecord)
+    }
 
     $request = @{
         Endpoint            = 'indexerstats'

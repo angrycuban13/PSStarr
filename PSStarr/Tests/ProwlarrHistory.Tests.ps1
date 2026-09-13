@@ -59,7 +59,7 @@ InModuleScope PSStarr {
             { Get-StarrProwlarrHistory -EventTypeId -1 } | Should -Throw
             { Get-StarrProwlarrHistory -EventTypeId @() } | Should -Throw
             { Get-StarrProwlarrHistory -IndexerIdFilter 1,0 } | Should -Throw
-            { Get-StarrProwlarrHistory -SortKey title } | Should -Throw
+            { Get-StarrProwlarrHistory -SortKey ' ' } | Should -Throw
             { Get-StarrProwlarrHistory -Since ([datetime]::UtcNow) -Page 1 } | Should -Throw
             { Get-StarrProwlarrHistory -Since ([datetime]::UtcNow) -IndexerId 1 } | Should -Throw
             { Get-StarrProwlarrHistory -IndexerId 1 -Successful $false } | Should -Throw

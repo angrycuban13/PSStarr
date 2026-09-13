@@ -60,10 +60,10 @@ function Get-StarrHistory {
     .PARAMETER EpisodeId
         The Sonarr episode identifier used to filter paged history.
 
-    .PARAMETER Languages
+    .PARAMETER LanguageIdFilter
         The language identifiers used to filter paged history.
 
-    .PARAMETER Quality
+    .PARAMETER QualityIdFilter
         The quality identifiers used to filter paged history.
 
     .PARAMETER IncludeMovie
@@ -188,13 +188,15 @@ function Get-StarrHistory {
 
         [Parameter(Mandatory = $false)]
         [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
+        [Alias('Languages')]
         [System.Int32[]]
-        $Languages,
+        $LanguageIdFilter,
 
         [Parameter(Mandatory = $false)]
         [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
+        [Alias('Quality')]
         [System.Int32[]]
-        $Quality,
+        $QualityIdFilter,
 
         [Parameter(Mandatory = $false)]
         [System.Boolean]
@@ -255,7 +257,7 @@ function Get-StarrHistory {
         Paged = @(
             'Name', 'Url', 'ApiKey', 'Application', 'Page', 'PageSize', 'SortKey',
             'SortDirection', 'EventTypeId', 'DownloadId', 'MovieIdFilter',
-            'SeriesIdFilter', 'EpisodeId', 'Languages', 'Quality',
+            'SeriesIdFilter', 'EpisodeId', 'LanguageIdFilter', 'QualityIdFilter',
             'IncludeMovie', 'IncludeSeries', 'IncludeEpisode'
         )
         Since = @(
@@ -308,8 +310,8 @@ function Get-StarrHistory {
         MovieIdFilter  = 'movieIds'
         SeriesIdFilter = 'seriesIds'
         EpisodeId      = 'episodeId'
-        Languages      = 'languages'
-        Quality        = 'quality'
+        LanguageIdFilter = 'languages'
+        QualityIdFilter  = 'quality'
         IncludeMovie   = 'includeMovie'
         IncludeSeries  = 'includeSeries'
         IncludeEpisode = 'includeEpisode'

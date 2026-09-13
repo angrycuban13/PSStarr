@@ -54,10 +54,10 @@ function Get-StarrQueue {
     .PARAMETER Protocol
         The download protocol used to filter results.
 
-    .PARAMETER Languages
+    .PARAMETER LanguageIdFilter
         The language identifiers used to filter results.
 
-    .PARAMETER Quality
+    .PARAMETER QualityIdFilter
         The quality identifiers used to filter results.
 
     .PARAMETER Status
@@ -162,13 +162,15 @@ function Get-StarrQueue {
 
         [Parameter(Mandatory = $false)]
         [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
+        [Alias('Languages')]
         [System.Int32[]]
-        $Languages,
+        $LanguageIdFilter,
 
         [Parameter(Mandatory = $false)]
         [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
+        [Alias('Quality')]
         [System.Int32[]]
-        $Quality,
+        $QualityIdFilter,
 
         [Parameter(Mandatory = $false)]
         [ValidateSet('unknown', 'queued', 'paused', 'downloading', 'completed', 'failed', 'warning', 'delay', 'downloadClientUnavailable', 'fallback')]
@@ -217,8 +219,8 @@ function Get-StarrQueue {
         IncludeEpisode            = 'includeEpisode'
         SeriesIdFilter            = 'seriesIds'
         Protocol                  = 'protocol'
-        Languages                 = 'languages'
-        Quality                   = 'quality'
+        LanguageIdFilter          = 'languages'
+        QualityIdFilter           = 'quality'
         Status                    = 'status'
     }
 
