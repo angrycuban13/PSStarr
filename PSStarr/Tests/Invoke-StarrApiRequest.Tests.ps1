@@ -82,18 +82,6 @@ Describe 'Invoke-StarrApiRequest' {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 Describe 'Invoke-StarrApiRequest instance inference' {
     InModuleScope PSStarr {
         BeforeEach {
@@ -135,7 +123,7 @@ Describe 'Invoke-StarrApiRequest instance inference' {
             Mock Get-StarrConfiguration {
                 @{
                     Instances = @{
-                        Main = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = 'fake' }
+                        Main  = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = 'fake' }
                         FourK = @{ Application = 'Radarr'; Url = 'http://localhost:7879'; ApiKey = 'fake' }
                     }
                 }

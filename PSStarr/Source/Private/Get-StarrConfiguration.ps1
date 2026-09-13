@@ -40,9 +40,3 @@ function Get-StarrConfiguration {
 
     $configuration
 }
-
-
-
-
-
-

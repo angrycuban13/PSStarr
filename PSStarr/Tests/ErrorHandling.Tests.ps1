@@ -42,8 +42,6 @@ Describe 'Starr error handling and logging' {
                 $Message -notmatch 'secret-key' -and $Message -match '\[REDACTED\]'
             }
         }
-
-
     }
 }
 
@@ -58,4 +56,3 @@ Describe 'Write-PSStarrLogEntry' {
         }
     }
 }
-

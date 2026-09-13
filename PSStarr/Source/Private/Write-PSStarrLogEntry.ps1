@@ -261,7 +261,3 @@ function Write-PSStarrLogEntry {
         }
     }
 }
-
-
-
-

@@ -49,7 +49,3 @@ function Protect-StarrSensitiveText {
 
     $sanitized
 }
-
-
-
-

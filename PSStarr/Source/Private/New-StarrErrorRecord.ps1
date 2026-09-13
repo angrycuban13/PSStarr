@@ -118,7 +118,3 @@ function New-StarrErrorRecord {
         return $errRecord
     }
 }
-
-
-
-

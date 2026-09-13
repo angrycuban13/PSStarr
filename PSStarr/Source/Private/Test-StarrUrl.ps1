@@ -46,9 +46,3 @@ function Test-StarrUrl {
 
     $true
 }
-
-
-
-
-
-

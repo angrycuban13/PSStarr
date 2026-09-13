@@ -1,4 +1,4 @@
-BeforeDiscovery {
+﻿BeforeDiscovery {
     Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
 }
 
@@ -71,7 +71,6 @@ Describe 'Starr instance configuration' {
             }
         }
 
-
         It 'does not reveal API keys when retrieving a instance' {
             Mock Import-Configuration {
                 @{ Instances = @{ Main = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = 'secret' } } }
@@ -92,7 +91,7 @@ Describe 'Starr instance configuration' {
                                 CipherText = 'encrypted'
                             }
                         }
-                        Legacy = @{
+                        Legacy    = @{
                             Application = 'Sonarr'
                             Url         = 'http://localhost:8989'
                             ApiKey      = 'plaintext'
@@ -104,8 +103,8 @@ Describe 'Starr instance configuration' {
 
             $instances = @(Get-PSStarrInstance)
 
-            ($instances | Where-Object Name -eq 'Encrypted').EncryptionMode | Should -Be 'Aes256'
-            ($instances | Where-Object Name -eq 'Legacy').EncryptionMode | Should -Be 'None'
+            ($instances | Where-Object Name -EQ 'Encrypted').EncryptionMode | Should -Be 'Aes256'
+            ($instances | Where-Object Name -EQ 'Legacy').EncryptionMode | Should -Be 'None'
             Should -Invoke Unprotect-StarrConfigurationSecret -Times 0
         }
 
@@ -114,7 +113,7 @@ Describe 'Starr instance configuration' {
                 @{ Instances = @{
                         Main      = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = 'secret' }
                         Secondary = @{ Application = 'Sonarr'; Url = 'http://localhost:8989'; ApiKey = 'secret' }
-                    } 
+                    }
                 }
             }
             Mock Remove-Item
@@ -138,7 +137,7 @@ Describe 'Starr instance configuration' {
             Mock Import-Configuration {
                 @{
                     Instances = @{
-                        Main = @{
+                        Main      = @{
                             Application = 'Radarr'
                             Url         = 'http://localhost:7878'
                             ApiKey      = 'secret'
