@@ -73,6 +73,20 @@ InModuleScope PSStarr {
             Should -Invoke Invoke-RestMethod -Times 0
         }
 
+        It 'rejects v3-only tag creation against Prowlarr' {
+            { New-StarrTag -InstanceName Main -Label test -Confirm:$false -ErrorAction Stop } |
+                Should -Throw '*not*Radarr or Sonarr*'
+
+            Should -Invoke Invoke-RestMethod -Times 0
+        }
+
+        It 'rejects v3-only command submission against Prowlarr' {
+            { Start-StarrCommand -InstanceName Main -CommandName test -Confirm:$false -ErrorAction Stop } |
+                Should -Throw '*not*Radarr or Sonarr*'
+
+            Should -Invoke Invoke-RestMethod -Times 0
+        }
+
         It 'saves a Prowlarr instance without changing the schema' {
             Mock Import-Configuration { @{ Instances = @{} } }
             Mock Export-Configuration

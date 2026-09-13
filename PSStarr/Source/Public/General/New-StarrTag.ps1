@@ -78,10 +78,11 @@ function New-StarrTag {
     }
 
     $request = @{
-        Endpoint   = 'tag'
-        Method     = 'POST'
-        ApiVersion = 'v3'
-        Body       = $body
+        Endpoint            = 'tag'
+        Method              = 'POST'
+        ApiVersion          = 'v3'
+        ExpectedApplication = @('Radarr', 'Sonarr')
+        Body                = $body
     }
 
     if ($PSCmdlet.ParameterSetName -eq 'Explicit') {

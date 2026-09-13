@@ -101,10 +101,11 @@ function Start-StarrCommand {
     }
 
     $request = @{
-        Endpoint   = 'command'
-        Method     = 'POST'
-        ApiVersion = 'v3'
-        Body       = $body
+        Endpoint            = 'command'
+        Method              = 'POST'
+        ApiVersion          = 'v3'
+        ExpectedApplication = @('Radarr', 'Sonarr')
+        Body                = $body
     }
 
     if ($PSCmdlet.ParameterSetName -eq 'Explicit') {
