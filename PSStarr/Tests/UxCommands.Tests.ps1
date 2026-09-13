@@ -308,3 +308,89 @@ Describe 'Application-specific queue-detail and blocklist commands' {
         }
     }
 }
+
+Describe 'Application-specific history commands' {
+    InModuleScope PSStarr {
+        BeforeEach {
+            Mock Invoke-StarrApiRequest { @() }
+        }
+
+        It 'forwards Radarr movie history with a Radarr discriminator' {
+            Get-StarrRadarrHistory -Name RadarrMain -MovieId 42 -EventType movieFileRenamed
+
+            Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
+                $ExpectedApplication -eq 'Radarr' -and $Endpoint -eq 'history/movie' -and
+                $Query.movieId -eq 42 -and $Query.eventType -eq 'movieFileRenamed'
+            }
+        }
+
+        It 'routes Radarr paged history filters' {
+            Get-StarrRadarrHistory -Name RadarrMain -Page 2 -PageSize 25 -MovieIdFilter 42,43 -EventTypeId 1,3 -IncludeMovie $true
+
+            Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
+                $ExpectedApplication -eq 'Radarr' -and $Endpoint -eq 'history' -and
+                $Query.page -eq 2 -and $Query.pageSize -eq 25 -and
+                @($Query.movieIds).Count -eq 2 -and @($Query.eventType).Count -eq 2 -and $Query.includeMovie
+            }
+        }
+
+        It 'routes Radarr history since a timestamp using ISO 8601' {
+            $since = [datetime]'2026-09-13T08:30:00Z'
+
+            Get-StarrRadarrHistory -Name RadarrMain -Since $since -EventType grabbed
+
+            Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
+                $ExpectedApplication -eq 'Radarr' -and $Endpoint -eq 'history/since' -and
+                $Query.date -eq $since.ToString('o') -and $Query.eventType -eq 'grabbed'
+            }
+        }
+
+        It 'forwards Sonarr series history with a Sonarr discriminator' {
+            Get-StarrSonarrHistory -Name SonarrMain -SeriesId 42 -SeasonNumber 2
+
+            Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
+                $ExpectedApplication -eq 'Sonarr' -and $Endpoint -eq 'history/series' -and
+                $Query.seriesId -eq 42 -and $Query.seasonNumber -eq 2
+            }
+        }
+
+        It 'routes Sonarr paged history filters' {
+            Get-StarrSonarrHistory -Name SonarrMain -Page 2 -SeriesIdFilter 42,43 -EpisodeId 9 -IncludeEpisode $true
+
+            Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
+                $ExpectedApplication -eq 'Sonarr' -and $Endpoint -eq 'history' -and
+                $Query.page -eq 2 -and @($Query.seriesIds).Count -eq 2 -and
+                $Query.episodeId -eq 9 -and $Query.includeEpisode
+            }
+        }
+
+        It 'routes Sonarr history since a timestamp' {
+            $since = [datetime]'2026-09-13T08:30:00Z'
+
+            Get-StarrSonarrHistory -Name SonarrMain -Since $since -IncludeSeries $true
+
+            Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
+                $ExpectedApplication -eq 'Sonarr' -and $Endpoint -eq 'history/since' -and
+                $Query.date -eq $since.ToString('o') -and $Query.includeSeries
+            }
+        }
+
+        It 'does not expose Sonarr-only parameters on Radarr history' {
+            (Get-Command Get-StarrRadarrHistory).Parameters.Keys | Should -Not -Contain 'SeriesId'
+            (Get-Command Get-StarrRadarrHistory).Parameters.Keys | Should -Not -Contain 'EpisodeId'
+            (Get-Command Get-StarrRadarrHistory).Parameters.Keys | Should -Not -Contain 'IncludeEpisode'
+        }
+
+        It 'does not expose Radarr-only parameters on Sonarr history' {
+            (Get-Command Get-StarrSonarrHistory).Parameters.Keys | Should -Not -Contain 'MovieId'
+            (Get-Command Get-StarrSonarrHistory).Parameters.Keys | Should -Not -Contain 'IncludeMovie'
+        }
+
+        It 'uses application-specific named event validation' {
+            { Get-StarrRadarrHistory -Name RadarrMain -MovieId 42 -EventType episodeFileRenamed } | Should -Throw
+            { Get-StarrSonarrHistory -Name SonarrMain -SeriesId 42 -EventType movieFileRenamed } | Should -Throw
+
+            Should -Invoke Invoke-StarrApiRequest -Times 0
+        }
+    }
+}
