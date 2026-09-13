@@ -1,10 +1,10 @@
 function Set-PSStarrInstance {
     <#
     .SYNOPSIS
-        Creates or replaces a saved PSStarr instance.
+        Creates or updates a saved PSStarr instance.
 
     .DESCRIPTION
-        This function creates or replaces a named Starr instance in persistent user configuration.
+        This function creates or updates a named Starr instance in persistent user configuration. New instances require Application, Url, and ApiKey. Existing instances can update any subset of those values or change the API-key encryption mode.
 
     .PARAMETER Name
         The name of the saved Starr instance.
@@ -30,6 +30,12 @@ function Set-PSStarrInstance {
     .EXAMPLE
         Set-PSStarrInstance -Name 'RadarrMain' -Application Radarr -Url 'http://localhost:7878' -ApiKey '<api-key>' -EncryptionMode None
 
+    .EXAMPLE
+        Set-PSStarrInstance -Name 'RadarrMain' -Url 'http://localhost:7879'
+
+    .EXAMPLE
+        Set-PSStarrInstance -Name 'RadarrMain' -EncryptionMode Aes256
+
     .INPUTS
         None.
 
@@ -48,17 +54,17 @@ function Set-PSStarrInstance {
         [string]
         $Name,
 
-        [Parameter(Mandatory = $true, Position = 1)]
+        [Parameter(Mandatory = $false, Position = 1)]
         [ValidateSet('Radarr', 'Sonarr', 'Prowlarr')]
         [string]
         $Application,
 
-        [Parameter(Mandatory = $true, Position = 2)]
+        [Parameter(Mandatory = $false, Position = 2)]
         [ValidateScript({ Test-StarrUrl -Url $_ })]
         [string]
         $Url,
 
-        [Parameter(Mandatory = $true, Position = 3)]
+        [Parameter(Mandatory = $false, Position = 3)]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
         $ApiKey,
@@ -95,29 +101,98 @@ function Set-PSStarrInstance {
         return
     }
 
-    try {
-        $encryptionParameters = @{}
+    $instanceExists = $configuration.Instances.Contains($Name)
 
-        if ($PSBoundParameters.ContainsKey('EncryptionMode')) {
-            $encryptionParameters.EncryptionMode = $EncryptionMode
+    if (-not $instanceExists) {
+        $missingParameters = @('Application', 'Url', 'ApiKey').Where({ -not $PSBoundParameters.ContainsKey($_) })
+
+        if ($missingParameters.Count -gt 0) {
+            $message = "A new Starr instance requires these parameters: $($missingParameters -join ', ')."
+            $exception = [System.ArgumentException]::new($message)
+            $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrConfigurationRequiredParameterMissing' -TargetObject $Name -Activity $MyInvocation.MyCommand.Name
+
+            Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction
+            return
+        }
+    }
+
+    if ($PSBoundParameters.ContainsKey('ApiKey') -and $ApiKey -eq '********') {
+        $message = 'The redacted API-key placeholder cannot be saved as an API key.'
+        $exception = [System.ArgumentException]::new($message)
+        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrConfigurationRedactedApiKeyRejected' -TargetObject $Name -Activity $MyInvocation.MyCommand.Name
+
+        Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction
+        return
+    }
+
+    if ($instanceExists) {
+        $existingInstance = $configuration.Instances[$Name]
+
+        if ($PSBoundParameters.ContainsKey('Application')) {
+            $resolvedApplication = $Application
+        }
+        else {
+            $resolvedApplication = $existingInstance.Application
         }
 
-        $resolvedEncryptionMode = Resolve-StarrEncryptionMode @encryptionParameters
-        $protectedApiKey = Protect-StarrConfigurationSecret -Secret $ApiKey -EncryptionMode $resolvedEncryptionMode
+        if ($PSBoundParameters.ContainsKey('Url')) {
+            $resolvedUrl = $Url.TrimEnd('/')
+        }
+        else {
+            $resolvedUrl = $existingInstance.Url
+        }
+
+        if ($existingInstance.ApiKey -is [System.Collections.IDictionary]) {
+            $existingEncryptionMode = $existingInstance.ApiKey.Mode
+        }
+        else {
+            $existingEncryptionMode = 'None'
+        }
+    }
+    else {
+        $resolvedApplication = $Application
+        $resolvedUrl = $Url.TrimEnd('/')
+        $existingEncryptionMode = $null
+    }
+
+    $plainApiKey = $null
+
+    try {
+        if ($PSBoundParameters.ContainsKey('EncryptionMode')) {
+            $resolvedEncryptionMode = Resolve-StarrEncryptionMode -EncryptionMode $EncryptionMode
+        }
+        elseif ($instanceExists) {
+            $resolvedEncryptionMode = $existingEncryptionMode
+        }
+        else {
+            $resolvedEncryptionMode = Resolve-StarrEncryptionMode
+        }
+
+        if ($PSBoundParameters.ContainsKey('ApiKey')) {
+            $plainApiKey = $ApiKey
+            $protectedApiKey = Protect-StarrConfigurationSecret -Secret $plainApiKey -EncryptionMode $resolvedEncryptionMode
+        }
+        elseif ($PSBoundParameters.ContainsKey('EncryptionMode')) {
+            $plainApiKey = Unprotect-StarrConfigurationSecret -Value $existingInstance.ApiKey
+            $protectedApiKey = Protect-StarrConfigurationSecret -Secret $plainApiKey -EncryptionMode $resolvedEncryptionMode
+        }
+        else {
+            $protectedApiKey = $existingInstance.ApiKey
+        }
     }
     catch {
         $message = "Unable to protect the API key for Starr instance '$Name'. $($_.Exception.Message)"
-        $message = Protect-StarrSensitiveText -Text $message -SensitiveValue @($ApiKey)
+        $message = Protect-StarrSensitiveText -Text $message -SensitiveValue @($ApiKey, $plainApiKey)
         $exception = [System.Security.Cryptography.CryptographicException]::new($message, $_.Exception)
         $errorRecord = New-StarrErrorRecord -Exception $exception -Category SecurityError -ErrorId 'StarrConfigurationEncryptionFailed' -TargetObject $Name -Activity $MyInvocation.MyCommand.Name
 
-        Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -LogMessage $message -SensitiveValue @($ApiKey)
+        Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -LogMessage $message -SensitiveValue @($ApiKey, $plainApiKey)
         return
     }
 
     $configuration.Instances[$Name] = [ordered]@{
-        Application = $Application
-        Url         = $Url.TrimEnd('/')
+        Application = $resolvedApplication
+        Url         = $resolvedUrl
         ApiKey      = $protectedApiKey
     }
 
@@ -126,18 +201,18 @@ function Set-PSStarrInstance {
     }
     catch {
         $message = "Unable to save Starr instance '$Name'. $($_.Exception.Message)"
-        $message = Protect-StarrSensitiveText -Text $message -SensitiveValue @($ApiKey)
+        $message = Protect-StarrSensitiveText -Text $message -SensitiveValue @($ApiKey, $plainApiKey)
         $exception = [System.InvalidOperationException]::new($message, $_.Exception)
         $errorRecord = New-StarrErrorRecord -Exception $exception -Category WriteError -ErrorId 'StarrConfigurationWriteFailed' -TargetObject $Name -Activity $MyInvocation.MyCommand.Name
 
-        Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -LogMessage $message -SensitiveValue @($ApiKey)
+        Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -LogMessage $message -SensitiveValue @($ApiKey, $plainApiKey)
         return
     }
 
     [PSCustomObject]@{
         Name           = $Name
-        Application    = $Application
-        Url            = $Url.TrimEnd('/')
+        Application    = $resolvedApplication
+        Url            = $resolvedUrl
         ApiKey         = '********'
         EncryptionMode = $resolvedEncryptionMode
     }

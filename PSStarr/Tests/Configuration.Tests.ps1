@@ -1,4 +1,4 @@
-﻿BeforeDiscovery {
+BeforeDiscovery {
     Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
 }
 
@@ -44,6 +44,130 @@ Describe 'Starr instance configuration' {
                 $InputObject.Instances.Main.Url -eq 'http://localhost:7878' -and
                 $InputObject.Instances.Main.ApiKey -eq 'new'
             }
+        }
+
+        It 'requires all connection fields when creating an instance' {
+            $errors = @(Set-PSStarrInstance -Name Main -Application Radarr -ErrorAction Continue 2>&1)
+
+            Should -Invoke Export-Configuration -Times 0
+            $errors[0].FullyQualifiedErrorId | Should -Match '^StarrConfigurationRequiredParameterMissing'
+            $errors[0].Exception.Message | Should -Match 'Url, ApiKey'
+        }
+
+        It 'updates only the URL and preserves the other stored values' {
+            $storedApiKey = @{
+                Version    = 1
+                Mode       = 'Aes256'
+                CipherText = 'encrypted'
+            }
+            Mock Import-Configuration {
+                @{ Instances = @{ Main = @{ Application = 'Radarr'; Url = 'http://old'; ApiKey = $storedApiKey } } }
+            }
+            Mock Protect-StarrConfigurationSecret { throw 'Protection should not occur.' }
+            Mock Unprotect-StarrConfigurationSecret { throw 'Decryption should not occur.' }
+
+            $result = Set-PSStarrInstance -Name Main -Url 'http://new/'
+
+            $result.Application | Should -Be 'Radarr'
+            $result.Url | Should -Be 'http://new'
+            $result.EncryptionMode | Should -Be 'Aes256'
+            Should -Invoke Export-Configuration -Times 1 -ParameterFilter {
+                $InputObject.Instances.Main.Application -eq 'Radarr' -and
+                $InputObject.Instances.Main.Url -eq 'http://new' -and
+                [System.Object]::ReferenceEquals($InputObject.Instances.Main.ApiKey, $storedApiKey)
+            }
+            Should -Invoke Protect-StarrConfigurationSecret -Times 0
+            Should -Invoke Unprotect-StarrConfigurationSecret -Times 0
+        }
+
+        It 'updates only the application' {
+            Mock Import-Configuration {
+                @{ Instances = @{ Main = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = 'old-key' } } }
+            }
+
+            Set-PSStarrInstance -Name Main -Application Sonarr
+
+            Should -Invoke Export-Configuration -Times 1 -ParameterFilter {
+                $InputObject.Instances.Main.Application -eq 'Sonarr' -and
+                $InputObject.Instances.Main.Url -eq 'http://localhost:7878' -and
+                $InputObject.Instances.Main.ApiKey -eq 'old-key'
+            }
+        }
+
+        It 'updates only the API key using the existing encryption mode' {
+            Mock Import-Configuration {
+                @{ Instances = @{ Main = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = @{ Version = 1; Mode = 'Aes256'; CipherText = 'old' } } } }
+            }
+            Mock Protect-StarrConfigurationSecret {
+                @{ Version = 1; Mode = $EncryptionMode; CipherText = 'new-encrypted' }
+            }
+
+            Set-PSStarrInstance -Name Main -ApiKey 'new-key'
+
+            Should -Invoke Protect-StarrConfigurationSecret -Times 1 -ParameterFilter {
+                $Secret -eq 'new-key' -and $EncryptionMode -eq 'Aes256'
+            }
+            Should -Invoke Export-Configuration -Times 1 -ParameterFilter {
+                $InputObject.Instances.Main.ApiKey.CipherText -eq 'new-encrypted'
+            }
+        }
+
+        It 're-encrypts the existing API key when only the encryption mode changes' {
+            Mock Import-Configuration {
+                @{ Instances = @{ Main = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = 'legacy-key' } } }
+            }
+            Mock Unprotect-StarrConfigurationSecret { 'decrypted-key' }
+            Mock Protect-StarrConfigurationSecret {
+                @{ Version = 1; Mode = $EncryptionMode; CipherText = 'encrypted' }
+            }
+
+            Set-PSStarrInstance -Name Main -EncryptionMode Aes256
+
+            Should -Invoke Unprotect-StarrConfigurationSecret -Times 1 -ParameterFilter { $Value -eq 'legacy-key' }
+            Should -Invoke Protect-StarrConfigurationSecret -Times 1 -ParameterFilter {
+                $Secret -eq 'decrypted-key' -and $EncryptionMode -eq 'Aes256'
+            }
+            Should -Invoke Export-Configuration -Times 1 -ParameterFilter {
+                $InputObject.Instances.Main.ApiKey.Mode -eq 'Aes256'
+            }
+        }
+
+        It 'rejects a redacted API key without changing persistence' {
+            Mock Import-Configuration {
+                @{ Instances = @{ Main = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = 'old-key' } } }
+            }
+
+            $errors = @(Set-PSStarrInstance -Name Main -ApiKey '********' -ErrorAction Continue 2>&1)
+
+            Should -Invoke Export-Configuration -Times 0
+            $errors[0].FullyQualifiedErrorId | Should -Match '^StarrConfigurationRedactedApiKeyRejected'
+        }
+
+        It 'does not persist an encryption-mode update when decryption fails' {
+            Mock Import-Configuration {
+                @{ Instances = @{ Main = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = @{ Version = 1; Mode = 'Aes256'; CipherText = 'encrypted' } } } }
+            }
+            Mock Unprotect-StarrConfigurationSecret { throw 'Unable to decrypt a saved Starr API key.' }
+
+            $errors = @(Set-PSStarrInstance -Name Main -EncryptionMode None -ErrorAction Continue 2>&1)
+
+            Should -Invoke Export-Configuration -Times 0
+            $errors[0].FullyQualifiedErrorId | Should -Match '^StarrConfigurationEncryptionFailed'
+            ($errors | Out-String) | Should -Not -Match 'encrypted'
+        }
+
+        It 'sanitizes a decrypted API key from encryption-mode update save failures' {
+            Mock Import-Configuration {
+                @{ Instances = @{ Main = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = 'stored-value' } } }
+            }
+            Mock Unprotect-StarrConfigurationSecret { 'decrypted-secret' }
+            Mock Protect-StarrConfigurationSecret { 'new-protected-value' }
+            Mock Export-Configuration { throw 'Could not serialize decrypted-secret.' }
+
+            $errors = @(Set-PSStarrInstance -Name Main -EncryptionMode Aes256 -ErrorAction Continue 2>&1)
+
+            $errors[0].FullyQualifiedErrorId | Should -Match '^StarrConfigurationWriteFailed'
+            ($errors | Out-String) | Should -Not -Match 'decrypted-secret'
         }
 
         It 'preserves another instance encrypted with an unavailable key' {
