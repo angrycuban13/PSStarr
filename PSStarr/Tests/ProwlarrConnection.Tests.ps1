@@ -62,6 +62,11 @@ InModuleScope PSStarr {
             Should -Invoke Invoke-RestMethod -Times 0
         }
 
+        It 'rejects shared commands that do not support Prowlarr' {
+            { Get-StarrDiskSpace -Name Main -ErrorAction Stop } | Should -Throw '*not*Radarr or Sonarr*'
+            Should -Invoke Invoke-RestMethod -Times 0
+        }
+
         It 'saves a Prowlarr instance without changing the schema' {
             Mock Import-Configuration { @{ Instances = @{} } }
             Mock Export-Configuration

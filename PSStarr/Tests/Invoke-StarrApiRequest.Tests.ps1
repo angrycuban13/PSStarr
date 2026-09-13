@@ -119,6 +119,24 @@ Describe 'Invoke-StarrApiRequest instance inference' {
             }
         }
 
+        It 'uses the only instance compatible with multiple supported applications' {
+            Mock Get-StarrConfiguration {
+                @{
+                    Instances = @{
+                        RadarrMain   = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = 'radarr-key' }
+                        ProwlarrMain = @{ Application = 'Prowlarr'; Url = 'http://localhost:9696'; ApiKey = 'prowlarr-key' }
+                    }
+                }
+            }
+
+            Invoke-StarrApiRequest -Endpoint diskspace -ExpectedApplication Radarr, Sonarr
+
+            Should -Invoke Invoke-RestMethod -Times 1 -ParameterFilter {
+                $Uri -eq 'http://localhost:7878/api/v3/diskspace' -and
+                $Headers['X-Api-Key'] -eq 'radarr-key'
+            }
+        }
+
         It 'rejects ambiguous inferred instances' {
             Mock Get-StarrConfiguration {
                 @{

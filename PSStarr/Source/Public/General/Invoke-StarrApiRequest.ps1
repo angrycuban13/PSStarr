@@ -34,7 +34,7 @@ function Invoke-StarrApiRequest {
         The request body content type.
 
     .PARAMETER ExpectedApplication
-        The application type required by an application-specific wrapper.
+        One or more application types supported by the calling wrapper.
 
     .PARAMETER Unversioned
         Builds the request without an API version segment.
@@ -103,7 +103,7 @@ function Invoke-StarrApiRequest {
 
         [Parameter(Mandatory = $false)]
         [ValidateSet('Radarr', 'Sonarr', 'Prowlarr')]
-        [System.String]
+        [System.String[]]
         $ExpectedApplication,
 
         [Parameter(Mandatory = $false)]
@@ -119,7 +119,14 @@ function Invoke-StarrApiRequest {
     }
     $ErrorActionPreference = 'Stop'
 
-    $resolvedApplication = $ExpectedApplication
+    $resolvedApplication = if (@($ExpectedApplication).Count -eq 1) {
+        @($ExpectedApplication)[0]
+    }
+    else {
+        $null
+    }
+
+    $expectedApplicationLabel = @($ExpectedApplication) -join ' or '
 
     if ($PSCmdlet.ParameterSetName -eq 'Named') {
         try {
@@ -152,14 +159,14 @@ function Invoke-StarrApiRequest {
             if ($PSBoundParameters.ContainsKey('ExpectedApplication')) {
                 $instanceNames = @(
                     $instanceNames | Where-Object {
-                        $configuration.Instances[$_].Application -eq $ExpectedApplication
+                        $ExpectedApplication -contains $configuration.Instances[$_].Application
                     }
                 )
             }
 
             if ($instanceNames.Count -eq 0) {
                 $targetApplication = if ($PSBoundParameters.ContainsKey('ExpectedApplication')) {
-                    " for $ExpectedApplication"
+                    " for $expectedApplicationLabel"
                 }
                 else {
                     ''
@@ -190,10 +197,10 @@ function Invoke-StarrApiRequest {
 
         $resolvedApplication = $instance.Application
 
-        if ($PSBoundParameters.ContainsKey('ExpectedApplication') -and $instance.Application -ne $ExpectedApplication) {
-            $message = "Starr instance '$instanceName' is '$($instance.Application)', not '$ExpectedApplication'."
+        if ($PSBoundParameters.ContainsKey('ExpectedApplication') -and $ExpectedApplication -notcontains $instance.Application) {
+            $message = "Starr instance '$instanceName' is '$($instance.Application)', not '$expectedApplicationLabel'."
             $exception = [System.ArgumentException]::new($message, 'Name')
-            $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrApplicationMismatch' -TargetObject $instanceName -Activity $MyInvocation.MyCommand.Name -RecommendedAction "Specify an instance configured for $ExpectedApplication."
+            $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrApplicationMismatch' -TargetObject $instanceName -Activity $MyInvocation.MyCommand.Name -RecommendedAction "Specify an instance configured for $expectedApplicationLabel."
 
             Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -NoLog
             return
