@@ -201,7 +201,8 @@ function Get-StarrQueue {
     $endpoint = 'queue'
 
     $request = @{
-        Endpoint = $endpoint
+        Endpoint            = $endpoint
+        ExpectedApplication = @('Radarr', 'Sonarr')
     }
 
     if ($PSBoundParameters.ContainsKey('Application')) {

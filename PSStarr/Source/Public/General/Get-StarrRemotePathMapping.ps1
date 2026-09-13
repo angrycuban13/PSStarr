@@ -73,7 +73,8 @@ function Get-StarrRemotePathMapping {
     $endpoint = 'remotepathmapping'
 
     $request = @{
-        Endpoint = $endpoint
+        Endpoint            = $endpoint
+        ExpectedApplication = @('Radarr', 'Sonarr')
     }
 
     if ($PSBoundParameters.ContainsKey('Application')) {

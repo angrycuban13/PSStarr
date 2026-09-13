@@ -4,7 +4,7 @@ function Get-StarrSonarrEpisode {
         Retrieves Sonarr episodes from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves Sonarr episodes from an inferred or named Starr instance, or from an explicit URL and API key.
+        This function retrieves Sonarr episodes from an inferred or named Starr instance, or from an explicit URL and API key. Specify at least one episode selector: EpisodeId, SeriesId, EpisodeIdFilter, or EpisodeFileId.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
@@ -40,13 +40,13 @@ function Get-StarrSonarrEpisode {
         Includes image data when true.
 
     .EXAMPLE
-        Get-StarrSonarrEpisode
+        Get-StarrSonarrEpisode -EpisodeId 456
 
     .EXAMPLE
-        Get-StarrSonarrEpisode -InstanceName 'Main'
+        Get-StarrSonarrEpisode -InstanceName 'Main' -SeriesId 123
 
     .EXAMPLE
-        Get-StarrSonarrEpisode -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrSonarrEpisode -Url 'http://localhost:8989' -ApiKey '<api-key>' -EpisodeIdFilter 456,789
 
     .EXAMPLE
         Get-StarrSonarrSeries -SeriesId 123 | Get-StarrSonarrEpisode
@@ -120,6 +120,25 @@ function Get-StarrSonarrEpisode {
     )
 
     process {
+        $selectors = @('EpisodeId', 'SeriesId', 'EpisodeIdFilter', 'EpisodeFileId') |
+            Where-Object { $PSBoundParameters.ContainsKey($_) }
+
+        if (@($selectors).Count -eq 0) {
+            $message = 'Specify at least one of EpisodeId, SeriesId, EpisodeIdFilter, or EpisodeFileId.'
+            $exception = [System.ArgumentException]::new($message)
+            $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrEpisodeSelectorInvalid' -TargetObject $selectors -Activity $MyInvocation.MyCommand.Name
+
+            $PSCmdlet.ThrowTerminatingError($errorRecord)
+        }
+
+        if ($PSBoundParameters.ContainsKey('SeasonNumber') -and -not $PSBoundParameters.ContainsKey('SeriesId')) {
+            $message = 'SeasonNumber requires SeriesId.'
+            $exception = [System.ArgumentException]::new($message)
+            $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrEpisodeSeasonSelectorInvalid' -TargetObject $SeasonNumber -Activity $MyInvocation.MyCommand.Name
+
+            $PSCmdlet.ThrowTerminatingError($errorRecord)
+        }
+
         $endpoint = 'episode'
 
         $request = @{

@@ -25,13 +25,13 @@ function Get-StarrRadarrMovieFile {
         The Radarr movie-file identifiers used to filter results.
 
     .EXAMPLE
-        Get-StarrRadarrMovieFile
+        Get-StarrRadarrMovieFile -MovieFileId 456
 
     .EXAMPLE
-        Get-StarrRadarrMovieFile -InstanceName 'Main'
+        Get-StarrRadarrMovieFile -InstanceName 'Main' -MovieIdFilter 123
 
     .EXAMPLE
-        Get-StarrRadarrMovieFile -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrRadarrMovieFile -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieFileIdFilter 456,789
 
     .EXAMPLE
         Get-StarrRadarrMovie -MovieId 123 | Get-StarrRadarrMovieFile
@@ -83,6 +83,17 @@ function Get-StarrRadarrMovieFile {
     )
 
     process {
+        $selectors = @('MovieFileId', 'MovieIdFilter', 'MovieFileIdFilter') |
+            Where-Object { $PSBoundParameters.ContainsKey($_) }
+
+        if (@($selectors).Count -eq 0) {
+            $message = 'Specify at least one of MovieFileId, MovieIdFilter, or MovieFileIdFilter.'
+            $exception = [System.ArgumentException]::new($message)
+            $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrMovieFileSelectorInvalid' -TargetObject $selectors -Activity $MyInvocation.MyCommand.Name
+
+            $PSCmdlet.ThrowTerminatingError($errorRecord)
+        }
+
         $endpoint = 'moviefile'
 
         $request = @{

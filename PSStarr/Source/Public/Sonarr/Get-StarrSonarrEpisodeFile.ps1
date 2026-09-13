@@ -4,7 +4,7 @@ function Get-StarrSonarrEpisodeFile {
         Retrieves Sonarr episode files from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves Sonarr episode files from an inferred or named Starr instance, or from an explicit URL and API key.
+        This function retrieves Sonarr episode files from an inferred or named Starr instance, or from an explicit URL and API key. Specify at least one episode-file selector: EpisodeFileId, SeriesId, or EpisodeFileIdFilter.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
@@ -25,13 +25,13 @@ function Get-StarrSonarrEpisodeFile {
         The Sonarr episode-file identifiers used to filter results.
 
     .EXAMPLE
-        Get-StarrSonarrEpisodeFile
+        Get-StarrSonarrEpisodeFile -EpisodeFileId 456
 
     .EXAMPLE
-        Get-StarrSonarrEpisodeFile -InstanceName 'Main'
+        Get-StarrSonarrEpisodeFile -InstanceName 'Main' -SeriesId 123
 
     .EXAMPLE
-        Get-StarrSonarrEpisodeFile -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrSonarrEpisodeFile -Url 'http://localhost:8989' -ApiKey '<api-key>' -EpisodeFileIdFilter 456,789
 
     .EXAMPLE
         Get-StarrSonarrSeries -SeriesId 123 | Get-StarrSonarrEpisodeFile
@@ -83,6 +83,17 @@ function Get-StarrSonarrEpisodeFile {
     )
 
     process {
+        $selectors = @('EpisodeFileId', 'SeriesId', 'EpisodeFileIdFilter') |
+            Where-Object { $PSBoundParameters.ContainsKey($_) }
+
+        if (@($selectors).Count -eq 0) {
+            $message = 'Specify at least one of EpisodeFileId, SeriesId, or EpisodeFileIdFilter.'
+            $exception = [System.ArgumentException]::new($message)
+            $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrEpisodeFileSelectorInvalid' -TargetObject $selectors -Activity $MyInvocation.MyCommand.Name
+
+            $PSCmdlet.ThrowTerminatingError($errorRecord)
+        }
+
         $endpoint = 'episodefile'
 
         $request = @{

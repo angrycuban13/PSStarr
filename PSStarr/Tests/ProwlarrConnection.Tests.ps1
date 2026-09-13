@@ -62,8 +62,14 @@ InModuleScope PSStarr {
             Should -Invoke Invoke-RestMethod -Times 0
         }
 
-        It 'rejects shared commands that do not support Prowlarr' {
-            { Get-StarrDiskSpace -Name Main -ErrorAction Stop } | Should -Throw '*not*Radarr or Sonarr*'
+        It 'rejects shared commands that do not support Prowlarr' -ForEach @(
+            @{ Command = 'Get-StarrDiskSpace' }
+            @{ Command = 'Get-StarrQueue' }
+            @{ Command = 'Get-StarrQueueDetail' }
+            @{ Command = 'Get-StarrQueueStatus' }
+            @{ Command = 'Get-StarrRemotePathMapping' }
+        ) {
+            { & $Command -InstanceName Main -ErrorAction Stop } | Should -Throw '*not*Radarr or Sonarr*'
             Should -Invoke Invoke-RestMethod -Times 0
         }
 

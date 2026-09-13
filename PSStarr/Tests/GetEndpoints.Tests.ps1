@@ -37,19 +37,25 @@ Describe 'GET endpoint wrappers' {
             @{ Command = 'Get-StarrCalendar'; Endpoint = 'calendar' }
             @{ Command = 'Get-StarrRadarrMovie'; Endpoint = 'movie'; App = 'Radarr' }
             @{ Command = 'Get-StarrRadarrCollection'; Endpoint = 'collection'; App = 'Radarr' }
-            @{ Command = 'Get-StarrRadarrMovieFile'; Endpoint = 'moviefile'; App = 'Radarr' }
+            @{ Command = 'Get-StarrRadarrMovieFile'; Endpoint = 'moviefile'; App = 'Radarr'; Arguments = @{ MovieIdFilter = 1 } }
             @{ Command = 'Get-StarrRadarrCredit'; Endpoint = 'credit'; App = 'Radarr' }
             @{ Command = 'Get-StarrRadarrMissing'; Endpoint = 'wanted/missing'; App = 'Radarr' }
             @{ Command = 'Get-StarrRadarrCutoff'; Endpoint = 'wanted/cutoff'; App = 'Radarr' }
             @{ Command = 'Get-StarrSonarrSeries'; Endpoint = 'series'; App = 'Sonarr' }
-            @{ Command = 'Get-StarrSonarrEpisode'; Endpoint = 'episode'; App = 'Sonarr' }
-            @{ Command = 'Get-StarrSonarrEpisodeFile'; Endpoint = 'episodefile'; App = 'Sonarr' }
+            @{ Command = 'Get-StarrSonarrEpisode'; Endpoint = 'episode'; App = 'Sonarr'; Arguments = @{ SeriesId = 1 } }
+            @{ Command = 'Get-StarrSonarrEpisodeFile'; Endpoint = 'episodefile'; App = 'Sonarr'; Arguments = @{ SeriesId = 1 } }
             @{ Command = 'Get-StarrSonarrMissing'; Endpoint = 'wanted/missing'; App = 'Sonarr' }
             @{ Command = 'Get-StarrSonarrCutoff'; Endpoint = 'wanted/cutoff'; App = 'Sonarr' }
         ) {
             $expectedEndpoint = $Endpoint
             $expectedApp = Get-Variable -Name App -ValueOnly -ErrorAction SilentlyContinue
-            & $Command -InstanceName Main
+            $commandArguments = Get-Variable -Name Arguments -ValueOnly -ErrorAction SilentlyContinue
+
+            if ($null -eq $commandArguments) {
+                $commandArguments = @{}
+            }
+
+            & $Command -InstanceName Main @commandArguments
             Should -Invoke Invoke-StarrApiRequest -Times 1 -ParameterFilter {
                 $InstanceName -eq 'Main' -and $Endpoint -eq $expectedEndpoint -and
                 ([string]::IsNullOrEmpty($expectedApp) -or $ExpectedApplication -eq $expectedApp)

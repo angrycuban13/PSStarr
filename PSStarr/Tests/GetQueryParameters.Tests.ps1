@@ -81,6 +81,30 @@ Describe 'Documented GET query parameters' {
             Should -Invoke Invoke-StarrApiRequest -Times 0
         }
 
+        It 'requires a Sonarr episode selector' {
+            { Get-StarrSonarrEpisode -InstanceName Main } |
+                Should -Throw '*at least one of EpisodeId, SeriesId, EpisodeIdFilter, or EpisodeFileId*'
+
+            { Get-StarrSonarrEpisode -InstanceName Main -SeasonNumber 1 } |
+                Should -Throw '*at least one of EpisodeId, SeriesId, EpisodeIdFilter, or EpisodeFileId*'
+
+            Should -Invoke Invoke-StarrApiRequest -Times 0
+        }
+
+        It 'requires a Sonarr episode-file selector' {
+            { Get-StarrSonarrEpisodeFile -InstanceName Main } |
+                Should -Throw '*at least one of EpisodeFileId, SeriesId, or EpisodeFileIdFilter*'
+
+            Should -Invoke Invoke-StarrApiRequest -Times 0
+        }
+
+        It 'requires a Radarr movie-file selector' {
+            { Get-StarrRadarrMovieFile -InstanceName Main } |
+                Should -Throw '*at least one of MovieFileId, MovieIdFilter, or MovieFileIdFilter*'
+
+            Should -Invoke Invoke-StarrApiRequest -Times 0
+        }
+
         It 'rejects mixed Radarr and Sonarr queue filters' {
             { Get-StarrQueue -InstanceName Main -MovieIdFilter 1 -SeriesIdFilter 2 } | Should -Throw '*cannot be combined*'
 
