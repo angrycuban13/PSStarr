@@ -1,10 +1,10 @@
 function Get-StarrProwlarrAppProfile {
     <#
     .SYNOPSIS
-        Retrieves Prowlarr AppProfile resources.
+        Retrieves Prowlarr application profiles.
 
     .DESCRIPTION
-        This function retrieves Prowlarr AppProfile resources through API v1 using the shared transport.
+        This function retrieves application profiles that control how Prowlarr synchronizes indexers with connected applications.
 
     .PARAMETER Name
         The saved Prowlarr instance name. When omitted, the only matching instance is used.

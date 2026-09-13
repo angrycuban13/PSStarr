@@ -1,25 +1,25 @@
 function Get-StarrRadarrCutoff {
     <#
     .SYNOPSIS
-        Retrieves Radarr cutoff-unmet records from a Starr instance.
+        Retrieves Radarr cutoff-unmet records using the legacy command name.
 
     .DESCRIPTION
-        This function retrieves Radarr cutoff-unmet records from an inferred or named Starr instance, or from an explicit URL and API key.
+        This function preserves the original command name and delegates to Get-StarrRadarrCutoffUnmet, which more clearly describes the returned wanted records.
 
     .PARAMETER Name
-        The optional name of a saved Starr instance. When omitted, the only matching instance is used.
+        The optional saved Radarr instance name.
 
     .PARAMETER Url
-        The absolute base URL of the Starr instance.
+        The absolute Radarr base URL.
 
     .PARAMETER ApiKey
-        The API key used to authenticate with the Starr instance.
+        The API key used to authenticate with Radarr.
 
     .PARAMETER Page
         The one-based result page.
 
     .PARAMETER PageSize
-        The maximum number of records returned per page.
+        The number of records requested per page.
 
     .PARAMETER SortKey
         The field used to sort results.
@@ -28,16 +28,13 @@ function Get-StarrRadarrCutoff {
         The result sort direction.
 
     .PARAMETER Monitored
-        Filters results by monitored state.
+        Limits results by monitored state.
 
     .EXAMPLE
-        Get-StarrRadarrCutoff
+        Get-StarrRadarrCutoff -Name RadarrMain
 
     .EXAMPLE
-        Get-StarrRadarrCutoff -Name 'Main'
-
-    .EXAMPLE
-        Get-StarrRadarrCutoff -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrRadarrCutoff -Name RadarrMain -Page 2 -PageSize 50
 
     .INPUTS
         None.
@@ -47,12 +44,12 @@ function Get-StarrRadarrCutoff {
     .OUTPUTS
         [System.Object]
 
-        This function returns response objects retrieved from the Starr API.
+        This function returns Radarr cutoff-unmet response objects.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
     [OutputType([System.Object])]
     param(
-        [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
+        [Parameter(ParameterSetName = 'Named')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
         $Name,
@@ -67,56 +64,30 @@ function Get-StarrRadarrCutoff {
         [System.String]
         $ApiKey,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         [ValidateRange(1, [System.Int32]::MaxValue)]
         [System.Int32]
         $Page,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         [ValidateRange(1, [System.Int32]::MaxValue)]
         [System.Int32]
         $PageSize,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
         $SortKey,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         [ValidateSet('default', 'ascending', 'descending')]
         [System.String]
         $SortDirection,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         [System.Boolean]
         $Monitored
     )
 
-    $endpoint = 'wanted/cutoff'
-
-    $request = @{
-        Endpoint = $endpoint
-    }
-    $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        Page          = 'page'
-        PageSize      = 'pageSize'
-        SortKey       = 'sortKey'
-        SortDirection = 'sortDirection'
-        Monitored     = 'monitored'
-    }
-
-    if ($query.Count -gt 0) {
-        $request.Query = $query
-    }
-    $request.ExpectedApplication = 'Radarr'
-
-    if ($PSCmdlet.ParameterSetName -eq 'Explicit') {
-        $request.Url = $Url
-        $request.ApiKey = $ApiKey
-    }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
-    }
-
-    Invoke-StarrApiRequest @request
+    Get-StarrRadarrCutoffUnmet @PSBoundParameters
 }

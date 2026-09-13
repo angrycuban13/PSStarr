@@ -1,7 +1,7 @@
 function Get-PSStarrInstance {
     <#
     .SYNOPSIS
-        Get-Starr Instance.
+        Retrieves saved PSStarr instances without exposing API keys.
 
     .DESCRIPTION
         This function retrieves saved Starr instances and their encryption modes without exposing API keys.
@@ -89,7 +89,3 @@ function Get-PSStarrInstance {
         }
     }
 }
-
-
-
-

@@ -1,7 +1,7 @@
 function Set-PSStarrInstance {
     <#
     .SYNOPSIS
-        Set-Starr Instance.
+        Creates or replaces a saved PSStarr instance.
 
     .DESCRIPTION
         This function creates or replaces a named Starr instance in persistent user configuration.
@@ -142,8 +142,3 @@ function Set-PSStarrInstance {
         EncryptionMode = $resolvedEncryptionMode
     }
 }
-
-
-
-
-

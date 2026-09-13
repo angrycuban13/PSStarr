@@ -1,10 +1,10 @@
 function Get-StarrProwlarrApplicationSchema {
     <#
     .SYNOPSIS
-        Retrieves Prowlarr ApplicationSchema resources.
+        Retrieves supported Prowlarr application-integration definitions.
 
     .DESCRIPTION
-        This function retrieves Prowlarr ApplicationSchema resources through API v1 using the shared transport. Provider secret values are redacted; do not submit returned objects as updates.
+        This function retrieves provider definitions used when configuring application integrations in Prowlarr. Provider secret values are redacted; do not submit returned objects as updates.
 
     .PARAMETER Name
         The saved Prowlarr instance name. When omitted, the only matching instance is used.

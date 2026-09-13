@@ -1,10 +1,10 @@
 function Get-StarrRadarrMovieLookup {
     <#
     .SYNOPSIS
-        Get-Starr Radarr Movie Lookup.
+        Searches Radarr metadata providers for movies to add.
 
     .DESCRIPTION
-        This function retrieves Radarr Movie Lookup data from a named Starr instance or an explicit URL and API key.
+        This function searches Radarr metadata providers by term, IMDb ID, or TMDB ID. It returns candidates and does not add movies.
 
     .PARAMETER Name
         The name of the saved Starr instance.
@@ -115,8 +115,3 @@ function Get-StarrRadarrMovieLookup {
 
     Invoke-StarrApiRequest @request
 }
-
-
-
-
-

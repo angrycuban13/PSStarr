@@ -1,10 +1,10 @@
 function Get-StarrSonarrSeriesLookup {
     <#
     .SYNOPSIS
-        Get-Starr Sonarr Series Lookup.
+        Searches Sonarr metadata providers for series to add.
 
     .DESCRIPTION
-        This function retrieves Sonarr Series Lookup data from a named Starr instance or an explicit URL and API key.
+        This function searches Sonarr metadata providers by term or TVDB ID. It returns candidates and does not add series.
 
     .PARAMETER Name
         The name of the saved Starr instance.
@@ -76,8 +76,3 @@ function Get-StarrSonarrSeriesLookup {
 
     Invoke-StarrApiRequest @request
 }
-
-
-
-
-

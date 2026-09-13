@@ -1,10 +1,10 @@
 function Get-StarrProwlarrIndexerCategory {
     <#
     .SYNOPSIS
-        Retrieves Prowlarr IndexerCategory resources.
+        Retrieves categories exposed by configured Prowlarr indexers.
 
     .DESCRIPTION
-        This function retrieves Prowlarr IndexerCategory resources through API v1 using the shared transport.
+        This function retrieves the category hierarchy available from configured Prowlarr indexers.
 
     .PARAMETER Name
         The saved Prowlarr instance name. When omitted, the only matching instance is used.

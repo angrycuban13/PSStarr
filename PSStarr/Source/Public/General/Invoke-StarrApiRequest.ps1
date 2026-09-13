@@ -1,7 +1,7 @@
 function Invoke-StarrApiRequest {
     <#
     .SYNOPSIS
-        Invoke-Starr Api Request.
+        Sends an authenticated request to a Starr application API.
 
     .DESCRIPTION
         This function resolves a Starr instance, constructs an authenticated API request, invokes it, and returns the deserialized response.
@@ -299,12 +299,3 @@ function Invoke-StarrApiRequest {
         return
     }
 }
-
-
-
-
-
-
-
-
-

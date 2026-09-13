@@ -1,10 +1,10 @@
 function Get-StarrProwlarrAppProfileSchema {
     <#
     .SYNOPSIS
-        Retrieves Prowlarr AppProfileSchema resources.
+        Retrieves the Prowlarr application-profile schema.
 
     .DESCRIPTION
-        This function retrieves Prowlarr AppProfileSchema resources through API v1 using the shared transport.
+        This function retrieves the schema used to configure Prowlarr application profiles.
 
     .PARAMETER Name
         The saved Prowlarr instance name. When omitted, the only matching instance is used.

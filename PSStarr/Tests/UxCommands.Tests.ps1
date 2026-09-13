@@ -505,3 +505,44 @@ Describe 'Application-specific history commands' {
         }
     }
 }
+
+Describe 'Semantically named cutoff-unmet commands' {
+    InModuleScope PSStarr {
+        BeforeEach {
+            Mock Invoke-StarrApiRequest { @() }
+        }
+
+        It 'retrieves Radarr cutoff-unmet records with the descriptive name' {
+            Get-StarrRadarrCutoffUnmet -Name RadarrMain -Page 2 -Monitored $true
+
+            Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
+                $ExpectedApplication -eq 'Radarr' -and $Endpoint -eq 'wanted/cutoff' -and
+                $Query.page -eq 2 -and $Query.monitored
+            }
+        }
+
+        It 'preserves the legacy Radarr cutoff command' {
+            Get-StarrRadarrCutoff -Name RadarrMain -PageSize 25
+
+            Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
+                $ExpectedApplication -eq 'Radarr' -and $Endpoint -eq 'wanted/cutoff' -and $Query.pageSize -eq 25
+            }
+        }
+
+        It 'retrieves one Sonarr cutoff-unmet episode with the descriptive name' {
+            Get-StarrSonarrCutoffUnmet -Name SonarrMain -EpisodeId 42 -IncludeSeries $true
+
+            Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
+                $ExpectedApplication -eq 'Sonarr' -and $Endpoint -eq 'wanted/cutoff/42' -and $Query.includeSeries
+            }
+        }
+
+        It 'preserves the legacy Sonarr cutoff command' {
+            Get-StarrSonarrCutoff -Name SonarrMain -Page 3
+
+            Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
+                $ExpectedApplication -eq 'Sonarr' -and $Endpoint -eq 'wanted/cutoff' -and $Query.page -eq 3
+            }
+        }
+    }
+}
