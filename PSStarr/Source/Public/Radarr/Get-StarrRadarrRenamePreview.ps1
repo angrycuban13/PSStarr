@@ -16,7 +16,7 @@ function Get-StarrRadarrRenamePreview {
         The API key used to authenticate with Radarr.
 
     .PARAMETER MovieIdFilter
-        One or more movie identifiers whose rename previews are requested.
+        One or more movie identifiers whose rename previews are requested. This parameter accepts an Id property from the pipeline.
 
     .EXAMPLE
         Get-StarrRadarrRenamePreview -Name 'Main' -MovieIdFilter 42,43
@@ -24,10 +24,13 @@ function Get-StarrRadarrRenamePreview {
     .EXAMPLE
         Get-StarrRadarrRenamePreview -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieIdFilter 42,43
 
-    .INPUTS
-        None.
+    .EXAMPLE
+        Get-StarrRadarrMovie -MovieId 42 | Get-StarrRadarrRenamePreview
 
-        You cannot pipe objects to this function.
+    .INPUTS
+        [System.Object]
+
+        This function accepts objects with an Id property representing a Radarr movie.
 
     .OUTPUTS
         [System.Object]
@@ -52,34 +55,37 @@ function Get-StarrRadarrRenamePreview {
         [System.String]
         $ApiKey,
 
-        [Parameter(Mandatory = $true, ParameterSetName = 'Named')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Named', ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Explicit', ValueFromPipelineByPropertyName = $true)]
+        [Alias('Id')]
         [ValidateRange(1, [System.Int32]::MaxValue)]
         [System.Int32[]]
         $MovieIdFilter
     )
 
-    $request = @{
-        Endpoint            = 'rename'
-        Method              = 'GET'
-        ExpectedApplication = 'Radarr'
-    }
+    process {
+        $request = @{
+            Endpoint            = 'rename'
+            Method              = 'GET'
+            ExpectedApplication = 'Radarr'
+        }
 
-    $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        MovieIdFilter = 'movieId'
-    }
+        $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
+            MovieIdFilter = 'movieId'
+        }
 
-    if ($query.Count -gt 0) {
-        $request.Query = $query
-    }
+        if ($query.Count -gt 0) {
+            $request.Query = $query
+        }
 
-    if ($PSBoundParameters.ContainsKey('Url')) {
-        $request.Url = $Url
-        $request.ApiKey = $ApiKey
-    }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
-    }
+        if ($PSBoundParameters.ContainsKey('Url')) {
+            $request.Url = $Url
+            $request.ApiKey = $ApiKey
+        }
+        elseif ($PSBoundParameters.ContainsKey('Name')) {
+            $request.Name = $Name
+        }
 
-    Invoke-StarrApiRequest @request
+        Invoke-StarrApiRequest @request
+    }
 }

@@ -16,7 +16,7 @@ function Get-StarrRadarrAlternativeTitle {
         The API key used to authenticate with the instance.
 
     .PARAMETER MovieId
-        The positive Radarr movie identifier used to filter records.
+        The positive Radarr movie identifier used to filter records. This parameter accepts an Id property from the pipeline.
 
     .PARAMETER MovieMetadataId
         The positive Radarr movie metadata identifier used to filter records.
@@ -33,10 +33,13 @@ function Get-StarrRadarrAlternativeTitle {
     .EXAMPLE
         Get-StarrRadarrAlternativeTitle -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieId 42
 
-    .INPUTS
-        None.
+    .EXAMPLE
+        Get-StarrRadarrMovie -MovieId 42 | Get-StarrRadarrAlternativeTitle
 
-        You cannot pipe objects to this function.
+    .INPUTS
+        [System.Object]
+
+        This function accepts objects with an Id property representing a Radarr movie.
 
     .OUTPUTS
         [System.Object]
@@ -64,8 +67,9 @@ function Get-StarrRadarrAlternativeTitle {
         [System.String]
         $ApiKey,
 
-        [Parameter(ParameterSetName = 'NamedList')]
-        [Parameter(ParameterSetName = 'ExplicitList')]
+        [Parameter(ParameterSetName = 'NamedList', ValueFromPipelineByPropertyName = $true)]
+        [Parameter(ParameterSetName = 'ExplicitList', ValueFromPipelineByPropertyName = $true)]
+        [Alias('Id')]
         [ValidateRange(1, [System.Int32]::MaxValue)]
         [System.Int32]
         $MovieId,
@@ -83,32 +87,34 @@ function Get-StarrRadarrAlternativeTitle {
         $AlternativeTitleId
     )
 
-    $request = @{
-        Endpoint            = 'alttitle'
-        Method              = 'GET'
-        ExpectedApplication = 'Radarr'
-    }
+    process {
+        $request = @{
+            Endpoint            = 'alttitle'
+            Method              = 'GET'
+            ExpectedApplication = 'Radarr'
+        }
 
-    if ($PSBoundParameters.ContainsKey('AlternativeTitleId')) {
-        $request.Endpoint = "alttitle/$AlternativeTitleId"
-    }
+        if ($PSBoundParameters.ContainsKey('AlternativeTitleId')) {
+            $request.Endpoint = "alttitle/$AlternativeTitleId"
+        }
 
-    $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        MovieId         = 'movieId'
-        MovieMetadataId = 'movieMetadataId'
-    }
+        $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
+            MovieId         = 'movieId'
+            MovieMetadataId = 'movieMetadataId'
+        }
 
-    if ($query.Count -gt 0) {
-        $request.Query = $query
-    }
+        if ($query.Count -gt 0) {
+            $request.Query = $query
+        }
 
-    if ($PSBoundParameters.ContainsKey('Url')) {
-        $request.Url = $Url
-        $request.ApiKey = $ApiKey
-    }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
-    }
+        if ($PSBoundParameters.ContainsKey('Url')) {
+            $request.Url = $Url
+            $request.ApiKey = $ApiKey
+        }
+        elseif ($PSBoundParameters.ContainsKey('Name')) {
+            $request.Name = $Name
+        }
 
-    Invoke-StarrApiRequest @request
+        Invoke-StarrApiRequest @request
+    }
 }

@@ -16,7 +16,7 @@ function Get-StarrRadarrExtraFile {
         The API key used to authenticate with the instance.
 
     .PARAMETER MovieId
-        The positive Radarr movie identifier used to filter records.
+        The positive Radarr movie identifier used to filter records. This parameter accepts an Id property from the pipeline.
 
     .EXAMPLE
         Get-StarrRadarrExtraFile -Name 'Main' -MovieId 42
@@ -24,10 +24,13 @@ function Get-StarrRadarrExtraFile {
     .EXAMPLE
         Get-StarrRadarrExtraFile -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieId 42
 
-    .INPUTS
-        None.
+    .EXAMPLE
+        Get-StarrRadarrMovie -MovieId 42 | Get-StarrRadarrExtraFile
 
-        You cannot pipe objects to this function.
+    .INPUTS
+        [System.Object]
+
+        This function accepts objects with an Id property representing a Radarr movie.
 
     .OUTPUTS
         [System.Object]
@@ -52,34 +55,37 @@ function Get-StarrRadarrExtraFile {
         [System.String]
         $ApiKey,
 
-        [Parameter(ParameterSetName = 'NamedList')]
-        [Parameter(ParameterSetName = 'ExplicitList')]
+        [Parameter(ParameterSetName = 'NamedList', ValueFromPipelineByPropertyName = $true)]
+        [Parameter(ParameterSetName = 'ExplicitList', ValueFromPipelineByPropertyName = $true)]
+        [Alias('Id')]
         [ValidateRange(1, [System.Int32]::MaxValue)]
         [System.Int32]
         $MovieId
     )
 
-    $request = @{
-        Endpoint            = 'extrafile'
-        Method              = 'GET'
-        ExpectedApplication = 'Radarr'
-    }
+    process {
+        $request = @{
+            Endpoint            = 'extrafile'
+            Method              = 'GET'
+            ExpectedApplication = 'Radarr'
+        }
 
-    $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        MovieId = 'movieId'
-    }
+        $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
+            MovieId = 'movieId'
+        }
 
-    if ($query.Count -gt 0) {
-        $request.Query = $query
-    }
+        if ($query.Count -gt 0) {
+            $request.Query = $query
+        }
 
-    if ($PSBoundParameters.ContainsKey('Url')) {
-        $request.Url = $Url
-        $request.ApiKey = $ApiKey
-    }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
-    }
+        if ($PSBoundParameters.ContainsKey('Url')) {
+            $request.Url = $Url
+            $request.ApiKey = $ApiKey
+        }
+        elseif ($PSBoundParameters.ContainsKey('Name')) {
+            $request.Name = $Name
+        }
 
-    Invoke-StarrApiRequest @request
+        Invoke-StarrApiRequest @request
+    }
 }

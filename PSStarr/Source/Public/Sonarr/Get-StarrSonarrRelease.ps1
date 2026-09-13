@@ -16,7 +16,7 @@ function Get-StarrSonarrRelease {
         The API key used to authenticate.
 
     .PARAMETER EpisodeId
-        The episode to search. Cannot be combined with season selection.
+        The episode to search. Cannot be combined with season selection. This parameter accepts an Id property from the pipeline.
 
     .PARAMETER SeriesId
         The series to search. SeasonNumber must also be supplied.
@@ -40,10 +40,13 @@ function Get-StarrSonarrRelease {
 
         Searches indexers for the specials season of series 42.
 
-    .INPUTS
-        None.
+    .EXAMPLE
+        Get-StarrSonarrEpisode -EpisodeId 42 | Get-StarrSonarrRelease
 
-        You cannot pipe objects to this function.
+    .INPUTS
+        [System.Object]
+
+        This function accepts objects with an Id property representing a Sonarr episode.
 
     .OUTPUTS
         [System.Object]
@@ -74,8 +77,9 @@ function Get-StarrSonarrRelease {
         [System.String]
         $ApiKey,
 
-        [Parameter(Mandatory = $true, ParameterSetName = 'NamedEpisode')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitEpisode')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'NamedEpisode', ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ExplicitEpisode', ValueFromPipelineByPropertyName = $true)]
+        [Alias('Id')]
         [ValidateRange(1, [System.Int32]::MaxValue)]
         [System.Int32]
         $EpisodeId,
@@ -93,29 +97,31 @@ function Get-StarrSonarrRelease {
         $SeasonNumber
     )
 
-    $request = @{
-        Endpoint            = 'release'
-        Method              = 'GET'
-        ExpectedApplication = 'Sonarr'
-    }
+    process {
+        $request = @{
+            Endpoint            = 'release'
+            Method              = 'GET'
+            ExpectedApplication = 'Sonarr'
+        }
 
-    $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        EpisodeId    = 'episodeId'
-        SeriesId     = 'seriesId'
-        SeasonNumber = 'seasonNumber'
-    }
+        $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
+            EpisodeId    = 'episodeId'
+            SeriesId     = 'seriesId'
+            SeasonNumber = 'seasonNumber'
+        }
 
-    if ($query.Count -gt 0) {
-        $request.Query = $query
-    }
+        if ($query.Count -gt 0) {
+            $request.Query = $query
+        }
 
-    if ($PSCmdlet.ParameterSetName -like 'Explicit*') {
-        $request.Url = $Url
-        $request.ApiKey = $ApiKey
-    }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
-    }
+        if ($PSCmdlet.ParameterSetName -like 'Explicit*') {
+            $request.Url = $Url
+            $request.ApiKey = $ApiKey
+        }
+        elseif ($PSBoundParameters.ContainsKey('Name')) {
+            $request.Name = $Name
+        }
 
-    Invoke-StarrApiRequest @request
+        Invoke-StarrApiRequest @request
+    }
 }

@@ -16,7 +16,7 @@ function Get-StarrSonarrRenamePreview {
         The API key used to authenticate.
 
     .PARAMETER SeriesId
-        The positive Sonarr resource identifier.
+        The positive Sonarr series identifier. This parameter accepts an Id property from the pipeline.
 
     .PARAMETER SeasonNumber
         The season to inspect, including zero for specials. Omit to inspect all seasons.
@@ -32,10 +32,13 @@ function Get-StarrSonarrRenamePreview {
 
         Previews renames for specials only.
 
-    .INPUTS
-        None.
+    .EXAMPLE
+        Get-StarrSonarrSeries -SeriesId 42 | Get-StarrSonarrRenamePreview
 
-        You cannot pipe objects to this function.
+    .INPUTS
+        [System.Object]
+
+        This function accepts objects with an Id property representing a Sonarr series.
 
     .OUTPUTS
         [System.Object]
@@ -60,7 +63,8 @@ function Get-StarrSonarrRenamePreview {
         [System.String]
         $ApiKey,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
+        [Alias('Id')]
         [ValidateRange(1, [System.Int32]::MaxValue)]
         [System.Int32]
         $SeriesId,
@@ -71,28 +75,30 @@ function Get-StarrSonarrRenamePreview {
         $SeasonNumber
     )
 
-    $request = @{
-        Endpoint            = 'rename'
-        Method              = 'GET'
-        ExpectedApplication = 'Sonarr'
-    }
+    process {
+        $request = @{
+            Endpoint            = 'rename'
+            Method              = 'GET'
+            ExpectedApplication = 'Sonarr'
+        }
 
-    $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        SeriesId     = 'seriesId'
-        SeasonNumber = 'seasonNumber'
-    }
+        $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
+            SeriesId     = 'seriesId'
+            SeasonNumber = 'seasonNumber'
+        }
 
-    if ($query.Count -gt 0) {
-        $request.Query = $query
-    }
+        if ($query.Count -gt 0) {
+            $request.Query = $query
+        }
 
-    if ($PSCmdlet.ParameterSetName -eq 'Explicit') {
-        $request.Url = $Url
-        $request.ApiKey = $ApiKey
-    }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
-    }
+        if ($PSCmdlet.ParameterSetName -eq 'Explicit') {
+            $request.Url = $Url
+            $request.ApiKey = $ApiKey
+        }
+        elseif ($PSBoundParameters.ContainsKey('Name')) {
+            $request.Name = $Name
+        }
 
-    Invoke-StarrApiRequest @request
+        Invoke-StarrApiRequest @request
+    }
 }

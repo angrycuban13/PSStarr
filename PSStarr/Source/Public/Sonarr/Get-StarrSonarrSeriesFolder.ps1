@@ -16,7 +16,7 @@ function Get-StarrSonarrSeriesFolder {
         The API key used to authenticate.
 
     .PARAMETER SeriesId
-        The positive Sonarr resource identifier.
+        The positive Sonarr series identifier. This parameter accepts an Id property from the pipeline.
 
     .EXAMPLE
         Get-StarrSonarrSeriesFolder -Name Main -SeriesId 42
@@ -24,10 +24,13 @@ function Get-StarrSonarrSeriesFolder {
     .EXAMPLE
         Get-StarrSonarrSeriesFolder -Url 'http://localhost:8989' -ApiKey '<api-key>' -SeriesId 42
 
-    .INPUTS
-        None.
+    .EXAMPLE
+        Get-StarrSonarrSeries -SeriesId 42 | Get-StarrSonarrSeriesFolder
 
-        You cannot pipe objects to this function.
+    .INPUTS
+        [System.Object]
+
+        This function accepts objects with an Id property representing a Sonarr series.
 
     .OUTPUTS
         [System.Object]
@@ -52,25 +55,28 @@ function Get-StarrSonarrSeriesFolder {
         [System.String]
         $ApiKey,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
+        [Alias('Id')]
         [ValidateRange(1, [System.Int32]::MaxValue)]
         [System.Int32]
         $SeriesId
     )
 
-    $request = @{
-        Endpoint            = "series/$SeriesId/folder"
-        Method              = 'GET'
-        ExpectedApplication = 'Sonarr'
-    }
+    process {
+        $request = @{
+            Endpoint            = "series/$SeriesId/folder"
+            Method              = 'GET'
+            ExpectedApplication = 'Sonarr'
+        }
 
-    if ($PSCmdlet.ParameterSetName -eq 'Explicit') {
-        $request.Url = $Url
-        $request.ApiKey = $ApiKey
-    }
-    elseif ($PSBoundParameters.ContainsKey('Name')) {
-        $request.Name = $Name
-    }
+        if ($PSCmdlet.ParameterSetName -eq 'Explicit') {
+            $request.Url = $Url
+            $request.ApiKey = $ApiKey
+        }
+        elseif ($PSBoundParameters.ContainsKey('Name')) {
+            $request.Name = $Name
+        }
 
-    Invoke-StarrApiRequest @request
+        Invoke-StarrApiRequest @request
+    }
 }
