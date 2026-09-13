@@ -139,3 +139,39 @@ Describe 'Typed consumer commands' {
         }
     }
 }
+
+Describe 'Application-specific queue commands' {
+    InModuleScope PSStarr {
+        BeforeEach {
+            Mock Get-StarrQueue { [pscustomobject]@{ ok = $true } }
+        }
+
+        It 'forwards only Radarr queue parameters with a Radarr discriminator' {
+            Get-StarrRadarrQueue -Name RadarrMain -MovieIdFilter 42,43 -IncludeMovie $true
+
+            Should -Invoke Get-StarrQueue -Times 1 -Exactly -ParameterFilter {
+                $Name -eq 'RadarrMain' -and $Application -eq 'Radarr' -and
+                @($MovieIdFilter).Count -eq 2 -and $IncludeMovie
+            }
+        }
+
+        It 'forwards only Sonarr queue parameters with a Sonarr discriminator' {
+            Get-StarrSonarrQueue -Name SonarrMain -SeriesIdFilter 42,43 -IncludeEpisode $true
+
+            Should -Invoke Get-StarrQueue -Times 1 -Exactly -ParameterFilter {
+                $Name -eq 'SonarrMain' -and $Application -eq 'Sonarr' -and
+                @($SeriesIdFilter).Count -eq 2 -and $IncludeEpisode
+            }
+        }
+
+        It 'does not expose Sonarr-only parameters on the Radarr command' {
+            (Get-Command Get-StarrRadarrQueue).Parameters.Keys | Should -Not -Contain 'SeriesIdFilter'
+            (Get-Command Get-StarrRadarrQueue).Parameters.Keys | Should -Not -Contain 'IncludeEpisode'
+        }
+
+        It 'does not expose Radarr-only parameters on the Sonarr command' {
+            (Get-Command Get-StarrSonarrQueue).Parameters.Keys | Should -Not -Contain 'MovieIdFilter'
+            (Get-Command Get-StarrSonarrQueue).Parameters.Keys | Should -Not -Contain 'IncludeMovie'
+        }
+    }
+}

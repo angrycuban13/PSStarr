@@ -30,7 +30,7 @@
     Copyright            = '(c) AngryCuban13. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description          = 'A PowerShell 7 client module for Radarr, Sonarr, and Prowlarr APIs.'
+    Description          = 'PSStarr is a PowerShell client module for Radarr, Sonarr, and Prowlarr.'
 
     # Minimum version of the PowerShell engine required by this module
     PowerShellVersion    = '7.0'
