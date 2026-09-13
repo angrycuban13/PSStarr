@@ -15,6 +15,9 @@ function Get-StarrQualityDefinition {
     .PARAMETER ApiKey
         The API key used to authenticate with the instance.
 
+    .PARAMETER Application
+        The expected application type. This filters inferred instances and validates named or explicit targets.
+
     .PARAMETER QualityDefinitionId
         The positive resource identifier for an individual quality definition.
 
@@ -55,6 +58,11 @@ function Get-StarrQualityDefinition {
         [System.String]
         $ApiKey,
 
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('Radarr', 'Sonarr')]
+        [System.String]
+        $Application,
+
         [Parameter()]
         [ValidateRange(1, [System.Int32]::MaxValue)]
         [System.Int32]
@@ -64,6 +72,10 @@ function Get-StarrQualityDefinition {
     $request = @{
         Endpoint = 'qualitydefinition'
         Method   = 'GET'
+    }
+
+    if ($PSBoundParameters.ContainsKey('Application')) {
+        $request.ExpectedApplication = $Application
     }
 
     if ($PSBoundParameters.ContainsKey('QualityDefinitionId')) {

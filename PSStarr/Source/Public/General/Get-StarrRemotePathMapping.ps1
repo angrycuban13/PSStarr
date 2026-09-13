@@ -15,6 +15,9 @@ function Get-StarrRemotePathMapping {
     .PARAMETER ApiKey
         The API key used to authenticate with the Starr instance.
 
+    .PARAMETER Application
+        The expected application type. This filters inferred instances and validates named or explicit targets.
+
     .PARAMETER RemotePathMappingId
         The positive RemotePathMapping resource identifier used for an individual lookup.
 
@@ -56,6 +59,11 @@ function Get-StarrRemotePathMapping {
         $ApiKey,
 
         [Parameter(Mandatory = $false)]
+        [ValidateSet('Radarr', 'Sonarr')]
+        [System.String]
+        $Application,
+
+        [Parameter(Mandatory = $false)]
         [ValidateRange(1, [System.Int32]::MaxValue)]
         [System.Int32]
         $RemotePathMappingId
@@ -65,6 +73,10 @@ function Get-StarrRemotePathMapping {
 
     $request = @{
         Endpoint = $endpoint
+    }
+
+    if ($PSBoundParameters.ContainsKey('Application')) {
+        $request.ExpectedApplication = $Application
     }
     if ($PSBoundParameters.ContainsKey('RemotePathMappingId')) {
         $request.Endpoint = "$endpoint/$RemotePathMappingId"

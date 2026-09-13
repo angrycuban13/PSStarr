@@ -15,6 +15,9 @@ function Get-StarrLanguage {
     .PARAMETER ApiKey
         The API key used to authenticate with the instance.
 
+    .PARAMETER Application
+        The expected application type. This filters inferred instances and validates named or explicit targets.
+
     .PARAMETER LanguageId
         The positive resource identifier for an individual language.
 
@@ -55,6 +58,11 @@ function Get-StarrLanguage {
         [System.String]
         $ApiKey,
 
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('Radarr', 'Sonarr')]
+        [System.String]
+        $Application,
+
         [Parameter()]
         [ValidateRange(1, [System.Int32]::MaxValue)]
         [System.Int32]
@@ -64,6 +72,10 @@ function Get-StarrLanguage {
     $request = @{
         Endpoint = 'language'
         Method   = 'GET'
+    }
+
+    if ($PSBoundParameters.ContainsKey('Application')) {
+        $request.ExpectedApplication = $Application
     }
 
     if ($PSBoundParameters.ContainsKey('LanguageId')) {

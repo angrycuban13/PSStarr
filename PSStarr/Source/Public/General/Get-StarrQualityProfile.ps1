@@ -15,6 +15,9 @@ function Get-StarrQualityProfile {
     .PARAMETER ApiKey
         The API key used to authenticate with the Starr instance.
 
+    .PARAMETER Application
+        The expected application type. This filters inferred instances and validates named or explicit targets.
+
     .PARAMETER QualityProfileId
         The positive QualityProfile resource identifier used for an individual lookup.
 
@@ -56,6 +59,11 @@ function Get-StarrQualityProfile {
         $ApiKey,
 
         [Parameter(Mandatory = $false)]
+        [ValidateSet('Radarr', 'Sonarr')]
+        [System.String]
+        $Application,
+
+        [Parameter(Mandatory = $false)]
         [ValidateRange(1, [System.Int32]::MaxValue)]
         [System.Int32]
         $QualityProfileId
@@ -65,6 +73,10 @@ function Get-StarrQualityProfile {
 
     $request = @{
         Endpoint = $endpoint
+    }
+
+    if ($PSBoundParameters.ContainsKey('Application')) {
+        $request.ExpectedApplication = $Application
     }
     if ($PSBoundParameters.ContainsKey('QualityProfileId')) {
         $request.Endpoint = "$endpoint/$QualityProfileId"

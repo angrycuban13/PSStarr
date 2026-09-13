@@ -1,7 +1,7 @@
 function Get-StarrPing {
     <#
     .SYNOPSIS
-        Retrieves ping response from Radarr or Sonarr.
+        Retrieves a ping response from a Starr application.
 
     .DESCRIPTION
         This function retrieves ping response using an inferred or named instance, or explicit connection credentials.
@@ -14,6 +14,9 @@ function Get-StarrPing {
 
     .PARAMETER ApiKey
         The API key used to authenticate with the instance.
+
+    .PARAMETER Application
+        The expected application type. This filters inferred instances and validates named or explicit targets.
 
     .EXAMPLE
         Get-StarrPing -Name 'Main'
@@ -47,13 +50,22 @@ function Get-StarrPing {
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $ApiKey
+        $ApiKey,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('Radarr', 'Sonarr', 'Prowlarr')]
+        [System.String]
+        $Application
     )
 
     $request = @{
         Endpoint    = 'ping'
         Method      = 'GET'
         Unversioned = $true
+    }
+
+    if ($PSBoundParameters.ContainsKey('Application')) {
+        $request.ExpectedApplication = $Application
     }
 
     if ($PSCmdlet.ParameterSetName -eq 'Explicit') {

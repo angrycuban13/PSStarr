@@ -15,6 +15,9 @@ function Get-StarrCustomFormat {
     .PARAMETER ApiKey
         The API key used to authenticate with the Starr instance.
 
+    .PARAMETER Application
+        The expected application type. This filters inferred instances and validates named or explicit targets.
+
     .PARAMETER CustomFormatId
         The positive CustomFormat resource identifier used for an individual lookup.
 
@@ -56,6 +59,11 @@ function Get-StarrCustomFormat {
         $ApiKey,
 
         [Parameter(Mandatory = $false)]
+        [ValidateSet('Radarr', 'Sonarr')]
+        [System.String]
+        $Application,
+
+        [Parameter(Mandatory = $false)]
         [ValidateRange(1, [System.Int32]::MaxValue)]
         [System.Int32]
         $CustomFormatId
@@ -65,6 +73,10 @@ function Get-StarrCustomFormat {
 
     $request = @{
         Endpoint = $endpoint
+    }
+
+    if ($PSBoundParameters.ContainsKey('Application')) {
+        $request.ExpectedApplication = $Application
     }
     if ($PSBoundParameters.ContainsKey('CustomFormatId')) {
         $request.Endpoint = "$endpoint/$CustomFormatId"

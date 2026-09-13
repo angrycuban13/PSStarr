@@ -15,6 +15,9 @@ function Get-StarrApiInfo {
     .PARAMETER ApiKey
         The API key used to authenticate with the Starr instance.
 
+    .PARAMETER Application
+        The expected application type. This filters inferred instances and validates named or explicit targets.
+
     .EXAMPLE
         Get-StarrApiInfo
 
@@ -50,7 +53,12 @@ function Get-StarrApiInfo {
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $ApiKey
+        $ApiKey,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('Radarr', 'Sonarr', 'Prowlarr')]
+        [System.String]
+        $Application
     )
 
     $endpoint = 'api'
@@ -58,6 +66,10 @@ function Get-StarrApiInfo {
     $request = @{
         Endpoint    = $endpoint
         Unversioned = $true
+    }
+
+    if ($PSBoundParameters.ContainsKey('Application')) {
+        $request.ExpectedApplication = $Application
     }
     if ($PSCmdlet.ParameterSetName -eq 'Explicit') {
         $request.Url = $Url

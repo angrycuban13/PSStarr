@@ -15,6 +15,9 @@ function Get-StarrQualityDefinitionLimit {
     .PARAMETER ApiKey
         The API key used to authenticate with the instance.
 
+    .PARAMETER Application
+        The expected application type. This filters inferred instances and validates named or explicit targets.
+
     .EXAMPLE
         Get-StarrQualityDefinitionLimit -Name 'Main'
 
@@ -47,12 +50,21 @@ function Get-StarrQualityDefinitionLimit {
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $ApiKey
+        $ApiKey,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('Radarr', 'Sonarr')]
+        [System.String]
+        $Application
     )
 
     $request = @{
         Endpoint = 'qualitydefinition/limits'
         Method   = 'GET'
+    }
+
+    if ($PSBoundParameters.ContainsKey('Application')) {
+        $request.ExpectedApplication = $Application
     }
 
     if ($PSCmdlet.ParameterSetName -eq 'Explicit') {

@@ -15,6 +15,9 @@ function Get-StarrQueueStatus {
     .PARAMETER ApiKey
         The API key used to authenticate with the Starr instance.
 
+    .PARAMETER Application
+        The expected application type. This filters inferred instances and validates named or explicit targets.
+
     .EXAMPLE
         Get-StarrQueueStatus
 
@@ -50,13 +53,22 @@ function Get-StarrQueueStatus {
         [Parameter(Mandatory = $true, ParameterSetName = 'Explicit')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
-        $ApiKey
+        $ApiKey,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('Radarr', 'Sonarr')]
+        [System.String]
+        $Application
     )
 
     $endpoint = 'queue/status'
 
     $request = @{
         Endpoint = $endpoint
+    }
+
+    if ($PSBoundParameters.ContainsKey('Application')) {
+        $request.ExpectedApplication = $Application
     }
     if ($PSCmdlet.ParameterSetName -eq 'Explicit') {
         $request.Url = $Url
