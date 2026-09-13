@@ -4,6 +4,10 @@
         "ms-vscode.powershell",
         "oderwat.indent-rainbow",
         "TylerLeonhardt.vscode-inline-values-powershell",
-        "usernamehw.errorlens"
+        "usernamehw.errorlens",
+        "aaron-bond.better-comments",
+        "EditorConfig.EditorConfig",
+        "pspester.pester-test",
+        "shardulm94.trailing-spaces"
     ]
 }
