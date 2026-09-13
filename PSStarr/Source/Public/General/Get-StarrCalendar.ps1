@@ -15,6 +15,9 @@ function Get-StarrCalendar {
     .PARAMETER ApiKey
         The API key used to authenticate with the Starr instance.
 
+    .PARAMETER Application
+        The expected application type. Use an application-specific calendar command for a narrower parameter surface.
+
     .PARAMETER Start
         The beginning of the calendar range.
 
@@ -26,6 +29,9 @@ function Get-StarrCalendar {
 
     .PARAMETER Tags
         A comma-separated list of tag identifiers.
+
+    .PARAMETER TagIdFilter
+        A typed list of positive tag identifiers. This cannot be combined with Tags.
 
     .PARAMETER IncludeSeries
         Includes series data when true.
@@ -74,6 +80,11 @@ function Get-StarrCalendar {
         $ApiKey,
 
         [Parameter(Mandatory = $false)]
+        [ValidateSet('Radarr', 'Sonarr')]
+        [System.String]
+        $Application,
+
+        [Parameter(Mandatory = $false)]
         [System.DateTime]
         $Start,
 
@@ -91,6 +102,11 @@ function Get-StarrCalendar {
         $Tags,
 
         [Parameter(Mandatory = $false)]
+        [ValidateScript({ @($_).Count -gt 0 -and @($_ | Where-Object { $_ -lt 1 }).Count -eq 0 })]
+        [System.Int32[]]
+        $TagIdFilter,
+
+        [Parameter(Mandatory = $false)]
         [System.Boolean]
         $IncludeSeries,
 
@@ -105,8 +121,30 @@ function Get-StarrCalendar {
 
     $endpoint = 'calendar'
 
+    if ($PSBoundParameters.ContainsKey('Tags') -and $PSBoundParameters.ContainsKey('TagIdFilter')) {
+        $message = 'Tags and TagIdFilter cannot be combined.'
+        $exception = [System.ArgumentException]::new($message)
+        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrCalendarTagFilterConflict' -TargetObject $PSBoundParameters -Activity $MyInvocation.MyCommand.Name
+
+        $PSCmdlet.ThrowTerminatingError($errorRecord)
+    }
+
+    $sonarrParameters = @('IncludeSeries', 'IncludeEpisodeFile', 'IncludeEpisodeImages') | Where-Object { $PSBoundParameters.ContainsKey($_) }
+
+    if ($Application -eq 'Radarr' -and @($sonarrParameters).Count -gt 0) {
+        $message = "Radarr calendar does not support: $($sonarrParameters -join ', ')."
+        $exception = [System.ArgumentException]::new($message)
+        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrApplicationParameterMismatch' -TargetObject $sonarrParameters -Activity $MyInvocation.MyCommand.Name
+
+        $PSCmdlet.ThrowTerminatingError($errorRecord)
+    }
+
     $request = @{
         Endpoint = $endpoint
+    }
+
+    if ($PSBoundParameters.ContainsKey('Application')) {
+        $request.ExpectedApplication = $Application
     }
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
         Start                = 'start'
@@ -124,10 +162,14 @@ function Get-StarrCalendar {
         }
     }
 
+    if ($PSBoundParameters.ContainsKey('TagIdFilter')) {
+        $query.tags = $TagIdFilter -join ','
+    }
+
     if ($query.Count -gt 0) {
         $request.Query = $query
     }
-    if ($PSBoundParameters.ContainsKey('IncludeSeries') -or $PSBoundParameters.ContainsKey('IncludeEpisodeFile') -or $PSBoundParameters.ContainsKey('IncludeEpisodeImages')) {
+    if ($Application -eq 'Sonarr' -or $PSBoundParameters.ContainsKey('IncludeSeries') -or $PSBoundParameters.ContainsKey('IncludeEpisodeFile') -or $PSBoundParameters.ContainsKey('IncludeEpisodeImages')) {
         $request.ExpectedApplication = 'Sonarr'
     }
 

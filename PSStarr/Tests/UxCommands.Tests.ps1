@@ -175,3 +175,51 @@ Describe 'Application-specific queue commands' {
         }
     }
 }
+
+Describe 'Application-specific calendar commands' {
+    InModuleScope PSStarr {
+        It 'serializes typed tag IDs for the shared calendar route' {
+            Mock Invoke-StarrApiRequest { @() }
+
+            Get-StarrCalendar -Name RadarrMain -Application Radarr -TagIdFilter 2,5
+
+            Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
+                $ExpectedApplication -eq 'Radarr' -and $Query.tags -eq '2,5'
+            }
+        }
+
+        It 'rejects both calendar tag-filter forms together' {
+            Mock Invoke-StarrApiRequest { @() }
+
+            { Get-StarrCalendar -Name RadarrMain -Tags '2,5' -TagIdFilter 2,5 } |
+                Should -Throw -ErrorId 'StarrCalendarTagFilterConflict,Get-StarrCalendar'
+
+            Should -Invoke Invoke-StarrApiRequest -Times 0
+        }
+
+        It 'forwards the Radarr calendar surface with a Radarr discriminator' {
+            Mock Get-StarrCalendar { @() }
+
+            Get-StarrRadarrCalendar -Name RadarrMain -TagIdFilter 2,5
+
+            Should -Invoke Get-StarrCalendar -Times 1 -Exactly -ParameterFilter {
+                $Application -eq 'Radarr' -and @($TagIdFilter).Count -eq 2
+            }
+        }
+
+        It 'forwards the Sonarr calendar surface with a Sonarr discriminator' {
+            Mock Get-StarrCalendar { @() }
+
+            Get-StarrSonarrCalendar -Name SonarrMain -IncludeSeries $true
+
+            Should -Invoke Get-StarrCalendar -Times 1 -Exactly -ParameterFilter {
+                $Application -eq 'Sonarr' -and $IncludeSeries
+            }
+        }
+
+        It 'does not expose Sonarr-only calendar parameters on the Radarr command' {
+            (Get-Command Get-StarrRadarrCalendar).Parameters.Keys | Should -Not -Contain 'IncludeSeries'
+            (Get-Command Get-StarrRadarrCalendar).Parameters.Keys | Should -Not -Contain 'IncludeEpisodeFile'
+        }
+    }
+}
