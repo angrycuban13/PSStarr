@@ -8,9 +8,15 @@ $projectRoot = Split-Path $PSScriptRoot -Parent
 $sourcePath = Join-Path $projectRoot 'Source'
 $buildPath = Join-Path $projectRoot 'build.psd1'
 $outputPath = Join-Path $projectRoot 'Output'
-$manifestPath = Join-Path $outputPath 'PSStarr/1.0.0/PSStarr.psd1'
+$sourceManifestPath = Join-Path $sourcePath 'PSStarr.psd1'
+$sourceManifest = Import-PowerShellDataFile -Path $sourceManifestPath
+$moduleVersion = [System.String]$sourceManifest.ModuleVersion
+$manifestPath = Join-Path $outputPath "PSStarr/$moduleVersion/PSStarr.psd1"
 
-$analysis = @(Invoke-ScriptAnalyzer -Path $sourcePath -Recurse -Severity Warning, Error)
+$analysis = @(
+    Invoke-ScriptAnalyzer -Path $sourcePath -Recurse -Severity Warning, Error
+    Invoke-ScriptAnalyzer -Path $PSScriptRoot -Recurse -Severity Warning, Error
+)
 
 if ($analysis.Count -gt 0) {
     $analysis | Format-Table -AutoSize

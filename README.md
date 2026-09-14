@@ -174,6 +174,17 @@ Run the complete release gate from the repository root:
 
 Live tests are opt-in and require local instance configuration. Unit tests use mocked HTTP and fake credentials.
 
+Prepare a stable release through a normal pull request:
+
+```powershell
+./PSStarr/tools/Prepare-Release.ps1 -Version 1.0.0
+```
+
+Review and commit the manifest and changelog changes, merge them into `main`, and
+then manually run the **Validate and release PSStarr** workflow with the matching
+version. The protected `PowerShellGallery` environment publishes the validated
+artifact and creates the corresponding GitHub release and `v*` tag.
+
 ### Local Development
 
 For local development, build and import the module:

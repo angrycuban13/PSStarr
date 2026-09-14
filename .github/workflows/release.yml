@@ -1,9 +1,10 @@
-name: Validate and publish PSStarr
+name: Validate and release PSStarr
 
 on:
     pull_request:
         paths:
             - ".github/workflows/release.yml"
+            - "CHANGELOG.md"
             - "PSStarr/Source/**"
             - "PSStarr/Tests/**"
             - "PSStarr/tools/**"
@@ -11,21 +12,19 @@ on:
     push:
         branches:
             - main
-        tags:
-            - "v*"
         paths:
             - ".github/workflows/release.yml"
+            - "CHANGELOG.md"
             - "PSStarr/Source/**"
             - "PSStarr/Tests/**"
             - "PSStarr/tools/**"
             - "PSStarr/build.psd1"
     workflow_dispatch:
         inputs:
-            publish:
-                description: Publish the validated package to PowerShell Gallery
+            version:
+                description: Stable semantic version already prepared on main
                 required: true
-                default: false
-                type: boolean
+                type: string
 
 permissions:
     contents: read
@@ -33,11 +32,47 @@ permissions:
 jobs:
     validate:
         runs-on: windows-latest
+        outputs:
+            version: ${{ steps.metadata.outputs.version }}
+            artifact_name: ${{ steps.metadata.outputs.artifact_name }}
         defaults:
             run:
                 shell: pwsh
         steps:
             - uses: actions/checkout@v4
+
+            - name: Read and validate release metadata
+              id: metadata
+              env:
+                  EVENT_NAME: ${{ github.event_name }}
+                  REQUESTED_VERSION: ${{ inputs.version }}
+              run: |
+                  $manifest = Import-PowerShellDataFile ./PSStarr/Source/PSStarr.psd1
+                  $version = [string]$manifest.ModuleVersion
+
+                  if ($version -notmatch '^\d+\.\d+\.\d+$') {
+                      throw "Manifest version '$version' is not a stable semantic version."
+                  }
+
+                  if ($env:EVENT_NAME -eq 'workflow_dispatch') {
+                      if ($env:GITHUB_REF -ne 'refs/heads/main') {
+                          throw 'Releases must be dispatched from main.'
+                      }
+
+                      if ($env:REQUESTED_VERSION -ne $version) {
+                          throw "Requested version '$env:REQUESTED_VERSION' does not match manifest version '$version'."
+                      }
+
+                      $changelog = Get-Content ./CHANGELOG.md -Raw
+                      $escapedVersion = [regex]::Escape($version)
+
+                      if ($changelog -notmatch "(?m)^## \[$escapedVersion\] - \d{4}-\d{2}-\d{2}\s*$") {
+                          throw "CHANGELOG.md does not contain a dated $version release."
+                      }
+                  }
+
+                  "version=$version" >> $env:GITHUB_OUTPUT
+                  "artifact_name=PSStarr-$version" >> $env:GITHUB_OUTPUT
 
             - name: Install build dependencies
               run: |
@@ -53,20 +88,94 @@ jobs:
             - name: Upload validated module
               uses: actions/upload-artifact@v4
               with:
-                  name: PSStarr-1.0.0
-                  path: PSStarr/Output/PSStarr/1.0.0
+                  name: ${{ steps.metadata.outputs.artifact_name }}
+                  path: PSStarr/Output/PSStarr/${{ steps.metadata.outputs.version }}
                   if-no-files-found: error
 
-            - name: Publish to PowerShell Gallery
-              if: startsWith(github.ref, 'refs/tags/v') || inputs.publish == true
+    release:
+        if: github.event_name == 'workflow_dispatch'
+        needs: validate
+        runs-on: windows-latest
+        environment: PowerShellGallery
+        permissions:
+            contents: write
+        defaults:
+            run:
+                shell: pwsh
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Download validated module
+              uses: actions/download-artifact@v4
+              with:
+                  name: ${{ needs.validate.outputs.artifact_name }}
+                  path: release-package
+
+            - name: Publish module
               env:
                   POWERSHELL_GALLERY_API_KEY: ${{ secrets.POWERSHELL_GALLERY_API_KEY }}
+                  RELEASE_VERSION: ${{ needs.validate.outputs.version }}
               run: |
                   if ([string]::IsNullOrWhiteSpace($env:POWERSHELL_GALLERY_API_KEY)) {
                       throw 'POWERSHELL_GALLERY_API_KEY is not configured.'
                   }
 
-                  Publish-Module `
-                      -Path ./PSStarr/Output/PSStarr/1.0.0 `
-                      -NuGetApiKey $env:POWERSHELL_GALLERY_API_KEY `
-                      -Repository PSGallery
+                  $publishedModule = Find-Module `
+                      -Name PSStarr `
+                      -RequiredVersion $env:RELEASE_VERSION `
+                      -Repository PSGallery `
+                      -ErrorAction SilentlyContinue
+
+                  if ($null -eq $publishedModule) {
+                      Publish-Module `
+                          -Path ./release-package `
+                          -NuGetApiKey $env:POWERSHELL_GALLERY_API_KEY `
+                          -Repository PSGallery
+                  }
+                  else {
+                      Write-Host "PSStarr $env:RELEASE_VERSION is already published; skipping PowerShell Gallery."
+                  }
+
+            - name: Create GitHub release
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+              run: |
+                  $tag = "v$env:RELEASE_VERSION"
+                  $releaseNotesPath = Join-Path $env:RUNNER_TEMP 'release-notes.md'
+                  $releaseArchivePath = Join-Path $env:RUNNER_TEMP "PSStarr-$env:RELEASE_VERSION.zip"
+                  $changelog = Get-Content ./CHANGELOG.md -Raw
+                  $escapedVersion = [regex]::Escape($env:RELEASE_VERSION)
+                  $releaseSection = [regex]::Match(
+                      $changelog,
+                      "(?ms)^## \[$escapedVersion\] - \d{4}-\d{2}-\d{2}\s*(?<Notes>.*?)(?=^## \[|\z)"
+                  )
+
+                  if (-not $releaseSection.Success) {
+                      throw "Could not extract release notes for $env:RELEASE_VERSION."
+                  }
+
+                  Set-Content `
+                      -LiteralPath $releaseNotesPath `
+                      -Value $releaseSection.Groups['Notes'].Value.Trim()
+
+                  Compress-Archive `
+                      -Path ./release-package/* `
+                      -DestinationPath $releaseArchivePath
+
+                  $null = gh release view $tag --json tagName 2>$null
+
+                  if ($LASTEXITCODE -eq 0) {
+                      Write-Host "GitHub release $tag already exists; skipping creation."
+                  }
+                  else {
+                      gh release create $tag `
+                          --target $env:GITHUB_SHA `
+                          --title "PSStarr $env:RELEASE_VERSION" `
+                          --notes-file $releaseNotesPath `
+                          $releaseArchivePath
+
+                      if ($LASTEXITCODE -ne 0) {
+                          throw "Failed to create GitHub release $tag."
+                      }
+                  }
