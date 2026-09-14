@@ -125,10 +125,13 @@ jobs:
                   }
 
                   Set-PSRepository PSGallery -InstallationPolicy Trusted
+                  Install-Module Configuration -RequiredVersion 1.6.0 -Scope CurrentUser -Force
 
                   if ([string]::IsNullOrWhiteSpace($env:POWERSHELL_GALLERY_API_KEY)) {
                       throw 'POWERSHELL_GALLERY_API_KEY is not configured.'
                   }
+
+                  $null = Test-ModuleManifest -Path ./release-package/PSStarr.psd1
 
                   $publishedModule = Find-Module `
                       -Name PSStarr `
