@@ -113,7 +113,7 @@ jobs:
               uses: actions/download-artifact@v8
               with:
                   name: ${{ needs.validate.outputs.artifact_name }}
-                  path: release-package
+                  path: release-package/PSStarr
 
             - name: Publish module
               env:
@@ -131,7 +131,7 @@ jobs:
                       throw 'POWERSHELL_GALLERY_API_KEY is not configured.'
                   }
 
-                  $null = Test-ModuleManifest -Path ./release-package/PSStarr.psd1
+                  $null = Test-ModuleManifest -Path ./release-package/PSStarr/PSStarr.psd1
 
                   $publishedModule = Find-Module `
                       -Name PSStarr `
@@ -141,7 +141,7 @@ jobs:
 
                   if ($null -eq $publishedModule) {
                       Publish-Module `
-                          -Path ./release-package `
+                          -Path ./release-package/PSStarr `
                           -NuGetApiKey $env:POWERSHELL_GALLERY_API_KEY `
                           -Repository PSGallery
                   }
@@ -173,7 +173,7 @@ jobs:
                       -Value $releaseSection.Groups['Notes'].Value.Trim()
 
                   Compress-Archive `
-                      -Path ./release-package/* `
+                      -Path ./release-package/PSStarr/* `
                       -DestinationPath $releaseArchivePath
 
                   $null = gh release view $tag --json tagName 2>$null
