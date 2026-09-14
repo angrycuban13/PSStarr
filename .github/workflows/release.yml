@@ -2,11 +2,23 @@ name: Validate and publish PSStarr
 
 on:
     pull_request:
+        paths:
+            - ".github/workflows/release.yml"
+            - "PSStarr/Source/**"
+            - "PSStarr/Tests/**"
+            - "PSStarr/tools/**"
+            - "PSStarr/build.psd1"
     push:
         branches:
             - main
         tags:
             - "v*"
+        paths:
+            - ".github/workflows/release.yml"
+            - "PSStarr/Source/**"
+            - "PSStarr/Tests/**"
+            - "PSStarr/tools/**"
+            - "PSStarr/build.psd1"
     workflow_dispatch:
         inputs:
             publish:
