@@ -3,17 +3,8 @@
 
 PSStarr is a PowerShell 7 client module for Radarr, Sonarr, and Prowlarr.
 
-The module offers the following features:
-
-- Stable typed PowerShell objects using `PSStarr.*` type names while retaining every upstream property
-- Concise default views with complete output available through `Format-List *` and `Select-Object *`
-- Pipeline-friendly parent-to-child resource commands
-- Named connections with DPAPI or portable AES-256 API-key encryption
-- Explicit URL and API-key parameters for ephemeral and CI use
-- Discoverable Radarr, Sonarr, and Prowlarr endpoint wrappers with validated query parameters
-- `ShouldProcess`, `-WhatIf`, and confirmation support for state-changing commands
-- Credential-safe errors, configuration output, provider responses, and operational logs
-- Public advanced transport and command-submission escape hatches
+<!-- omit in toc -->
+## Table of Contents
 
 - [Installation](#installation)
 - [First Time Configuration](#first-time-configuration)
@@ -27,16 +18,27 @@ The module offers the following features:
   - [Advanced Usage](#advanced-usage)
     - [Command submission](#command-submission)
     - [Transport](#transport)
-  - [Local Development](#local-development)
 - [Development](#development)
+  - [Local Development](#local-development)
 - [Changelog](#changelog)
 - [License](#license)
 
+### Features
+
+`PSStarr` offers the following features:
+
+- Stable typed PowerShell objects using `PSStarr.*` type names while retaining every upstream property
+- Concise default views with complete output available through `Format-List *` and `Select-Object *`
+- Pipeline-friendly parent-to-child resource commands
+- Named connections with DPAPI or portable AES-256 API-key encryption
+- Explicit URL and API-key parameters for ephemeral and CI use
+- Discoverable Radarr, Sonarr, and Prowlarr endpoint wrappers with validated query parameters
+- `ShouldProcess`, `-WhatIf`, and confirmation support for state-changing commands
+- Credential-safe errors, configuration output, provider responses, and operational logs
+- Public advanced transport and command-submission escape hatches
+
 <!-- omit in toc -->
 ## Supported applications
-
-> [!NOTE]
-> Lidarr, Readarr, and Whisparr are intentionally outside the supported module scope.
 
 | Application | API |
 | --- | --- |
@@ -44,11 +46,13 @@ The module offers the following features:
 | Sonarr | v3 |
 | Prowlarr | v1 |
 
+> [!NOTE]
+> Lidarr, Readarr, and Whisparr are not included because they are semi-abandoned and/or deprecated.
+
 <!-- omit in toc -->
 ## Requirements
 
 - PowerShell 7.0+
-- [`Microsoft.PowerShell.PSResourceGet`](https://www.powershellgallery.com/packages/Microsoft.PowerShell.PSResourceGet) for `Install-PSResource`
 - [`Configuration`](https://www.powershellgallery.com/packages/Configuration) module 1.6.0+
 
 ## Installation
@@ -56,7 +60,7 @@ The module offers the following features:
 Install a published release from the PowerShell Gallery:
 
 ```powershell
-Install-PSResource -Name PSStarr -Scope CurrentUser
+Install-Module -Name PSStarr -Scope CurrentUser
 ```
 
 ## First Time Configuration
@@ -80,8 +84,10 @@ Set-PSStarrInstance @params
 
 ### Plaintext
 
-> [!TIP]
+> [!NOTE]
 > Non-Windows platforms default to **plaintext**.
+>
+> Plaintext storage must be selected **explicitly** on Windows.
 
 ```powershell
 $params = @{
@@ -94,9 +100,6 @@ $params = @{
 
 Set-PSStarrInstance @params
 ```
-
-> [!NOTE]
-> Plaintext storage must be selected **explicitly** on Windows.
 
 ### Portable AES-256
 
@@ -161,22 +164,6 @@ Invoke-StarrApiRequest -InstanceName Radarr -Method GET -Endpoint 'movie/42'
 >
 > Callers are responsible for selecting the endpoint, and response handling.
 
-### Local Development
-
-For local development, build and import the module:
-
-```powershell
-Install-PSResource -Name ModuleBuilder -Scope CurrentUser
-
-Set-Location ./PSStarr
-
-Import-Module ModuleBuilder
-
-Build-Module ./build.psd1
-
-Import-Module ./Output/PSStarr/1.0.0/PSStarr.psd1 -Force
-```
-
 ## Development
 
 Run the complete release gate from the repository root:
@@ -186,6 +173,22 @@ Run the complete release gate from the repository root:
 ```
 
 Live tests are opt-in and require local instance configuration. Unit tests use mocked HTTP and fake credentials.
+
+### Local Development
+
+For local development, build and import the module:
+
+```powershell
+Install-Module -Name ModuleBuilder -Scope CurrentUser
+
+Set-Location ./PSStarr
+
+Import-Module ModuleBuilder
+
+Build-Module ./build.psd1
+
+Import-Module ./Output/PSStarr/1.0.0/PSStarr.psd1 -Force
+```
 
 ## Changelog
 
