@@ -76,6 +76,10 @@ jobs:
 
             - name: Install build dependencies
               run: |
+                  if ($null -eq (Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue)) {
+                      Register-PSRepository -Default
+                  }
+
                   Set-PSRepository PSGallery -InstallationPolicy Trusted
                   Install-Module Configuration -RequiredVersion 1.6.0 -Scope CurrentUser -Force
                   Install-Module ModuleBuilder -Scope CurrentUser -Force
@@ -116,6 +120,12 @@ jobs:
                   POWERSHELL_GALLERY_API_KEY: ${{ secrets.POWERSHELL_GALLERY_API_KEY }}
                   RELEASE_VERSION: ${{ needs.validate.outputs.version }}
               run: |
+                  if ($null -eq (Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue)) {
+                      Register-PSRepository -Default
+                  }
+
+                  Set-PSRepository PSGallery -InstallationPolicy Trusted
+
                   if ([string]::IsNullOrWhiteSpace($env:POWERSHELL_GALLERY_API_KEY)) {
                       throw 'POWERSHELL_GALLERY_API_KEY is not configured.'
                   }
