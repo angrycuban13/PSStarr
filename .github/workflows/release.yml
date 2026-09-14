@@ -133,17 +133,10 @@ jobs:
 
                   $null = Test-ModuleManifest -Path ./release-package/PSStarr/PSStarr.psd1
 
-                  $publishedModule = Find-Module `
-                      -Name PSStarr `
-                      -RequiredVersion $env:RELEASE_VERSION `
-                      -Repository PSGallery `
-                      -ErrorAction SilentlyContinue
+                  $publishedModule = Find-Module -Name PSStarr -RequiredVersion $env:RELEASE_VERSION -Repository PSGallery -ErrorAction SilentlyContinue
 
                   if ($null -eq $publishedModule) {
-                      Publish-Module `
-                          -Path ./release-package/PSStarr `
-                          -NuGetApiKey $env:POWERSHELL_GALLERY_API_KEY `
-                          -Repository PSGallery
+                      Publish-Module -Path ./release-package/PSStarr -NuGetApiKey $env:POWERSHELL_GALLERY_API_KEY -Repository PSGallery
                   }
                   else {
                       Write-Host "PSStarr $env:RELEASE_VERSION is already published; skipping PowerShell Gallery."
@@ -168,13 +161,9 @@ jobs:
                       throw "Could not extract release notes for $env:RELEASE_VERSION."
                   }
 
-                  Set-Content `
-                      -LiteralPath $releaseNotesPath `
-                      -Value $releaseSection.Groups['Notes'].Value.Trim()
+                  Set-Content -LiteralPath $releaseNotesPath -Value $releaseSection.Groups['Notes'].Value.Trim()
 
-                  Compress-Archive `
-                      -Path ./release-package/PSStarr/* `
-                      -DestinationPath $releaseArchivePath
+                  Compress-Archive -Path ./release-package/PSStarr/* -DestinationPath $releaseArchivePath
 
                   $null = gh release view $tag --json tagName 2>$null
 
@@ -182,11 +171,7 @@ jobs:
                       Write-Host "GitHub release $tag already exists; skipping creation."
                   }
                   else {
-                      gh release create $tag `
-                          --target $env:GITHUB_SHA `
-                          --title "PSStarr $env:RELEASE_VERSION" `
-                          --notes-file $releaseNotesPath `
-                          $releaseArchivePath
+                      gh release create $tag --target $env:GITHUB_SHA --title "PSStarr $env:RELEASE_VERSION" --notes-file $releaseNotesPath $releaseArchivePath
 
                       if ($LASTEXITCODE -ne 0) {
                           throw "Failed to create GitHub release $tag."

@@ -15,15 +15,17 @@ Favor a small, coherent public API over narrow functions designed for one existi
 - Saved configuration encrypts API keys only. Windows defaults to current-user/current-host DPAPI; portable AES-256 requires an external Base64-encoded 32-byte key in `PSSTARR_AES_KEY`; plaintext must be explicit on Windows. Never fall back to plaintext after an encryption failure.
 - Provider, host, error, and log responses must mask recognizable credentials. Redacted configuration output must never be submitted as an update. Successful calls are not logged; operational logging is controlled by `PSSTARR_LOG_DISABLED` and `PSSTARR_LOG_DIRECTORY`.
 - GETs that search releases or Prowlarr indexers can contact providers and consume quotas; manual-import reads inspect server files. Filesystem browsing, feeds, authentication UI, localization, static/binary downloads, log downloads, and deprecated endpoints stay excluded.
-- Consumer-required writes are limited to tag creation, command submission, Radarr movie-tag and collection-monitoring updates, and Sonarr series-tag updates. All state changes require `SupportsShouldProcess`; collection monitoring can trigger Radarr automation.
+- Consumer-required writes are limited to tag creation and deletion, command submission, Radarr movie-tag and collection-monitoring updates, and Sonarr series-tag updates. Typed command facades cover broadly useful refresh, rescan, rename, and tightly scoped search operations. All state changes require `SupportsShouldProcess`; collection monitoring and searches can trigger upstream automation or provider activity.
+- Tag mutation commands use `Action` with `Add` and `Remove` values. Where tags apply to media, accept tag names as a user-facing alternative to IDs, resolve names through the tag endpoint, and warn without mutation when a requested name does not exist.
 - Unit tests use fake credentials and mocked HTTP. Live checks are opt-in and must never print credentials or response bodies. The saved-connection baseline covers safe Radarr, Sonarr, and Prowlarr reads; rerun the full live matrix after public parameter or configuration changes.
 - Application-facing commands use `InstanceName` for saved-connection selection; only `*-PSStarrInstance` configuration commands use `Name` for the configuration record itself.
-- Preserve predictable output shapes: ordinary collections stream zero or more resource objects, paged endpoints return their paging envelope, ID routes return one resource, and filter commands remain list searches. Do not fabricate empty arrays or placeholder objects.
+- Preserve predictable output shapes: ordinary collections stream zero or more resource objects, paged endpoints return their paging envelope, ID routes return one resource, and filter commands remain list searches. Do not fabricate empty arrays or placeholder objects. Apply stable `PSStarr.*` type names without removing upstream properties; default format views show useful properties while `Format-List *` and `Select-Object *` expose the complete response.
 - Support property-name pipeline binding only for natural parent-to-child reads. Avoid implicit pipeline behavior for searches and server-filesystem inspection.
 - Apply consistent parameter semantics: positive resource IDs and ID arrays, paging values starting at 1, typed booleans, descriptive `*IdFilter` names, ISO 8601 dates, and early validation of invalid combinations and reversed date ranges.
 - Shared commands must expose an application discriminator where explicit credentials are accepted and reject unsupported applications before transport. Prefer application-specific facades when Radarr and Sonarr contracts differ.
+- `Invoke-StarrCommand` is the canonical advanced command-submission interface. Keep `Start-StarrCommand` only for compatibility, and prefer typed application-specific command facades when a command is broadly useful enough to support directly.
 - Live verification must cover empty results, paged envelopes, ID/list behavior, explicit and saved connections, and application mismatch errors. Provider searches can consume quotas; manual-import reads inspect server files. Configure each application's recycle bin before destructive media tests.
-- ModuleBuilder output is generated and ignored; publish built artifacts from a clean checkout. A public 1.0.0 release still needs a license, root README, release notes, and a repeatable publishing workflow.
+- ModuleBuilder output is generated and ignored. Build and publish from a clean checkout, use the repository changelog as the release-note source of truth, and never hand-edit or publish generated output.
 
 ## Architecture
 
@@ -52,9 +54,13 @@ Use Pester for unit tests. Mock `Invoke-StarrApiRequest` in endpoint tests and m
 Cover URL normalization, query serialization, API-version handling, sanitized errors, configuration persistence, list responses, ID lookup, and application-specific differences.
 Keep integration tests opt-in and driven by environment variables.
 
-## Delivery Order
+## Delivery and Release
 
-Complete public `InstanceName` consistency and partial configuration updates, then run the full local live matrix before release-readiness work. Maintain an endpoint inventory by application and supported API version so GET coverage remains measurable.
+Run `PSStarr/tools/Test-Release.ps1` before publishing. The gate analyzes source and tooling, builds the module using the manifest version, validates the manifest and exported commands, verifies comment-based help, runs the full Pester suite, and rejects unexpected package files.
+
+Prepare stable versions with `PSStarr/tools/Prepare-Release.ps1`, review the manifest and dated changelog changes through the normal Git workflow, and merge them into `main` before release dispatch. The release workflow must require a matching stable version from `main`, transfer the exact validated artifact into the `PowerShellGallery` environment, publish idempotently, and create the matching GitHub release and `v*` tag. Do not publish on ordinary pushes or pull requests.
+
+Treat the local API specifications and consumer-coverage documents as dated research rather than a promise of complete upstream endpoint coverage. Re-audit them when upstream contracts or supported consumer requirements change.
 
 ## PowerShell Style
 
