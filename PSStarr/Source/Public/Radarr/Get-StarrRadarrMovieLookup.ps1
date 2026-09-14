@@ -1,4 +1,4 @@
-function Get-StarrRadarrMovieLookup {
+﻿function Get-StarrRadarrMovieLookup {
     <#
     .SYNOPSIS
         Searches Radarr metadata providers for movies to add.
@@ -36,12 +36,12 @@ function Get-StarrRadarrMovieLookup {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Radarr.LookupResult]
 
         This function returns response objects retrieved from the Starr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'NamedTerm')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Radarr.LookupResult')]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'NamedTerm')]
         [Parameter(Mandatory = $false, ParameterSetName = 'NamedImdb')]

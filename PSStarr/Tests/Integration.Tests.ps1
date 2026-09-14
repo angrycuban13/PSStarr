@@ -1,4 +1,4 @@
-BeforeDiscovery {
+﻿BeforeDiscovery {
     $liveEnabled = $env:PSSTARR_RUN_INTEGRATION -ceq '1'
 }
 

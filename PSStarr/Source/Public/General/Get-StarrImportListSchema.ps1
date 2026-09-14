@@ -1,4 +1,4 @@
-function Get-StarrImportListSchema {
+﻿function Get-StarrImportListSchema {
     <#
     .SYNOPSIS
         Retrieves import list schemas from Radarr or Sonarr.
@@ -30,12 +30,12 @@ function Get-StarrImportListSchema {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.ProviderSchema]
 
         This function returns deserialized import list schemas.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.ProviderSchema')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

@@ -1,4 +1,4 @@
-function Get-StarrSonarrSeries {
+﻿function Get-StarrSonarrSeries {
     <#
     .SYNOPSIS
         Retrieves Sonarr series from a Starr instance.
@@ -39,12 +39,12 @@ function Get-StarrSonarrSeries {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Sonarr.Series]
 
         This function returns response objects retrieved from the Starr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Sonarr.Series')]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
         [Alias('Name')]

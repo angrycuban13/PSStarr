@@ -1,4 +1,4 @@
-function Protect-StarrSensitiveText {
+﻿function Protect-StarrSensitiveText {
     <#
     .SYNOPSIS
         Redacts sensitive values from text.

@@ -1,4 +1,4 @@
-function Get-StarrRadarrHistory {
+﻿function Get-StarrRadarrHistory {
     <#
     .SYNOPSIS
         Retrieves Radarr history.
@@ -66,12 +66,12 @@ function Get-StarrRadarrHistory {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Radarr.PagedResult], [PSStarr.Radarr.History]
 
         This function returns Radarr history responses.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Radarr.PagedResult', 'PSStarr.Radarr.History')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

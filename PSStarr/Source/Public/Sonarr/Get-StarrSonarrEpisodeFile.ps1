@@ -1,4 +1,4 @@
-function Get-StarrSonarrEpisodeFile {
+﻿function Get-StarrSonarrEpisodeFile {
     <#
     .SYNOPSIS
         Retrieves Sonarr episode files from a Starr instance.
@@ -42,12 +42,12 @@ function Get-StarrSonarrEpisodeFile {
         This function accepts objects with an Id property representing a Sonarr series.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Sonarr.EpisodeFile]
 
         This function returns response objects retrieved from the Starr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Sonarr.EpisodeFile')]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
         [Alias('Name')]

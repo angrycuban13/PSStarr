@@ -60,12 +60,12 @@ function Get-StarrRadarrQueue {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Radarr.PagedResult]
 
         This function returns the Radarr queue response.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Radarr.PagedResult')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

@@ -1,4 +1,4 @@
-function Get-StarrRadarrCalendar {
+﻿function Get-StarrRadarrCalendar {
     <#
     .SYNOPSIS
         Retrieves Radarr calendar records.
@@ -39,12 +39,12 @@ function Get-StarrRadarrCalendar {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Radarr.CalendarEntry]
 
         This function returns Radarr calendar records.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Radarr.CalendarEntry')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

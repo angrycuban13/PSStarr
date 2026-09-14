@@ -1,4 +1,4 @@
-function Get-StarrReleaseProfile {
+﻿function Get-StarrReleaseProfile {
     <#
     .SYNOPSIS
         Retrieves release profile settings from Radarr or Sonarr.
@@ -36,12 +36,12 @@ function Get-StarrReleaseProfile {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.ReleaseProfile]
 
         This function returns deserialized release profile objects.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.ReleaseProfile')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

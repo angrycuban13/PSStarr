@@ -1,4 +1,4 @@
-function Get-StarrConfiguration {
+﻿function Get-StarrConfiguration {
     <#
     .SYNOPSIS
         Retrieves the persisted PSStarr configuration.

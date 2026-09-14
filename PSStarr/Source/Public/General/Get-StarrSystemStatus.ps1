@@ -1,4 +1,4 @@
-function Get-StarrSystemStatus {
+﻿function Get-StarrSystemStatus {
     <#
     .SYNOPSIS
         Retrieves system status information from a Starr instance.
@@ -33,12 +33,12 @@ function Get-StarrSystemStatus {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.SystemStatus]
 
         This function returns response objects retrieved from the Starr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.SystemStatus')]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
         [Alias('Name')]

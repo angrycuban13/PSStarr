@@ -1,4 +1,4 @@
-BeforeDiscovery {
+﻿BeforeDiscovery {
     Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
 }
 
@@ -52,7 +52,7 @@ InModuleScope PSStarr {
         }
 
         It 'keeps array filters as arrays and preserves list responses' {
-            $result = @(Get-StarrProwlarrSearch -Term example -Type search -IndexerIdFilter 1,2 -CategoryIdFilter 2000,2040 -Limit 25 -Offset 0)
+            $result = @(Get-StarrProwlarrSearch -Term example -Type search -IndexerIdFilter 1, 2 -CategoryIdFilter 2000, 2040 -Limit 25 -Offset 0)
 
             $result.Count | Should -Be 2
             $result[1].title | Should -Be Second
@@ -88,7 +88,7 @@ InModuleScope PSStarr {
         It 'sends comma-separated filters and round-trip dates' {
             $start = [datetime]'2026-01-01T00:00:00Z'
             $end = [datetime]'2026-01-02T00:00:00Z'
-            $result = Get-StarrProwlarrIndexerStatistic -StartDate $start -EndDate $end -IndexerIdFilter 1,2 -Protocol Usenet,Torrent -Tag movies,3
+            $result = Get-StarrProwlarrIndexerStatistic -StartDate $start -EndDate $end -IndexerIdFilter 1, 2 -Protocol Usenet, Torrent -Tag movies, 3
 
             @($result.indexers).Count | Should -Be 0
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {

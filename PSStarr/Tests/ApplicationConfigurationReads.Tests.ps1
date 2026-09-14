@@ -1,4 +1,4 @@
-BeforeDiscovery {
+﻿BeforeDiscovery {
     Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
 }
 
@@ -16,7 +16,7 @@ InModuleScope PSStarr {
         BeforeEach {
             Mock Invoke-StarrApiRequest {
                 [pscustomobject]@{
-                    id = 1
+                    id      = 1
                     enabled = $false
                 }
             }
@@ -40,22 +40,6 @@ InModuleScope PSStarr {
             }
         }
 
-        It 'forwards explicit credentials' {
-            Get-StarrApplicationConfiguration -Url 'http://localhost:7878/base' -ApiKey fixture-key -Section $Section
-
-            Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                $Endpoint -eq $Path -and $Url -eq 'http://localhost:7878/base' -and $ApiKey -eq 'fixture-key'
-            }
-        }
-
-        It 'delegates connection inference' {
-            Get-StarrApplicationConfiguration -Section $Section
-
-            Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                $Endpoint -eq $Path -and [string]::IsNullOrEmpty($InstanceName) -and [string]::IsNullOrEmpty($Url)
-            }
-        }
-
         It 'restricts only metadata to Radarr' {
             Get-StarrApplicationConfiguration -InstanceName Main -Section $Section
 
@@ -65,12 +49,35 @@ InModuleScope PSStarr {
             }
         }
 
+    }
+
+    Describe 'Application configuration shared connection contract' {
+        BeforeEach {
+            Mock Invoke-StarrApiRequest { [pscustomobject]@{ id = 1 } }
+        }
+
+        It 'forwards explicit credentials' {
+            Get-StarrApplicationConfiguration -Url 'http://localhost:7878/base' -ApiKey fixture-key -Section Host
+
+            Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
+                $Endpoint -eq 'config/host' -and $Url -eq 'http://localhost:7878/base' -and $ApiKey -eq 'fixture-key'
+            }
+        }
+
+        It 'delegates connection inference' {
+            Get-StarrApplicationConfiguration -Section Host
+
+            Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
+                [string]::IsNullOrEmpty($InstanceName) -and [string]::IsNullOrEmpty($Url)
+            }
+        }
+
         It 'rejects invalid IDs and connection values before transport' {
-            { Get-StarrApplicationConfiguration -Section $Section -ConfigurationId 0 } | Should -Throw
-            { Get-StarrApplicationConfiguration -Section $Section -ConfigurationId -1 } | Should -Throw
-            { Get-StarrApplicationConfiguration -Section $Section -InstanceName ' ' } | Should -Throw
-            { Get-StarrApplicationConfiguration -Section $Section -Url 'ftp://localhost' -ApiKey fixture-key } | Should -Throw
-            { Get-StarrApplicationConfiguration -Section $Section -Url 'http://localhost' -ApiKey ' ' } | Should -Throw
+            { Get-StarrApplicationConfiguration -Section Host -ConfigurationId 0 } | Should -Throw
+            { Get-StarrApplicationConfiguration -Section Host -ConfigurationId -1 } | Should -Throw
+            { Get-StarrApplicationConfiguration -Section Host -InstanceName ' ' } | Should -Throw
+            { Get-StarrApplicationConfiguration -Section Host -Url 'ftp://localhost' -ApiKey fixture-key } | Should -Throw
+            { Get-StarrApplicationConfiguration -Section Host -Url 'http://localhost' -ApiKey ' ' } | Should -Throw
             Should -Invoke Invoke-StarrApiRequest -Times 0
         }
     }
@@ -85,14 +92,14 @@ InModuleScope PSStarr {
 
         It 'redacts all host secret fields without modifying the transport object' {
             $script:hostFixture = [pscustomobject]@{
-                id = 1
-                apiKey = 'fixture-api-key'
-                password = 'fixture-password'
+                id                   = 1
+                apiKey               = 'fixture-api-key'
+                password             = 'fixture-password'
                 passwordConfirmation = 'fixture-confirmation'
-                sslCertPassword = 'fixture-certificate-password'
-                proxyPassword = 'fixture-proxy-password'
-                port = 7878
-                enableSsl = $false
+                sslCertPassword      = 'fixture-certificate-password'
+                proxyPassword        = 'fixture-proxy-password'
+                port                 = 7878
+                enableSsl            = $false
             }
 
             Mock Invoke-StarrApiRequest { $script:hostFixture }

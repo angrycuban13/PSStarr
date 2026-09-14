@@ -1,4 +1,4 @@
-function Get-StarrRadarrRelease {
+﻿function Get-StarrRadarrRelease {
     <#
     .SYNOPSIS
         Retrieves Radarr release results.
@@ -38,12 +38,12 @@ function Get-StarrRadarrRelease {
         This function accepts objects with an Id property representing a Radarr movie.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Radarr.Release]
 
         This function returns deserialized Radarr response objects.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Radarr.Release')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

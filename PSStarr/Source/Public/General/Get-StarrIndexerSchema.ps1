@@ -1,4 +1,4 @@
-function Get-StarrIndexerSchema {
+﻿function Get-StarrIndexerSchema {
     <#
     .SYNOPSIS
         Retrieves indexer schemas from a Starr instance.
@@ -33,12 +33,12 @@ function Get-StarrIndexerSchema {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.ProviderSchema]
 
         This function returns response objects retrieved from the Starr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.ProviderSchema')]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
         [Alias('Name')]

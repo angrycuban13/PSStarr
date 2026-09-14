@@ -1,4 +1,4 @@
-function Get-StarrSonarrQueue {
+﻿function Get-StarrSonarrQueue {
     <#
     .SYNOPSIS
         Retrieves the Sonarr download queue.
@@ -63,12 +63,12 @@ function Get-StarrSonarrQueue {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Sonarr.PagedResult]
 
         This function returns the Sonarr queue response.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Sonarr.PagedResult')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

@@ -21,12 +21,12 @@ function Get-PSStarrInstance {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Management.Automation.PSCustomObject]
+        [PSStarr.Instance]
 
-        This function returns Starr instance configuration objects.
+        This function returns redacted saved-instance configuration objects.
     #>
     [CmdletBinding()]
-    [OutputType([System.Management.Automation.PSCustomObject])]
+    [OutputType('PSStarr.Instance')]
     param(
         [Parameter(Mandatory = $false, Position = 0)]
         [ValidateNotNullOrWhiteSpace()]
@@ -80,12 +80,16 @@ function Get-PSStarrInstance {
             'None'
         }
 
-        [PSCustomObject]@{
+        $outputInstance = [PSCustomObject]@{
             Name           = $instanceName
             Application    = $instance.Application
             Url            = $instance.Url
             ApiKey         = '********'
             EncryptionMode = $encryptionMode
         }
+
+        $outputInstance.PSObject.TypeNames.Insert(0, 'PSStarr.Instance')
+
+        $outputInstance
     }
 }

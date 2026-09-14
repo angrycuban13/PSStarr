@@ -1,4 +1,4 @@
-function Get-StarrRootFolder {
+﻿function Get-StarrRootFolder {
     <#
     .SYNOPSIS
         Retrieves root folders from a Starr instance.
@@ -36,12 +36,12 @@ function Get-StarrRootFolder {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.RootFolder]
 
         This function returns response objects retrieved from the Starr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.RootFolder')]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
         [Alias('Name')]

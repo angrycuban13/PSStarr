@@ -1,4 +1,4 @@
-function Get-StarrProwlarrIndexer {
+﻿function Get-StarrProwlarrIndexer {
     <#
     .SYNOPSIS
         Retrieves every configured Prowlarr indexer or one indexer by ID.
@@ -30,12 +30,12 @@ function Get-StarrProwlarrIndexer {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Prowlarr.Indexer]
 
         This function returns sanitized Prowlarr indexer resources.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Prowlarr.Indexer')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

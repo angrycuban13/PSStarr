@@ -1,4 +1,4 @@
-function Get-StarrSonarrCalendarEntry {
+﻿function Get-StarrSonarrCalendarEntry {
     <#
     .SYNOPSIS
         Retrieves Sonarr calendar episode.
@@ -30,12 +30,12 @@ function Get-StarrSonarrCalendarEntry {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Sonarr.CalendarEntry]
 
         This function returns response objects retrieved from the Sonarr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Sonarr.CalendarEntry')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

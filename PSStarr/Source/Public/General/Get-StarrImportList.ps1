@@ -1,4 +1,4 @@
-function Get-StarrImportList {
+﻿function Get-StarrImportList {
     <#
     .SYNOPSIS
         Retrieves import list settings from Radarr or Sonarr.
@@ -36,12 +36,12 @@ function Get-StarrImportList {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.ImportList]
 
         This function returns deserialized import list objects.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.ImportList')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

@@ -1,4 +1,4 @@
-function Get-StarrRadarrMissing {
+﻿function Get-StarrRadarrMissing {
     <#
     .SYNOPSIS
         Retrieves Radarr missing records from a Starr instance.
@@ -45,12 +45,12 @@ function Get-StarrRadarrMissing {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Radarr.PagedResult], [PSStarr.Radarr.WantedItem]
 
         This function returns response objects retrieved from the Starr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Radarr.PagedResult', 'PSStarr.Radarr.WantedItem')]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
         [Alias('Name')]

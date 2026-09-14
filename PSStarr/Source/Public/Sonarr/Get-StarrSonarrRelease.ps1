@@ -1,4 +1,4 @@
-function Get-StarrSonarrRelease {
+﻿function Get-StarrSonarrRelease {
     <#
     .SYNOPSIS
         Retrieves Sonarr release search results.
@@ -49,12 +49,12 @@ function Get-StarrSonarrRelease {
         This function accepts objects with an Id property representing a Sonarr episode.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Sonarr.Release]
 
         This function returns response objects retrieved from the Sonarr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'NamedRss')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Sonarr.Release')]
     param(
         [Parameter(ParameterSetName = 'NamedRss')]
         [Parameter(ParameterSetName = 'NamedEpisode')]

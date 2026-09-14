@@ -1,0 +1,60 @@
+name: Validate and publish PSStarr
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish the validated package to PowerShell Gallery
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module Configuration -RequiredVersion 1.6.0 -Scope CurrentUser -Force
+          Install-Module ModuleBuilder -Scope CurrentUser -Force
+          Install-Module Pester -RequiredVersion 5.7.1 -Scope CurrentUser -Force
+          Install-Module PSScriptAnalyzer -Scope CurrentUser -Force
+
+      - name: Run clean-checkout release gate
+        run: ./PSStarr/tools/Test-Release.ps1
+
+      - name: Upload validated module
+        uses: actions/upload-artifact@v4
+        with:
+          name: PSStarr-1.0.0
+          path: PSStarr/Output/PSStarr/1.0.0
+          if-no-files-found: error
+
+      - name: Publish to PowerShell Gallery
+        if: startsWith(github.ref, 'refs/tags/v') || inputs.publish == true
+        env:
+          PSGALLERY_API_KEY: ${{ secrets.PSGALLERY_API_KEY }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:PSGALLERY_API_KEY)) {
+              throw 'PSGALLERY_API_KEY is not configured.'
+          }
+
+          Publish-Module `
+              -Path ./PSStarr/Output/PSStarr/1.0.0 `
+              -NuGetApiKey $env:PSGALLERY_API_KEY `
+              -Repository PSGallery

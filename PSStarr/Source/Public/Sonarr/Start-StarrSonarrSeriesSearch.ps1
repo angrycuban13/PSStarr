@@ -1,4 +1,4 @@
-function Start-StarrSonarrSeriesSearch {
+﻿function Start-StarrSonarrSeriesSearch {
     <#
     .SYNOPSIS
         Starts a Sonarr search for selected series.
@@ -30,12 +30,12 @@ function Start-StarrSonarrSeriesSearch {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Sonarr.Command]
 
         This function returns the accepted Sonarr command resource.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named', SupportsShouldProcess, ConfirmImpact = 'Medium')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Sonarr.Command')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

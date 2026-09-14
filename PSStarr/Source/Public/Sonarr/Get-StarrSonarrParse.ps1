@@ -1,4 +1,4 @@
-function Get-StarrSonarrParse {
+﻿function Get-StarrSonarrParse {
     <#
     .SYNOPSIS
         Retrieves Sonarr parsed release information.
@@ -38,12 +38,12 @@ function Get-StarrSonarrParse {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Sonarr.ParseResult]
 
         This function returns response objects retrieved from the Sonarr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Sonarr.ParseResult')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

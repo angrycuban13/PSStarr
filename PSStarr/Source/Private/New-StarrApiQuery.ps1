@@ -1,4 +1,4 @@
-function New-StarrApiQuery {
+﻿function New-StarrApiQuery {
     <#
     .SYNOPSIS
         Creates a Starr API query from bound command parameters.

@@ -1,4 +1,4 @@
-function Get-StarrRadarrCredit {
+﻿function Get-StarrRadarrCredit {
     <#
     .SYNOPSIS
         Retrieves Radarr credits from a Starr instance.
@@ -42,12 +42,12 @@ function Get-StarrRadarrCredit {
         This function accepts objects with an Id property representing a Radarr movie.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Radarr.Credit]
 
         This function returns response objects retrieved from the Starr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Radarr.Credit')]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
         [Alias('Name')]

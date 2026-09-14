@@ -1,4 +1,4 @@
-function Get-StarrIndexerFlag {
+﻿function Get-StarrIndexerFlag {
     <#
     .SYNOPSIS
         Retrieves indexer flags from Radarr or Sonarr.
@@ -30,12 +30,12 @@ function Get-StarrIndexerFlag {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.IndexerFlag]
 
         This function returns deserialized indexer flags.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.IndexerFlag')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

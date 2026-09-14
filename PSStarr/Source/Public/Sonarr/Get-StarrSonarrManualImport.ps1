@@ -1,4 +1,4 @@
-function Get-StarrSonarrManualImport {
+﻿function Get-StarrSonarrManualImport {
     <#
     .SYNOPSIS
         Retrieves Sonarr manual-import candidates.
@@ -47,12 +47,12 @@ function Get-StarrSonarrManualImport {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Sonarr.ManualImportItem]
 
         This function returns response objects retrieved from the Sonarr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'NamedFolder')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Sonarr.ManualImportItem')]
     param(
         [Parameter(ParameterSetName = 'NamedFolder')]
         [Parameter(ParameterSetName = 'NamedSeries')]

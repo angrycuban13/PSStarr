@@ -1,4 +1,4 @@
-function Get-StarrProwlarrHistory {
+﻿function Get-StarrProwlarrHistory {
     <#
     .SYNOPSIS
         Retrieves Prowlarr history.
@@ -66,12 +66,12 @@ function Get-StarrProwlarrHistory {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Prowlarr.PagedResult], [PSStarr.Prowlarr.History]
 
         This function returns a paging response or history records from Prowlarr.
     #>
     [CmdletBinding(DefaultParameterSetName = 'NamedPaged')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Prowlarr.PagedResult', 'PSStarr.Prowlarr.History')]
     param(
         [Parameter(ParameterSetName = 'NamedPaged')]
         [Parameter(ParameterSetName = 'NamedSince')]

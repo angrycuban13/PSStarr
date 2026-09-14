@@ -36,12 +36,12 @@ function Get-StarrCustomFilter {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.CustomFilter]
 
         This function returns deserialized custom filter objects.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.CustomFilter')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

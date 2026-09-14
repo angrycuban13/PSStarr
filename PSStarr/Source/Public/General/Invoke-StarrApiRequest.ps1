@@ -1,4 +1,4 @@
-function Invoke-StarrApiRequest {
+﻿function Invoke-StarrApiRequest {
     <#
     .SYNOPSIS
         Sends an authenticated request to a Starr application API.
@@ -288,7 +288,21 @@ function Invoke-StarrApiRequest {
         }
 
         foreach ($responseItem in $response) {
-            $responseItem
+            if ($null -eq $responseItem) {
+                $responseItem
+                continue
+            }
+
+            $typeParameters = @{
+                Resource = $responseItem
+                Endpoint = $normalizedEndpoint
+            }
+
+            if (-not [System.String]::IsNullOrWhiteSpace($resolvedApplication)) {
+                $typeParameters.Application = $resolvedApplication
+            }
+
+            Add-StarrResponseTypeName @typeParameters
         }
     }
     catch {

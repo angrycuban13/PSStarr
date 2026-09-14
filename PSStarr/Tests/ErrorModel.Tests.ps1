@@ -1,4 +1,4 @@
-BeforeDiscovery {
+﻿BeforeDiscovery {
     Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
 }
 
@@ -94,7 +94,7 @@ Describe 'Configuration operation error behavior' {
             Mock Import-Configuration {
                 @{
                     Instances = @{
-                        Main = @{
+                        Main  = @{
                             Application = 'Radarr'
                             Url         = 'http://localhost:7878'
                             ApiKey      = 'secret'

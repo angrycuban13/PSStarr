@@ -1,4 +1,4 @@
-function Get-StarrQueueStatus {
+﻿function Get-StarrQueueStatus {
     <#
     .SYNOPSIS
         Retrieves queue status from a Starr instance.
@@ -33,12 +33,12 @@ function Get-StarrQueueStatus {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.QueueStatus]
 
         This function returns response objects retrieved from the Starr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.QueueStatus')]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
         [Alias('Name')]

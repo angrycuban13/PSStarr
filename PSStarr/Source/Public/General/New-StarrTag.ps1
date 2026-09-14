@@ -1,4 +1,4 @@
-function New-StarrTag {
+﻿function New-StarrTag {
     <#
     .SYNOPSIS
         Creates an application tag in Radarr or Sonarr.
@@ -30,12 +30,12 @@ function New-StarrTag {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Tag]
 
         This function returns the deserialized created tag resource.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named', SupportsShouldProcess, ConfirmImpact = 'Medium')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Tag')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

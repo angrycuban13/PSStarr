@@ -1,4 +1,4 @@
-function Get-StarrAesKey {
+﻿function Get-StarrAesKey {
     <#
     .SYNOPSIS
         Retrieves the PSStarr AES-256 configuration key.

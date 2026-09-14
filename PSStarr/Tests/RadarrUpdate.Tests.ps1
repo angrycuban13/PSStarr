@@ -1,11 +1,11 @@
-BeforeDiscovery {
+﻿BeforeDiscovery {
     Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
 }
 
 InModuleScope PSStarr {
     Describe '<Command> Radarr updates' -ForEach @(
-        @{ Command = 'Set-StarrRadarrMovieTag'; Resource = 'movie/editor'; Arguments = @{ MovieId = @(42,43); TagId = @(2,3); ApplyTags = 'Add' } }
-        @{ Command = 'Set-StarrRadarrCollectionMonitoring'; Resource = 'collection'; Arguments = @{ CollectionId = @(42,43); Monitored = $true } }
+        @{ Command = 'Set-StarrRadarrMovieTag'; Resource = 'movie/editor'; Arguments = @{ MovieId = @(42, 43); TagId = @(2, 3); ApplyTags = 'Add' } }
+        @{ Command = 'Set-StarrRadarrCollectionMonitoring'; Resource = 'collection'; Arguments = @{ CollectionId = @(42, 43); Monitored = $true } }
     ) {
         BeforeEach {
             Mock Invoke-StarrApiRequest { [pscustomobject]@{ id = 42 } }
@@ -54,7 +54,7 @@ InModuleScope PSStarr {
         }
 
         It 'adds tags without sending unrelated settings' {
-            Set-StarrRadarrMovieTag -MovieId 42,43 -TagId 2,3 -ApplyTags Add -Confirm:$false
+            Set-StarrRadarrMovieTag -MovieId 42, 43 -TagId 2, 3 -ApplyTags Add -Confirm:$false
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $Body.Count -eq 3 -and ($Body.movieIds -join ',') -eq '42,43' -and
@@ -81,7 +81,7 @@ InModuleScope PSStarr {
         }
 
         It 'sends true monitoring for all specified collections' {
-            Set-StarrRadarrCollectionMonitoring -CollectionId 42,43 -Monitored $true -Confirm:$false
+            Set-StarrRadarrCollectionMonitoring -CollectionId 42, 43 -Monitored $true -Confirm:$false
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 ($Body.collectionIds -join ',') -eq '42,43' -and $Body.monitored -eq $true
@@ -90,12 +90,12 @@ InModuleScope PSStarr {
 
         It 'rejects empty or invalid identifiers and tag replacement' {
             { Set-StarrRadarrMovieTag -MovieId @() -TagId 2 -ApplyTags Add } | Should -Throw
-            { Set-StarrRadarrMovieTag -MovieId 42,0 -TagId 2 -ApplyTags Add } | Should -Throw
+            { Set-StarrRadarrMovieTag -MovieId 42, 0 -TagId 2 -ApplyTags Add } | Should -Throw
             { Set-StarrRadarrMovieTag -MovieId 42 -TagId @() -ApplyTags Add } | Should -Throw
             { Set-StarrRadarrMovieTag -MovieId 42 -TagId -1 -ApplyTags Add } | Should -Throw
             { Set-StarrRadarrMovieTag -MovieId 42 -TagId 2 -ApplyTags Replace } | Should -Throw
             { Set-StarrRadarrCollectionMonitoring -CollectionId @() -Monitored $true } | Should -Throw
-            { Set-StarrRadarrCollectionMonitoring -CollectionId 42,0 -Monitored $true } | Should -Throw
+            { Set-StarrRadarrCollectionMonitoring -CollectionId 42, 0 -Monitored $true } | Should -Throw
             Should -Invoke Invoke-StarrApiRequest -Times 0
         }
     }

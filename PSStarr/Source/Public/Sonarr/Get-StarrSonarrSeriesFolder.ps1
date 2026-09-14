@@ -1,4 +1,4 @@
-function Get-StarrSonarrSeriesFolder {
+﻿function Get-StarrSonarrSeriesFolder {
     <#
     .SYNOPSIS
         Retrieves Sonarr calculated series folder name.
@@ -33,12 +33,12 @@ function Get-StarrSonarrSeriesFolder {
         This function accepts objects with an Id property representing a Sonarr series.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Sonarr.FolderPreview]
 
         This function returns response objects retrieved from the Sonarr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Sonarr.FolderPreview')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

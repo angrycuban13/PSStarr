@@ -1,4 +1,4 @@
-function Get-StarrRadarrExtraFile {
+﻿function Get-StarrRadarrExtraFile {
     <#
     .SYNOPSIS
         Retrieves Radarr extra-file records.
@@ -33,12 +33,12 @@ function Get-StarrRadarrExtraFile {
         This function accepts objects with an Id property representing a Radarr movie.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Radarr.ExtraFile]
 
         This function returns deserialized extra-file records.
     #>
     [CmdletBinding(DefaultParameterSetName = 'NamedList')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Radarr.ExtraFile')]
     param(
         [Parameter(ParameterSetName = 'NamedList')]
         [Alias('Name')]

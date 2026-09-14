@@ -1,4 +1,4 @@
-function Resolve-StarrEncryptionMode {
+﻿function Resolve-StarrEncryptionMode {
     <#
     .SYNOPSIS
         Resolves the configuration encryption mode for the current platform.

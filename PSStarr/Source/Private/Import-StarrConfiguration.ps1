@@ -1,4 +1,4 @@
-function Import-StarrConfiguration {
+﻿function Import-StarrConfiguration {
     <#
     .SYNOPSIS
         Imports the persisted PSStarr configuration without decrypting secrets.

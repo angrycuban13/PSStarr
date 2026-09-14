@@ -1,4 +1,4 @@
-function Get-StarrRadarrMovieFolder {
+﻿function Get-StarrRadarrMovieFolder {
     <#
     .SYNOPSIS
         Retrieves Radarr movie folder results.
@@ -33,12 +33,12 @@ function Get-StarrRadarrMovieFolder {
         This function accepts objects with an Id property representing a Radarr movie.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Radarr.FolderPreview]
 
         This function returns deserialized Radarr response objects.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Radarr.FolderPreview')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

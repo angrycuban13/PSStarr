@@ -1,4 +1,4 @@
-function Get-StarrLanguage {
+﻿function Get-StarrLanguage {
     <#
     .SYNOPSIS
         Retrieves language settings from Radarr or Sonarr.
@@ -36,12 +36,12 @@ function Get-StarrLanguage {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Language]
 
         This function returns deserialized language objects.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Language')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

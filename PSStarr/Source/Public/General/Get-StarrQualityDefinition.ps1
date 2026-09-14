@@ -1,4 +1,4 @@
-function Get-StarrQualityDefinition {
+﻿function Get-StarrQualityDefinition {
     <#
     .SYNOPSIS
         Retrieves quality definition settings from Radarr or Sonarr.
@@ -36,12 +36,12 @@ function Get-StarrQualityDefinition {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.QualityDefinition]
 
         This function returns deserialized quality definition objects.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.QualityDefinition')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

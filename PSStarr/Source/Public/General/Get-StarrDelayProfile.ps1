@@ -36,12 +36,12 @@ function Get-StarrDelayProfile {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.DelayProfile]
 
         This function returns deserialized delay profile objects.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.DelayProfile')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

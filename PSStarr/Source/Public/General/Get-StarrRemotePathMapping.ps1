@@ -1,4 +1,4 @@
-function Get-StarrRemotePathMapping {
+﻿function Get-StarrRemotePathMapping {
     <#
     .SYNOPSIS
         Retrieves remote-path mappings from a Starr instance.
@@ -36,12 +36,12 @@ function Get-StarrRemotePathMapping {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.RemotePathMapping]
 
         This function returns response objects retrieved from the Starr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.RemotePathMapping')]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
         [Alias('Name')]

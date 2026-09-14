@@ -1,4 +1,4 @@
-function Get-StarrLogEntry {
+﻿function Get-StarrLogEntry {
     <#
     .SYNOPSIS
         Retrieves application log records from a Starr instance.
@@ -48,12 +48,12 @@ function Get-StarrLogEntry {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.PagedResult]
 
         This function returns response objects retrieved from the Starr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.PagedResult')]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
         [Alias('Name')]

@@ -1,4 +1,4 @@
-function Start-StarrRadarrMovieRename {
+﻿function Start-StarrRadarrMovieRename {
     <#
     .SYNOPSIS
         Starts renaming files for selected Radarr movies.
@@ -30,12 +30,12 @@ function Start-StarrRadarrMovieRename {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Radarr.Command]
 
         This function returns the accepted Radarr command resource.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named', SupportsShouldProcess, ConfirmImpact = 'High')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Radarr.Command')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

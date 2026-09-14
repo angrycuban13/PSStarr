@@ -1,4 +1,4 @@
-BeforeDiscovery {
+﻿BeforeDiscovery {
     Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
 }
 
@@ -9,7 +9,7 @@ InModuleScope PSStarr {
         }
 
         It 'adds tags with a narrow body and preserves response objects' {
-            $result = @(Set-StarrSonarrSeriesTag -InstanceName Main -SeriesId 42,43 -TagId 7 -ApplyTags Add -Confirm:$false)
+            $result = @(Set-StarrSonarrSeriesTag -InstanceName Main -SeriesId 42, 43 -TagId 7 -ApplyTags Add -Confirm:$false)
 
             $result.Count | Should -Be 2
             $result[1].id | Should -Be 43
@@ -22,7 +22,7 @@ InModuleScope PSStarr {
         }
 
         It 'removes tags using explicit connection settings' {
-            Set-StarrSonarrSeriesTag -Url 'http://localhost:8989/base' -ApiKey fixture-key -SeriesId 42 -TagId 7,8 -ApplyTags Remove -Confirm:$false
+            Set-StarrSonarrSeriesTag -Url 'http://localhost:8989/base' -ApiKey fixture-key -SeriesId 42 -TagId 7, 8 -ApplyTags Remove -Confirm:$false
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
                 $Endpoint -eq 'series/editor' -and $Method -eq 'PUT' -and $ExpectedApplication -eq 'Sonarr' -and

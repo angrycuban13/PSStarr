@@ -1,4 +1,4 @@
-function Protect-StarrProviderResource {
+﻿function Protect-StarrProviderResource {
     <#
     .SYNOPSIS
         Copies provider resources with secret values redacted.
@@ -88,5 +88,13 @@ function Protect-StarrProviderResource {
         }
     }
 
-    [pscustomobject]$safe
+    $safeResource = [pscustomobject]$safe
+
+    $typeNames = @($Resource.PSObject.TypeNames | Where-Object { $_ -like 'PSStarr.*' })
+
+    for ($index = $typeNames.Count - 1; $index -ge 0; $index--) {
+        $safeResource.PSObject.TypeNames.Insert(0, $typeNames[$index])
+    }
+
+    $safeResource
 }

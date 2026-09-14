@@ -1,4 +1,4 @@
-function Start-StarrRadarrMovieSearch {
+﻿function Start-StarrRadarrMovieSearch {
     <#
     .SYNOPSIS
         Starts a Radarr search for selected movies.
@@ -30,12 +30,12 @@ function Start-StarrRadarrMovieSearch {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Radarr.Command]
 
         This function returns the accepted Radarr command resource.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named', SupportsShouldProcess, ConfirmImpact = 'Medium')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Radarr.Command')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

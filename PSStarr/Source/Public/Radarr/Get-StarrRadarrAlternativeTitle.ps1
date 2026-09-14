@@ -1,4 +1,4 @@
-function Get-StarrRadarrAlternativeTitle {
+﻿function Get-StarrRadarrAlternativeTitle {
     <#
     .SYNOPSIS
         Retrieves Radarr alternative titles.
@@ -37,7 +37,7 @@ function Get-StarrRadarrAlternativeTitle {
         Get-StarrRadarrMovie -MovieId 42 | Get-StarrRadarrAlternativeTitle
 
     .INPUTS
-        [System.Object]
+        [PSStarr.Radarr.AlternativeTitle]
 
         This function accepts objects with an Id property representing a Radarr movie.
 
@@ -47,11 +47,10 @@ function Get-StarrRadarrAlternativeTitle {
         This function returns deserialized alternative titles.
     #>
     [CmdletBinding(DefaultParameterSetName = 'NamedList')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Radarr.AlternativeTitle')]
     param(
         [Parameter(ParameterSetName = 'NamedList')]
         [Parameter(ParameterSetName = 'NamedId')]
-        [Alias('Name')]
         [ValidateNotNullOrWhiteSpace()]
         [System.String]
         $InstanceName,

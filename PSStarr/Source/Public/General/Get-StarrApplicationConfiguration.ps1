@@ -39,12 +39,12 @@ function Get-StarrApplicationConfiguration {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.ApplicationConfiguration]
 
         This function returns deserialized application configuration with host secrets redacted.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.ApplicationConfiguration')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]
@@ -135,6 +135,14 @@ function Get-StarrApplicationConfiguration {
             }
         }
 
-        [pscustomobject]$safeConfiguration
+        $safeOutput = [pscustomobject]$safeConfiguration
+
+        $typeNames = @($configuration.PSObject.TypeNames | Where-Object { $_ -like 'PSStarr.*' })
+
+        for ($index = $typeNames.Count - 1; $index -ge 0; $index--) {
+            $safeOutput.PSObject.TypeNames.Insert(0, $typeNames[$index])
+        }
+
+        $safeOutput
     }
 }

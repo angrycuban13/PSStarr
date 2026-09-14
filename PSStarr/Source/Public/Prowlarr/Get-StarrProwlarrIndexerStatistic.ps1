@@ -1,4 +1,4 @@
-function Get-StarrProwlarrIndexerStatistic {
+﻿function Get-StarrProwlarrIndexerStatistic {
     <#
     .SYNOPSIS
         Retrieves Prowlarr indexer statistics results.
@@ -42,12 +42,12 @@ function Get-StarrProwlarrIndexerStatistic {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Prowlarr.IndexerStatistic]
 
         This function returns deserialized Prowlarr response objects.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Prowlarr.IndexerStatistic')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

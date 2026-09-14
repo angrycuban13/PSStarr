@@ -1,4 +1,4 @@
-function Remove-PSStarrInstance {
+﻿function Remove-PSStarrInstance {
     <#
     .SYNOPSIS
         Removes a saved Starr instance.

@@ -1,4 +1,4 @@
-function Set-PSStarrInstance {
+﻿function Set-PSStarrInstance {
     <#
     .SYNOPSIS
         Creates or updates a saved PSStarr instance.
@@ -10,7 +10,7 @@ function Set-PSStarrInstance {
         The name of the saved Starr instance.
 
     .PARAMETER Application
-        The Starr application type. Valid values are Radarr, Sonarr, and Lidarr.
+        The Starr application type. Valid values are Radarr, Sonarr, and Prowlarr.
 
     .PARAMETER Url
         The absolute base URL of the Starr instance.
@@ -42,12 +42,12 @@ function Set-PSStarrInstance {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Management.Automation.PSCustomObject]
+        [PSStarr.Instance]
 
-        This function returns Starr instance configuration objects.
+        This function returns a redacted saved-instance configuration object.
     #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
-    [OutputType([System.Management.Automation.PSCustomObject])]
+    [OutputType('PSStarr.Instance')]
     param(
         [Parameter(Mandatory = $true, Position = 0)]
         [ValidateNotNullOrWhiteSpace()]
@@ -209,11 +209,15 @@ function Set-PSStarrInstance {
         return
     }
 
-    [PSCustomObject]@{
+    $outputInstance = [PSCustomObject]@{
         Name           = $Name
         Application    = $resolvedApplication
         Url            = $resolvedUrl
         ApiKey         = '********'
         EncryptionMode = $resolvedEncryptionMode
     }
+
+    $outputInstance.PSObject.TypeNames.Insert(0, 'PSStarr.Instance')
+
+    $outputInstance
 }

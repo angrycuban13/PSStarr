@@ -1,4 +1,4 @@
-function Test-StarrUrl {
+﻿function Test-StarrUrl {
     <#
     .SYNOPSIS
         Validates a Starr instance URL.

@@ -1,4 +1,4 @@
-function Get-StarrSonarrCutoffUnmet {
+﻿function Get-StarrSonarrCutoffUnmet {
     <#
     .SYNOPSIS
         Retrieves Sonarr episodes that have not met their quality cutoff.
@@ -57,12 +57,12 @@ function Get-StarrSonarrCutoffUnmet {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Sonarr.PagedResult], [PSStarr.Sonarr.WantedItem]
 
         This function returns response objects retrieved from the Starr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Sonarr.PagedResult', 'PSStarr.Sonarr.WantedItem')]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
         [Alias('Name')]

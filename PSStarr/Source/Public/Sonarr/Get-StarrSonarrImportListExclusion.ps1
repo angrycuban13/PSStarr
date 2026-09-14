@@ -1,4 +1,4 @@
-function Get-StarrSonarrImportListExclusion {
+﻿function Get-StarrSonarrImportListExclusion {
     <#
     .SYNOPSIS
         Retrieves Sonarr import-list exclusions.
@@ -45,12 +45,12 @@ function Get-StarrSonarrImportListExclusion {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Sonarr.PagedResult], [PSStarr.Sonarr.ImportListExclusion]
 
         This function returns a paging object containing records, or an individual exclusion.
     #>
     [CmdletBinding(DefaultParameterSetName = 'NamedPage')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Sonarr.PagedResult', 'PSStarr.Sonarr.ImportListExclusion')]
     param(
         [Parameter(ParameterSetName = 'NamedPage')]
         [Parameter(ParameterSetName = 'NamedId')]

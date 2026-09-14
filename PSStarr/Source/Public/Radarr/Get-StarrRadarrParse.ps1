@@ -1,4 +1,4 @@
-function Get-StarrRadarrParse {
+﻿function Get-StarrRadarrParse {
     <#
     .SYNOPSIS
         Retrieves Radarr parse results.
@@ -30,12 +30,12 @@ function Get-StarrRadarrParse {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Radarr.ParseResult]
 
         This function returns deserialized Radarr response objects.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Radarr.ParseResult')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

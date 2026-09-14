@@ -1,4 +1,4 @@
-function Get-StarrRadarrImportListExclusion {
+﻿function Get-StarrRadarrImportListExclusion {
     <#
     .SYNOPSIS
         Retrieves Radarr import-list exclusions.
@@ -45,12 +45,12 @@ function Get-StarrRadarrImportListExclusion {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Radarr.PagedResult], [PSStarr.Radarr.ImportListExclusion]
 
         This function returns a paging object containing records, or an individual exclusion.
     #>
     [CmdletBinding(DefaultParameterSetName = 'NamedPage')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Radarr.PagedResult', 'PSStarr.Radarr.ImportListExclusion')]
     param(
         [Parameter(ParameterSetName = 'NamedPage')]
         [Parameter(ParameterSetName = 'NamedId')]

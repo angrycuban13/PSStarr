@@ -1,4 +1,4 @@
-function Write-PSStarrLogEntry {
+﻿function Write-PSStarrLogEntry {
     <#
     .SYNOPSIS
         Writes readable entries to the PSStarr log.

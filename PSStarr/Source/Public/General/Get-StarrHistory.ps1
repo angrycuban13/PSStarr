@@ -90,12 +90,12 @@ function Get-StarrHistory {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.PagedResult], [PSStarr.History]
 
         This function returns history response objects retrieved from the Starr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.PagedResult', 'PSStarr.History')]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
         [Alias('Name')]
@@ -255,17 +255,17 @@ function Get-StarrHistory {
     }
 
     $allowedParameters = @{
-        Paged = @(
+        Paged  = @(
             'InstanceName', 'Url', 'ApiKey', 'Application', 'Page', 'PageSize', 'SortKey',
             'SortDirection', 'EventTypeId', 'DownloadId', 'MovieIdFilter',
             'SeriesIdFilter', 'EpisodeId', 'LanguageIdFilter', 'QualityIdFilter',
             'IncludeMovie', 'IncludeSeries', 'IncludeEpisode'
         )
-        Since = @(
+        Since  = @(
             'InstanceName', 'Url', 'ApiKey', 'Application', 'Since', 'EventType', 'IncludeMovie',
             'IncludeSeries', 'IncludeEpisode'
         )
-        Movie = @(
+        Movie  = @(
             'InstanceName', 'Url', 'ApiKey', 'Application', 'MovieId', 'EventType', 'IncludeMovie'
         )
         Series = @(
@@ -302,22 +302,22 @@ function Get-StarrHistory {
     }
 
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
-        Page           = 'page'
-        PageSize       = 'pageSize'
-        SortKey        = 'sortKey'
-        SortDirection  = 'sortDirection'
-        EventTypeId    = 'eventType'
-        DownloadId     = 'downloadId'
-        MovieIdFilter  = 'movieIds'
-        SeriesIdFilter = 'seriesIds'
-        EpisodeId      = 'episodeId'
+        Page             = 'page'
+        PageSize         = 'pageSize'
+        SortKey          = 'sortKey'
+        SortDirection    = 'sortDirection'
+        EventTypeId      = 'eventType'
+        DownloadId       = 'downloadId'
+        MovieIdFilter    = 'movieIds'
+        SeriesIdFilter   = 'seriesIds'
+        EpisodeId        = 'episodeId'
         LanguageIdFilter = 'languages'
         QualityIdFilter  = 'quality'
-        IncludeMovie   = 'includeMovie'
-        IncludeSeries  = 'includeSeries'
-        IncludeEpisode = 'includeEpisode'
-        SeasonNumber   = 'seasonNumber'
-        EventType      = 'eventType'
+        IncludeMovie     = 'includeMovie'
+        IncludeSeries    = 'includeSeries'
+        IncludeEpisode   = 'includeEpisode'
+        SeasonNumber     = 'seasonNumber'
+        EventType        = 'eventType'
     }
 
     if ($PSBoundParameters.ContainsKey('Since')) {

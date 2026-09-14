@@ -1,4 +1,4 @@
-function Get-StarrProwlarrAppProfile {
+﻿function Get-StarrProwlarrAppProfile {
     <#
     .SYNOPSIS
         Retrieves Prowlarr application profiles.
@@ -33,12 +33,12 @@ function Get-StarrProwlarrAppProfile {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Prowlarr.ApplicationProfile]
 
         This function returns deserialized Prowlarr AppProfile resources.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Prowlarr.ApplicationProfile')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

@@ -1,4 +1,4 @@
-function Get-StarrProwlarrAppProfileSchema {
+﻿function Get-StarrProwlarrAppProfileSchema {
     <#
     .SYNOPSIS
         Retrieves the Prowlarr application-profile schema.
@@ -27,12 +27,12 @@ function Get-StarrProwlarrAppProfileSchema {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Prowlarr.ProviderSchema]
 
         This function returns deserialized Prowlarr AppProfileSchema resources.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Prowlarr.ProviderSchema')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

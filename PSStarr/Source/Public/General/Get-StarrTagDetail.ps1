@@ -1,4 +1,4 @@
-function Get-StarrTagDetail {
+﻿function Get-StarrTagDetail {
     <#
     .SYNOPSIS
         Retrieves tag usage records using the legacy command name.
@@ -36,12 +36,12 @@ function Get-StarrTagDetail {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.TagUsage]
 
         This function returns response objects retrieved from the Starr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.TagUsage')]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
         [Alias('Name')]

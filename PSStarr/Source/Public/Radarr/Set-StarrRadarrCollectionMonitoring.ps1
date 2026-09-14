@@ -1,4 +1,4 @@
-function Set-StarrRadarrCollectionMonitoring {
+﻿function Set-StarrRadarrCollectionMonitoring {
     <#
     .SYNOPSIS
         Changes Radarr collection monitoring.
@@ -33,12 +33,12 @@ function Set-StarrRadarrCollectionMonitoring {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Radarr.Collection]
 
         This function returns deserialized updated collection objects from Radarr.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named', SupportsShouldProcess = $true, ConfirmImpact = 'Medium')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Radarr.Collection')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]
@@ -79,7 +79,7 @@ function Set-StarrRadarrCollectionMonitoring {
         ExpectedApplication = 'Radarr'
         Body                = @{
             collectionIds = $CollectionId
-            monitored = $Monitored
+            monitored     = $Monitored
         }
     }
 

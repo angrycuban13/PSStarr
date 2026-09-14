@@ -1,4 +1,4 @@
-BeforeDiscovery {
+﻿BeforeDiscovery {
     Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
 }
 
@@ -10,9 +10,9 @@ InModuleScope PSStarr {
         BeforeEach {
             Mock Invoke-StarrApiRequest {
                 [pscustomobject]@{
-                    page = 2
+                    page         = 2
                     totalRecords = 1
-                    records = @([pscustomobject]@{ id = 7 })
+                    records      = @([pscustomobject]@{ id = 7 })
                 }
             }
         }

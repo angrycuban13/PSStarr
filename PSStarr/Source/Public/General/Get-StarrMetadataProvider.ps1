@@ -1,4 +1,4 @@
-function Get-StarrMetadataProvider {
+﻿function Get-StarrMetadataProvider {
     <#
     .SYNOPSIS
         Retrieves metadata provider settings from Radarr or Sonarr.
@@ -36,12 +36,12 @@ function Get-StarrMetadataProvider {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.MetadataProvider]
 
         This function returns deserialized metadata provider objects.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.MetadataProvider')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

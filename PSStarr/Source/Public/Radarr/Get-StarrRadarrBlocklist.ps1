@@ -1,4 +1,4 @@
-function Get-StarrRadarrBlocklist {
+﻿function Get-StarrRadarrBlocklist {
     <#
     .SYNOPSIS
         Retrieves Radarr blocklist records.
@@ -48,12 +48,12 @@ function Get-StarrRadarrBlocklist {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Radarr.PagedResult]
 
         This function returns Radarr blocklist responses.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Radarr.PagedResult')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

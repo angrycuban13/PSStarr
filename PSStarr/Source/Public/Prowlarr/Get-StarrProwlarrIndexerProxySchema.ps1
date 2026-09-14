@@ -1,4 +1,4 @@
-function Get-StarrProwlarrIndexerProxySchema {
+﻿function Get-StarrProwlarrIndexerProxySchema {
     <#
     .SYNOPSIS
         Retrieves Prowlarr IndexerProxySchema resources.
@@ -27,12 +27,12 @@ function Get-StarrProwlarrIndexerProxySchema {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Prowlarr.ProviderSchema]
 
         This function returns deserialized Prowlarr IndexerProxySchema resources with provider secrets redacted.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Prowlarr.ProviderSchema')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

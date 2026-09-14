@@ -1,4 +1,4 @@
-function New-StarrErrorRecord {
+﻿function New-StarrErrorRecord {
     <#
     .SYNOPSIS
         Creates a new ErrorRecord object.

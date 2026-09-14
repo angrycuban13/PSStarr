@@ -1,4 +1,4 @@
-function Get-StarrRadarrCutoff {
+﻿function Get-StarrRadarrCutoff {
     <#
     .SYNOPSIS
         Retrieves Radarr cutoff-unmet records using the legacy command name.
@@ -42,12 +42,12 @@ function Get-StarrRadarrCutoff {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Radarr.PagedResult], [PSStarr.Radarr.WantedItem]
 
         This function returns Radarr cutoff-unmet response objects.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Radarr.PagedResult', 'PSStarr.Radarr.WantedItem')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

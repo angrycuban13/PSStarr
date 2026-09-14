@@ -1,10 +1,10 @@
-function Start-StarrCommand {
+﻿function Start-StarrCommand {
     <#
     .SYNOPSIS
-        Starts an application command in Radarr or Sonarr.
+        Submits an application command using the legacy command name.
 
     .DESCRIPTION
-        This function submits a command to run asynchronously through API v3 using the shared transport. It supports confirmation and WhatIf. Command names and arguments are application-specific; the server validates them. A successful response means accepted, not completed.
+        This function is the compatibility name for Invoke-StarrCommand. It submits a command asynchronously through Radarr or Sonarr API v3. New code should use Invoke-StarrCommand.
 
     .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.
@@ -33,12 +33,12 @@ function Start-StarrCommand {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Command]
 
         This function returns the deserialized accepted command resource.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named', SupportsShouldProcess, ConfirmImpact = 'Medium')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Command')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]
@@ -64,14 +64,14 @@ function Start-StarrCommand {
         [Parameter()]
         [ValidateNotNull()]
         [ValidateScript({
-            foreach ($key in $_.Keys) {
-                if ([System.String]$key -ieq 'Name') {
-                    throw 'Arguments cannot contain the reserved name property. Use CommandName.'
+                foreach ($key in $_.Keys) {
+                    if ([System.String]$key -ieq 'Name') {
+                        throw 'Arguments cannot contain the reserved name property. Use CommandName.'
+                    }
                 }
-            }
 
-            $true
-        })]
+                $true
+            })]
         [System.Collections.Hashtable]
         $Arguments
     )

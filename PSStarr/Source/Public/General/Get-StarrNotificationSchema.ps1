@@ -1,4 +1,4 @@
-function Get-StarrNotificationSchema {
+﻿function Get-StarrNotificationSchema {
     <#
     .SYNOPSIS
         Retrieves notification schemas from a Starr instance.
@@ -33,12 +33,12 @@ function Get-StarrNotificationSchema {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.ProviderSchema]
 
         This function returns response objects retrieved from the Starr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.ProviderSchema')]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
         [Alias('Name')]

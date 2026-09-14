@@ -1,4 +1,4 @@
-function Get-StarrSonarrRenamePreview {
+﻿function Get-StarrSonarrRenamePreview {
     <#
     .SYNOPSIS
         Retrieves Sonarr episode-file rename previews.
@@ -41,12 +41,12 @@ function Get-StarrSonarrRenamePreview {
         This function accepts objects with an Id property representing a Sonarr series.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Sonarr.RenamePreview]
 
         This function returns response objects retrieved from the Sonarr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Sonarr.RenamePreview')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

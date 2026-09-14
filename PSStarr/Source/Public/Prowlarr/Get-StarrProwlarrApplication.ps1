@@ -1,4 +1,4 @@
-function Get-StarrProwlarrApplication {
+﻿function Get-StarrProwlarrApplication {
     <#
     .SYNOPSIS
         Retrieves applications configured for synchronization from Prowlarr.
@@ -33,12 +33,12 @@ function Get-StarrProwlarrApplication {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Prowlarr.Application]
 
         This function returns deserialized Prowlarr Application resources with provider secrets redacted.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Prowlarr.Application')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

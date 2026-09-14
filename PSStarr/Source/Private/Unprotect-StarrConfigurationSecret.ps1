@@ -1,4 +1,4 @@
-function Unprotect-StarrConfigurationSecret {
+﻿function Unprotect-StarrConfigurationSecret {
     <#
     .SYNOPSIS
         Resolves a persisted PSStarr configuration secret.

@@ -1,4 +1,4 @@
-function Get-StarrRadarrManualImport {
+﻿function Get-StarrRadarrManualImport {
     <#
     .SYNOPSIS
         Retrieves Radarr manual import results.
@@ -42,12 +42,12 @@ function Get-StarrRadarrManualImport {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Radarr.ManualImportItem]
 
         This function returns deserialized Radarr response objects.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Radarr.ManualImportItem')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

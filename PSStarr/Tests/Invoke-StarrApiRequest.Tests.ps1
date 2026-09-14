@@ -1,4 +1,4 @@
-BeforeDiscovery {
+﻿BeforeDiscovery {
     Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
 }
 
@@ -55,14 +55,14 @@ Describe 'Invoke-StarrApiRequest' {
 
         It 'enumerates collection responses on the pipeline' {
             Mock Invoke-RestMethod {
-                Write-Output -NoEnumerate @(
+                Write-Output @(
                     [pscustomobject]@{
                         id = 1
                     }
                     [pscustomobject]@{
                         id = 2
                     }
-                )
+                ) -NoEnumerate
             }
 
             $firstResult = Invoke-StarrApiRequest -Url 'http://localhost:7878' -ApiKey fake -Endpoint episodefile |

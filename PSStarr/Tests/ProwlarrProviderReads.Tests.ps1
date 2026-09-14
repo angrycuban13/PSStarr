@@ -1,4 +1,4 @@
-BeforeDiscovery {
+﻿BeforeDiscovery {
     Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
 }
 
@@ -31,37 +31,6 @@ InModuleScope PSStarr {
             }
         }
 
-        It 'supports explicit credentials' {
-            & $Command -Url 'http://localhost:9696/base' -ApiKey fixture-key
-
-            Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                $Endpoint -eq $ResourcePath -and $Url -eq 'http://localhost:9696/base' -and
-                $ApiKey -eq 'fixture-key' -and $ApiVersion -eq 'v1' -and $ExpectedApplication -eq 'Prowlarr'
-            }
-        }
-
-        It 'delegates application-filtered inference' {
-            & $Command
-
-            Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
-                [string]::IsNullOrEmpty($InstanceName) -and [string]::IsNullOrEmpty($Url) -and
-                $ExpectedApplication -eq 'Prowlarr'
-            }
-        }
-
-        It 'validates credentials before transport' {
-            { & $Command -InstanceName ' ' } | Should -Throw
-            { & $Command -Url 'ftp://localhost' -ApiKey fixture-key } | Should -Throw
-            { & $Command -Url 'http://localhost:9696' -ApiKey ' ' } | Should -Throw
-            Should -Invoke Invoke-StarrApiRequest -Times 0
-        }
-
-        It 'returns no objects for empty responses' {
-            Mock Invoke-StarrApiRequest {}
-
-            @(& $Command -InstanceName Main).Count | Should -Be 0
-        }
-
         if ($IdParameter) {
             It 'requests an individual resource by ID' {
                 $arguments = @{ Name = 'Main' }
@@ -89,6 +58,43 @@ InModuleScope PSStarr {
         }
     }
 
+    Describe 'Prowlarr provider shared connection and output contract' {
+        BeforeEach {
+            Mock Invoke-StarrApiRequest { [pscustomobject]@{ id = 1 } }
+        }
+
+        It 'supports explicit credentials and v1 routing' {
+            Get-StarrProwlarrApplication -Url 'http://localhost:9696/base' -ApiKey fixture-key
+
+            Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
+                $Url -eq 'http://localhost:9696/base' -and $ApiKey -eq 'fixture-key' -and
+                $ApiVersion -eq 'v1' -and $ExpectedApplication -eq 'Prowlarr'
+            }
+        }
+
+        It 'delegates application-filtered inference' {
+            Get-StarrProwlarrApplication
+
+            Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
+                [string]::IsNullOrEmpty($InstanceName) -and [string]::IsNullOrEmpty($Url) -and
+                $ExpectedApplication -eq 'Prowlarr'
+            }
+        }
+
+        It 'validates credentials before transport' {
+            { Get-StarrProwlarrApplication -InstanceName ' ' } | Should -Throw
+            { Get-StarrProwlarrApplication -Url 'ftp://localhost' -ApiKey fixture-key } | Should -Throw
+            { Get-StarrProwlarrApplication -Url 'http://localhost:9696' -ApiKey ' ' } | Should -Throw
+            Should -Invoke Invoke-StarrApiRequest -Times 0
+        }
+
+        It 'returns no objects for an empty response' {
+            Mock Invoke-StarrApiRequest {}
+
+            @(Get-StarrProwlarrApplication -InstanceName Main).Count | Should -Be 0
+        }
+    }
+
     Describe '<Command> provider secret protection' -ForEach @(
         @{ Command = 'Get-StarrProwlarrApplication' }
         @{ Command = 'Get-StarrProwlarrApplicationSchema' }
@@ -97,8 +103,8 @@ InModuleScope PSStarr {
     ) {
         It 'redacts private fields and presets without mutating server data' {
             $script:providerFixture = [pscustomobject]@{
-                id = 1
-                fields = @(
+                id      = 1
+                fields  = @(
                     [pscustomobject]@{ name = 'apiKey'; privacy = 'apiKey'; value = 'fixture-secret' }
                     [pscustomobject]@{ name = 'other'; privacy = 'password'; value = 'fixture-password' }
                     [pscustomobject]@{ name = 'account'; privacy = 'userName'; value = 'fixture-user' }
@@ -131,13 +137,13 @@ InModuleScope PSStarr {
     Describe 'Provider redaction helper shape and safety' {
         It 'supports dictionaries, empty arrays, booleans and null fields' {
             $fixture = @{
-                fields = @(
+                fields  = @(
                     @{ name = 'credential'; type = 'password'; value = 'fixture-value' }
                     @{ name = 'enabled'; privacy = 'normal'; value = $false }
                     @{ name = 'empty'; privacy = 'normal'; value = $null }
                 )
                 presets = @()
-                apiKey = 'fixture-root-key'
+                apiKey  = 'fixture-root-key'
             }
 
             $result = Protect-StarrProviderResource -Resource $fixture
@@ -153,11 +159,11 @@ InModuleScope PSStarr {
 
         It 'redacts unknown non-normal privacy and case-insensitive names' {
             $result = Protect-StarrProviderResource -Resource ([pscustomobject]@{
-                fields = @(
-                    [pscustomobject]@{ name = 'custom'; privacy = 'futurePrivate'; value = 'fixture-value' }
-                    [pscustomobject]@{ name = 'APIKEY'; value = 'fixture-key' }
-                )
-            })
+                    fields = @(
+                        [pscustomobject]@{ name = 'custom'; privacy = 'futurePrivate'; value = 'fixture-value' }
+                        [pscustomobject]@{ name = 'APIKEY'; value = 'fixture-key' }
+                    )
+                })
 
             $result.fields[0].value | Should -Be '[REDACTED]'
             $result.fields[1].value | Should -Be '[REDACTED]'

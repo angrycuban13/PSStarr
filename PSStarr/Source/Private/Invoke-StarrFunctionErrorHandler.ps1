@@ -1,4 +1,4 @@
-function Invoke-StarrFunctionErrorHandler {
+﻿function Invoke-StarrFunctionErrorHandler {
     <#
     .SYNOPSIS
         Emits a sanitized error according to the caller's effective error action.

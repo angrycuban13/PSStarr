@@ -1,4 +1,4 @@
-function Get-StarrRadarrRenamePreview {
+﻿function Get-StarrRadarrRenamePreview {
     <#
     .SYNOPSIS
         Retrieves Radarr rename results.
@@ -33,12 +33,12 @@ function Get-StarrRadarrRenamePreview {
         This function accepts objects with an Id property representing a Radarr movie.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Radarr.RenamePreview]
 
         This function returns deserialized Radarr response objects.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Radarr.RenamePreview')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

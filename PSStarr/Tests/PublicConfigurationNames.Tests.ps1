@@ -1,4 +1,4 @@
-BeforeAll {
+﻿BeforeAll {
     Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
 }
 
@@ -16,5 +16,12 @@ Describe 'Public module configuration command names' {
 
     It 'keeps application commands under Starr' {
         (Get-Module PSStarr).ExportedFunctions.ContainsKey('Get-StarrSystemStatus') | Should -BeTrue
+    }
+
+    It 'exports Invoke-StarrCommand and retains the compatibility command' {
+        $module = Get-Module PSStarr
+
+        $module.ExportedFunctions.ContainsKey('Invoke-StarrCommand') | Should -BeTrue
+        $module.ExportedFunctions.ContainsKey('Start-StarrCommand') | Should -BeTrue
     }
 }

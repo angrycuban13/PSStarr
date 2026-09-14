@@ -1,4 +1,4 @@
-function Get-StarrProwlarrIndexerCategory {
+﻿function Get-StarrProwlarrIndexerCategory {
     <#
     .SYNOPSIS
         Retrieves categories exposed by configured Prowlarr indexers.
@@ -27,12 +27,12 @@ function Get-StarrProwlarrIndexerCategory {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Prowlarr.IndexerCategory]
 
         This function returns deserialized Prowlarr IndexerCategory resources.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Prowlarr.IndexerCategory')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

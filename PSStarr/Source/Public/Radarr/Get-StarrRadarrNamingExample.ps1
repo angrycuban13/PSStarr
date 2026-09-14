@@ -1,4 +1,4 @@
-function Get-StarrRadarrNamingExample {
+﻿function Get-StarrRadarrNamingExample {
     <#
     .SYNOPSIS
         Retrieves Radarr naming example results.
@@ -48,12 +48,12 @@ function Get-StarrRadarrNamingExample {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Radarr.ApplicationConfiguration]
 
         This function returns deserialized Radarr response objects.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Radarr.ApplicationConfiguration')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Parameter(ParameterSetName = 'NamedCustom')]

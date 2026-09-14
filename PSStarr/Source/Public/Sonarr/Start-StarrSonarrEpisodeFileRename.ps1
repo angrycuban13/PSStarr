@@ -1,4 +1,4 @@
-function Start-StarrSonarrEpisodeFileRename {
+﻿function Start-StarrSonarrEpisodeFileRename {
     <#
     .SYNOPSIS
         Starts renaming selected Sonarr episode files.
@@ -33,12 +33,12 @@ function Start-StarrSonarrEpisodeFileRename {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Sonarr.Command]
 
         This function returns the accepted Sonarr command resource.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named', SupportsShouldProcess, ConfirmImpact = 'High')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Sonarr.Command')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

@@ -1,4 +1,4 @@
-function Resolve-StarrErrorRecord {
+﻿function Resolve-StarrErrorRecord {
     <#
     .SYNOPSIS
         Formats an error record as readable diagnostic text.

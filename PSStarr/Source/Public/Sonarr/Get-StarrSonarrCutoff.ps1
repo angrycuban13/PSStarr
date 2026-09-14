@@ -1,4 +1,4 @@
-function Get-StarrSonarrCutoff {
+﻿function Get-StarrSonarrCutoff {
     <#
     .SYNOPSIS
         Retrieves Sonarr cutoff-unmet records using the legacy command name.
@@ -54,12 +54,12 @@ function Get-StarrSonarrCutoff {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Sonarr.PagedResult], [PSStarr.Sonarr.WantedItem]
 
         This function returns Sonarr cutoff-unmet response objects.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Sonarr.PagedResult', 'PSStarr.Sonarr.WantedItem')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

@@ -1,4 +1,4 @@
-BeforeDiscovery {
+﻿BeforeDiscovery {
     Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
 }
 
@@ -11,9 +11,9 @@ Describe 'Transport response shapes and HTTP failures' {
         It 'preserves a paged response and its records' {
             Mock Invoke-RestMethod {
                 [pscustomobject]@{
-                    page = 1
+                    page         = 1
                     totalRecords = 2
-                    records = @(
+                    records      = @(
                         [pscustomobject]@{ id = 10 }
                         [pscustomobject]@{ id = 20 }
                     )

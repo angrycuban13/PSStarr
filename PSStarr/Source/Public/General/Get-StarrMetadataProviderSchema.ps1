@@ -1,4 +1,4 @@
-function Get-StarrMetadataProviderSchema {
+﻿function Get-StarrMetadataProviderSchema {
     <#
     .SYNOPSIS
         Retrieves metadata provider schemas from Radarr or Sonarr.
@@ -30,12 +30,12 @@ function Get-StarrMetadataProviderSchema {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.ProviderSchema]
 
         This function returns deserialized metadata provider schemas.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.ProviderSchema')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

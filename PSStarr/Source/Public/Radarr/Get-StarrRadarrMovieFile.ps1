@@ -1,4 +1,4 @@
-function Get-StarrRadarrMovieFile {
+﻿function Get-StarrRadarrMovieFile {
     <#
     .SYNOPSIS
         Retrieves Radarr movie files from a Starr instance.
@@ -42,12 +42,12 @@ function Get-StarrRadarrMovieFile {
         This function accepts objects with an Id property representing a Radarr movie.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Radarr.MovieFile]
 
         This function returns response objects retrieved from the Starr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Radarr.MovieFile')]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
         [Alias('Name')]

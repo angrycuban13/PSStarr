@@ -1,4 +1,4 @@
-function Get-StarrRadarrImportListMovie {
+﻿function Get-StarrRadarrImportListMovie {
     <#
     .SYNOPSIS
         Retrieves Radarr import list movie results.
@@ -36,12 +36,12 @@ function Get-StarrRadarrImportListMovie {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Radarr.ImportListMovie]
 
         This function returns deserialized Radarr response objects.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Radarr.ImportListMovie')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

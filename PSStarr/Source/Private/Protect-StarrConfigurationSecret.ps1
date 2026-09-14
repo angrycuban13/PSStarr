@@ -1,4 +1,4 @@
-function Protect-StarrConfigurationSecret {
+﻿function Protect-StarrConfigurationSecret {
     <#
     .SYNOPSIS
         Protects a secret for persistent PSStarr configuration.

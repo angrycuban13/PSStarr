@@ -1,4 +1,4 @@
-function Get-StarrRadarrQueueDetail {
+﻿function Get-StarrRadarrQueueDetail {
     <#
     .SYNOPSIS
         Retrieves Radarr queue details.
@@ -33,12 +33,12 @@ function Get-StarrRadarrQueueDetail {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Radarr.QueueDetail]
 
         This function returns Radarr queue-detail records.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Radarr.QueueDetail')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

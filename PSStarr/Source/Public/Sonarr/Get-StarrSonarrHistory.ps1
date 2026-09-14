@@ -1,4 +1,4 @@
-function Get-StarrSonarrHistory {
+﻿function Get-StarrSonarrHistory {
     <#
     .SYNOPSIS
         Retrieves Sonarr history.
@@ -75,12 +75,12 @@ function Get-StarrSonarrHistory {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Sonarr.PagedResult], [PSStarr.Sonarr.History]
 
         This function returns Sonarr history responses.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Sonarr.PagedResult', 'PSStarr.Sonarr.History')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

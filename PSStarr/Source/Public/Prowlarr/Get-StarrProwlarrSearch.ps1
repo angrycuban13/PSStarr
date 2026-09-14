@@ -1,4 +1,4 @@
-function Get-StarrProwlarrSearch {
+﻿function Get-StarrProwlarrSearch {
     <#
     .SYNOPSIS
         Retrieves Prowlarr search results.
@@ -45,12 +45,12 @@ function Get-StarrProwlarrSearch {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Prowlarr.SearchResult]
 
         This function returns deserialized Prowlarr response objects.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Prowlarr.SearchResult')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

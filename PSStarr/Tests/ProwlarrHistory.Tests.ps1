@@ -1,4 +1,4 @@
-BeforeDiscovery {
+﻿BeforeDiscovery {
     Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
 }
 
@@ -9,7 +9,7 @@ InModuleScope PSStarr {
         }
 
         It 'preserves the paging envelope without fetching additional pages' {
-            $result = Get-StarrProwlarrHistory -InstanceName Main -Page 2 -PageSize 50 -SortKey date -SortDirection descending -EventTypeId 0,2 -Successful $false -DownloadId fixture-download -IndexerIdFilter 3,4
+            $result = Get-StarrProwlarrHistory -InstanceName Main -Page 2 -PageSize 50 -SortKey date -SortDirection descending -EventTypeId 0, 2 -Successful $false -DownloadId fixture-download -IndexerIdFilter 3, 4
 
             $result.totalRecords | Should -Be 1
             $result.records[0].id | Should -Be 42
@@ -58,7 +58,7 @@ InModuleScope PSStarr {
             { Get-StarrProwlarrHistory -IndexerId 1 -Limit 0 } | Should -Throw
             { Get-StarrProwlarrHistory -EventTypeId -1 } | Should -Throw
             { Get-StarrProwlarrHistory -EventTypeId @() } | Should -Throw
-            { Get-StarrProwlarrHistory -IndexerIdFilter 1,0 } | Should -Throw
+            { Get-StarrProwlarrHistory -IndexerIdFilter 1, 0 } | Should -Throw
             { Get-StarrProwlarrHistory -SortKey ' ' } | Should -Throw
             { Get-StarrProwlarrHistory -Since ([datetime]::UtcNow) -Page 1 } | Should -Throw
             { Get-StarrProwlarrHistory -Since ([datetime]::UtcNow) -IndexerId 1 } | Should -Throw

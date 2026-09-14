@@ -1,4 +1,4 @@
-function Get-StarrQualityDefinitionLimit {
+﻿function Get-StarrQualityDefinitionLimit {
     <#
     .SYNOPSIS
         Retrieves quality definition limits from Radarr or Sonarr.
@@ -30,12 +30,12 @@ function Get-StarrQualityDefinitionLimit {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.QualityDefinitionLimit]
 
         This function returns deserialized quality definition limits.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.QualityDefinitionLimit')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

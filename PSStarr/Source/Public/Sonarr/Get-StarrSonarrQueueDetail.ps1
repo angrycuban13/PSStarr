@@ -1,4 +1,4 @@
-function Get-StarrSonarrQueueDetail {
+﻿function Get-StarrSonarrQueueDetail {
     <#
     .SYNOPSIS
         Retrieves Sonarr queue details.
@@ -39,12 +39,12 @@ function Get-StarrSonarrQueueDetail {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Sonarr.QueueDetail]
 
         This function returns Sonarr queue-detail records.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Sonarr.QueueDetail')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

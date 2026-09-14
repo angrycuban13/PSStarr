@@ -1,4 +1,4 @@
-function Get-StarrProwlarrIndexerStatus {
+﻿function Get-StarrProwlarrIndexerStatus {
     <#
     .SYNOPSIS
         Retrieves Prowlarr indexer failure and backoff records.
@@ -27,12 +27,12 @@ function Get-StarrProwlarrIndexerStatus {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Prowlarr.IndexerStatus]
 
         This function returns indexer failure and backoff records.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Prowlarr.IndexerStatus')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

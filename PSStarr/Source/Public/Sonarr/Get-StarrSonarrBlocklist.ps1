@@ -1,4 +1,4 @@
-function Get-StarrSonarrBlocklist {
+﻿function Get-StarrSonarrBlocklist {
     <#
     .SYNOPSIS
         Retrieves Sonarr blocklist records.
@@ -45,12 +45,12 @@ function Get-StarrSonarrBlocklist {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Sonarr.PagedResult]
 
         This function returns Sonarr blocklist responses.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Sonarr.PagedResult')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

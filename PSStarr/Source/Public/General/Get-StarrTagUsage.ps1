@@ -1,4 +1,4 @@
-function Get-StarrTagUsage {
+﻿function Get-StarrTagUsage {
     <#
     .SYNOPSIS
         Retrieves resources associated with application tags.
@@ -33,12 +33,12 @@ function Get-StarrTagUsage {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.TagUsage]
 
         This function returns tag usage response objects.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.TagUsage')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

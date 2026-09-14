@@ -1,4 +1,4 @@
-function Get-StarrSonarrNamingExample {
+﻿function Get-StarrSonarrNamingExample {
     <#
     .SYNOPSIS
         Retrieves Sonarr filename examples.
@@ -68,12 +68,12 @@ function Get-StarrSonarrNamingExample {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Sonarr.ApplicationConfiguration]
 
         This function returns response objects retrieved from the Sonarr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Sonarr.ApplicationConfiguration')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Parameter(ParameterSetName = 'NamedCustom')]

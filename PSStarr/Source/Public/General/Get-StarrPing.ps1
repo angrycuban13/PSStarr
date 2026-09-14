@@ -1,4 +1,4 @@
-function Get-StarrPing {
+﻿function Get-StarrPing {
     <#
     .SYNOPSIS
         Retrieves a ping response from a Starr application.
@@ -30,12 +30,12 @@ function Get-StarrPing {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Ping]
 
         This function returns deserialized ping response.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Ping')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]

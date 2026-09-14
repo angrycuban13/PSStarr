@@ -1,4 +1,4 @@
-function Get-StarrHealth {
+﻿function Get-StarrHealth {
     <#
     .SYNOPSIS
         Retrieves health information from a Starr instance.
@@ -33,12 +33,12 @@ function Get-StarrHealth {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Health]
 
         This function returns response objects retrieved from the Starr API.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Health')]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Named')]
         [Alias('Name')]

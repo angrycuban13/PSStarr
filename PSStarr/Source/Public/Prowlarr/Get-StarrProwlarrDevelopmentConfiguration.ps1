@@ -1,4 +1,4 @@
-function Get-StarrProwlarrDevelopmentConfiguration {
+﻿function Get-StarrProwlarrDevelopmentConfiguration {
     <#
     .SYNOPSIS
         Retrieves Prowlarr development settings.
@@ -30,12 +30,12 @@ function Get-StarrProwlarrDevelopmentConfiguration {
         You cannot pipe objects to this function.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Prowlarr.ApplicationConfiguration]
 
         This function returns Prowlarr development configuration.
     #>
     [CmdletBinding(DefaultParameterSetName = 'Named')]
-    [OutputType([System.Object])]
+    [OutputType('PSStarr.Prowlarr.ApplicationConfiguration')]
     param(
         [Parameter(ParameterSetName = 'Named')]
         [Alias('Name')]
