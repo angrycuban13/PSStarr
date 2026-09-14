@@ -39,7 +39,7 @@ jobs:
             run:
                 shell: pwsh
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
 
             - name: Read and validate release metadata
               id: metadata
@@ -90,7 +90,7 @@ jobs:
               run: ./PSStarr/tools/Test-Release.ps1
 
             - name: Upload validated module
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v7
               with:
                   name: ${{ steps.metadata.outputs.artifact_name }}
                   path: PSStarr/Output/PSStarr/${{ steps.metadata.outputs.version }}
@@ -107,10 +107,10 @@ jobs:
             run:
                 shell: pwsh
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
 
             - name: Download validated module
-              uses: actions/download-artifact@v4
+              uses: actions/download-artifact@v8
               with:
                   name: ${{ needs.validate.outputs.artifact_name }}
                   path: release-package
