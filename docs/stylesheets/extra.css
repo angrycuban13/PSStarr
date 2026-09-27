@@ -1,0 +1,12 @@
+/* Wrap code blocks instead of horizontal scroll */
+.md-typeset pre code {
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+}
+
+/* Truncate long TOC entries (e.g. long parameter names) instead of wrapping mid-word */
+.md-nav--secondary .md-nav__link {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

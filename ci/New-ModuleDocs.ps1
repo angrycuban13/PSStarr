@@ -18,7 +18,7 @@ param(
     [Parameter(Mandatory = $false)]
     [ValidateNotNullOrWhiteSpace()]
     [System.String]
-    $DocumentationBaseUri = 'https://psstarr.xyz/modules/PSStarr/',
+    $DocumentationBaseUri = 'https://psstarr.xyz/command-reference/',
 
     [Parameter(Mandatory = $false)]
     [ValidateNotNullOrWhiteSpace()]
@@ -144,6 +144,8 @@ try {
         }
         else {
             $null = New-Item -ItemType Directory -Path $stagingPath -Force
+            $stagingCommandPath = Join-Path $stagingPath 'commands'
+            $null = New-Item -ItemType Directory -Path $stagingCommandPath -Force
             $generatedFiles = @(Get-ChildItem -LiteralPath $generatedModulePath -File -Filter '*.md' | Sort-Object Name)
             $expectedNames = @($exportedCommands | ForEach-Object { "$_.md" }) + 'PSStarr.md'
             $actualNames = @($generatedFiles.Name)
@@ -170,6 +172,16 @@ try {
                     $content = $content.Replace("`r`n", "`n").Replace("`r", "`n")
                     $content = [System.Text.RegularExpressions.Regex]::Replace($content, '(?m)[ \t]+$', '')
                     $content = [System.Text.RegularExpressions.Regex]::Replace($content, '(?m)^ms\.date:.*\n', '')
+                    $content = [System.Text.RegularExpressions.Regex]::Replace(
+                        $content,
+                        '(?m)^external help file:.*\n',
+                        ''
+                    )
+                    $content = [System.Text.RegularExpressions.Regex]::Replace(
+                        $content,
+                        "(?m)^HelpUri: ''\n",
+                        ''
+                    )
                     $frontMatter = [System.Text.RegularExpressions.Regex]::Match(
                         $content,
                         '\A---\n.*?^---[ \t]*$',
@@ -259,20 +271,16 @@ try {
                                 }
                             }
 
-                            if ($firstContentIndex -ge 0 -and $lines[$firstContentIndex] -match '^\\?\[(?<Type>.+)\\?\]$') {
+                            if ($firstContentIndex -ge 0 -and $lines[$firstContentIndex] -match '^\\?\[(?<Type>.+?)\\?\]$') {
                                 $typeName = $Matches['Type']
                                 $lines[$firstContentIndex] = $typeName
 
-                                for ($lineIndex = $firstContentIndex + 1; $lineIndex -lt $lines.Count; $lineIndex++) {
-                                    if ([System.String]::IsNullOrWhiteSpace($lines[$lineIndex])) {
-                                        continue
-                                    }
+                                for ($lineIndex = $lines.Count - 1; $lineIndex -gt $firstContentIndex; $lineIndex--) {
+                                    $candidateType = $lines[$lineIndex].Trim() -replace '\\$', ''
 
-                                    if ($lines[$lineIndex].Trim() -eq $typeName) {
+                                    if ($candidateType -eq $typeName) {
                                         $lines.RemoveAt($lineIndex)
                                     }
-
-                                    break
                                 }
                             }
 
@@ -292,11 +300,17 @@ try {
                         $DocumentationBaseUri.TrimEnd('/') + '/'
                     }
                     else {
-                        $DocumentationBaseUri.TrimEnd('/') + "/$pageName/"
+                        $DocumentationBaseUri.TrimEnd('/') + "/commands/$pageName/"
                     }
 
                     if ($pageName -eq 'PSStarr') {
                         $sourceFilePath = $sourceManifestPath
+                        $content = $content.Replace('title: PSStarr Module', 'title: Command Reference')
+                        $content = [System.Text.RegularExpressions.Regex]::Replace(
+                            $content,
+                            '(?m)(^### \[[^\]]+\]\()([^/)]+\.md\))',
+                            '$1commands/$2'
+                        )
                     }
                     elseif ($sourceFilesByCommand.ContainsKey($pageName)) {
                         $sourceFilePath = $sourceFilesByCommand[$pageName]
@@ -330,7 +344,19 @@ try {
                         throw 'The transformed file contains a PlatyPS placeholder.'
                     }
 
-                    $targetPath = Join-Path $stagingPath $generatedFile.Name
+                    $targetDirectory = if ($pageName -eq 'PSStarr') {
+                        $stagingPath
+                    }
+                    else {
+                        $stagingCommandPath
+                    }
+                    $targetName = if ($pageName -eq 'PSStarr') {
+                        'index.md'
+                    }
+                    else {
+                        $generatedFile.Name
+                    }
+                    $targetPath = Join-Path $targetDirectory $targetName
                     [System.IO.File]::WriteAllText($targetPath, $content, $utf8WithoutBom)
                 }
                 catch {
@@ -344,7 +370,10 @@ try {
         throw "Module documentation generation failed:`n - $($failures -join "`n - ")"
     }
 
-    $stagedFiles = @(Get-ChildItem -LiteralPath $stagingPath -File -Filter '*.md')
+    $navigationPath = Join-Path $stagingPath '.nav.yml'
+    [System.IO.File]::WriteAllText($navigationPath, "title: Command Reference`n", $utf8WithoutBom)
+
+    $stagedFiles = @(Get-ChildItem -LiteralPath $stagingPath -File -Filter '*.md' -Recurse)
 
     if ($stagedFiles.Count -ne $expectedNames.Count) {
         throw "The staging directory contains $($stagedFiles.Count) files. Expected $($expectedNames.Count)."

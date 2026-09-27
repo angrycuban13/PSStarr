@@ -1,18 +1,46 @@
 ---
-title: PSStarr
-description: PowerShell 7 commands for Radarr, Sonarr, and Prowlarr.
+title: Home
+description: Install PSStarr and configure a saved application connection
 ---
 
+<!-- markdownlint-disable MD025-->
 # PSStarr
+<!-- markdownlint-enable MD025-->
 
 PSStarr is a PowerShell 7 client module for Radarr, Sonarr, and Prowlarr.
 
-Use PSStarr to save application connections and call supported API endpoints with typed commands.
+## Requirements
 
-## Start here
+- PowerShell 7.0 or later
+- Radarr, Sonarr, or Prowlarr
+- An API key for the application
 
-- [Install and configure PSStarr](getting-started.md)
-- [Browse the command reference](modules/PSStarr/PSStarr.md)
+## Install PSStarr
 
-The command reference comes from the comment-based help in the module source.
-Do not edit the generated command pages.
+```powershell
+Install-Module -Name PSStarr -Repository PSGallery
+Import-Module -Name PSStarr
+```
+
+## Save a connection
+
+This example saves a Radarr connection.
+
+```powershell
+Set-PSStarrInstance -Name 'RadarrMain' -Application Radarr -Url 'https://radarr.example.com' -ApiKey (Read-Host -Prompt 'Enter your Radarr API key')
+```
+
+<!-- markdownlint-disable MD046-->
+!!! NOTE
+    By default, Windows encrypts the API key for the current user and host with DPAPI.
+
+    For portable encryption, set `PSSTARR_AES_KEY` to a Base64-encoded 32-byte key.
+<!-- markdownlint-enable MD046-->
+
+## Test the connection
+
+```powershell
+Get-StarrSystemStatus -InstanceName 'RadarrMain'
+```
+
+See the [command reference](command-reference/index.md) for all supported commands.
