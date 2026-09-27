@@ -1,10 +1,10 @@
-﻿function Get-StarrReleaseProfile {
+function Get-StarrReleaseProfile {
     <#
     .SYNOPSIS
         Retrieves release profile settings from Radarr or Sonarr.
 
     .DESCRIPTION
-        This function retrieves release profile settings using an inferred or named instance, or explicit connection credentials.
+    This function retrieves release-profile settings.
 
     .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.
@@ -28,7 +28,7 @@
         Get-StarrReleaseProfile -InstanceName 'Main' -ReleaseProfileId 1
 
     .EXAMPLE
-        Get-StarrReleaseProfile -Url 'http://localhost:8989' -ApiKey '<api-key>'
+        Get-StarrReleaseProfile -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

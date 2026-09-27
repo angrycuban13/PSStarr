@@ -4,7 +4,7 @@ function Get-StarrRadarrQueue {
         Retrieves the Radarr download queue.
 
     .DESCRIPTION
-        This function exposes only the queue parameters supported by Radarr and delegates the request to the shared queue implementation.
+        This function retrieves paged Radarr queue records.
 
     .PARAMETER InstanceName
         The optional saved Radarr instance name.

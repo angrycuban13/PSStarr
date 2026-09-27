@@ -1,10 +1,10 @@
-﻿function Get-StarrProwlarrIndexerCategory {
+function Get-StarrProwlarrIndexerCategory {
     <#
     .SYNOPSIS
         Retrieves categories exposed by configured Prowlarr indexers.
 
     .DESCRIPTION
-        This function retrieves the category hierarchy available from configured Prowlarr indexers.
+        This function retrieves the category hierarchy from configured Prowlarr indexers.
 
     .PARAMETER InstanceName
         The saved Prowlarr instance name. When omitted, the only matching instance is used.
@@ -19,7 +19,7 @@
         Get-StarrProwlarrIndexerCategory -InstanceName Main
 
     .EXAMPLE
-        Get-StarrProwlarrIndexerCategory -Url 'http://localhost:9696' -ApiKey '<api-key>'
+        Get-StarrProwlarrIndexerCategory -Url 'http://localhost:9696' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

@@ -4,7 +4,7 @@ function Get-StarrApplicationConfiguration {
         Retrieves application configuration from a Starr application.
 
     .DESCRIPTION
-        This function retrieves a supported application configuration section, not PSStarr's saved connections. Metadata is Radarr-only; Prowlarr supports DownloadClient, Host, and Ui through this command. Host credentials are always replaced with [REDACTED]; returned host settings must not be submitted as a configuration update.
+    This function retrieves a supported application configuration section. It does not retrieve saved PSStarr connections. Host credentials are redacted. Do not use returned host settings in an update.
 
     .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.
@@ -31,7 +31,7 @@ function Get-StarrApplicationConfiguration {
         Get-StarrApplicationConfiguration -InstanceName Main -Section Host -ConfigurationId 1
 
     .EXAMPLE
-        Get-StarrApplicationConfiguration -Url 'http://localhost:7878' -ApiKey '<api-key>' -Section Metadata
+        Get-StarrApplicationConfiguration -Url 'http://localhost:7878' -ApiKey 'example-api-key' -Section Metadata
 
     .INPUTS
         None.
@@ -95,8 +95,18 @@ function Get-StarrApplicationConfiguration {
 
     if ($PSBoundParameters.ContainsKey('Application') -and $Section -notin $supportedSections[$Application]) {
         $message = "$Application does not support the $Section configuration section."
+
         $exception = [System.ArgumentException]::new($message)
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrConfigurationSectionNotSupported' -TargetObject $Section -Activity $MyInvocation.MyCommand.Name
+
+        $errorRecordParameters = @{
+            Exception    = $exception
+            Category     = 'InvalidArgument'
+            ErrorId      = 'StarrConfigurationSectionNotSupported'
+            TargetObject = $Section
+            Activity     = $MyInvocation.MyCommand.Name
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
 
         $PSCmdlet.ThrowTerminatingError($errorRecord)
     }
@@ -123,6 +133,7 @@ function Get-StarrApplicationConfiguration {
         return $result
     }
 
+    # Copy host settings so redaction does not modify the transport response.
     foreach ($configuration in $result) {
         $safeConfiguration = [ordered]@{}
 
@@ -135,7 +146,7 @@ function Get-StarrApplicationConfiguration {
             }
         }
 
-        $safeOutput = [pscustomobject]$safeConfiguration
+        $safeOutput = [PSCustomObject]$safeConfiguration
 
         $typeNames = @($configuration.PSObject.TypeNames | Where-Object { $_ -like 'PSStarr.*' })
 

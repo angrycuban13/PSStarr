@@ -1,14 +1,20 @@
 ﻿BeforeDiscovery {
-    Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
+    Import-Module (& "$PSScriptRoot/Get-PSStarrTestModulePath.ps1") -Force
 }
 
 InModuleScope PSStarr {
     Describe '<Command> Prowlarr GET connection handling' -ForEach @(
-        @{ Command = 'Get-StarrProwlarrSearch'; Resource = 'search' }
-        @{ Command = 'Get-StarrProwlarrIndexerStatistic'; Resource = 'indexerstats' }
+        @{
+            Command  = 'Get-StarrProwlarrSearch'
+            Resource = 'search'
+        }
+        @{
+            Command  = 'Get-StarrProwlarrIndexerStatistic'
+            Resource = 'indexerstats'
+        }
     ) {
         BeforeEach {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ marker = 'fixture' } }
+            Mock Invoke-StarrApiRequest { [PSCustomObject]@{ marker = 'fixture' } }
         }
 
         It 'uses Prowlarr API v1 and leaves omitted filters to the server' {
@@ -46,8 +52,8 @@ InModuleScope PSStarr {
     Describe 'Prowlarr search query mapping' {
         BeforeEach {
             Mock Invoke-StarrApiRequest {
-                [pscustomobject]@{ title = 'First' }
-                [pscustomobject]@{ title = 'Second' }
+                [PSCustomObject]@{ title = 'First' }
+                [PSCustomObject]@{ title = 'Second' }
             }
         }
 
@@ -82,7 +88,13 @@ InModuleScope PSStarr {
 
     Describe 'Prowlarr indexer statistics filters' {
         BeforeEach {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ indexers = @(); hosts = @(); userAgents = @() } }
+            Mock Invoke-StarrApiRequest {
+                [PSCustomObject]@{
+                    indexers   = @()
+                    hosts      = @()
+                    userAgents = @()
+                }
+            }
         }
 
         It 'sends comma-separated filters and round-trip dates' {

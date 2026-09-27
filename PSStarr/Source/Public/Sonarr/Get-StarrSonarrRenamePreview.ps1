@@ -1,10 +1,10 @@
-﻿function Get-StarrSonarrRenamePreview {
+function Get-StarrSonarrRenamePreview {
     <#
     .SYNOPSIS
         Retrieves Sonarr episode-file rename previews.
 
     .DESCRIPTION
-        This function retrieves proposed episode-file renames for a series. This is a preview only and does not rename files.
+        This function returns proposed episode-file names for a series and optional season. It does not rename files.
 
     .PARAMETER InstanceName
         The optional saved instance name. When omitted, the matching instance is inferred.
@@ -25,7 +25,7 @@
         Get-StarrSonarrRenamePreview -InstanceName Main -SeriesId 42
 
     .EXAMPLE
-        Get-StarrSonarrRenamePreview -Url 'http://localhost:8989' -ApiKey '<api-key>' -SeriesId 42
+        Get-StarrSonarrRenamePreview -Url 'http://localhost:8989' -ApiKey 'example-api-key' -SeriesId 42
 
     .EXAMPLE
         Get-StarrSonarrRenamePreview -InstanceName Main -SeriesId 42 -SeasonNumber 0

@@ -4,7 +4,7 @@ function Get-StarrCustomFilter {
         Retrieves custom filter settings from Radarr or Sonarr.
 
     .DESCRIPTION
-        This function retrieves custom filter settings using an inferred or named instance, or explicit connection credentials.
+    This function retrieves custom-filter settings.
 
     .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.
@@ -28,7 +28,7 @@ function Get-StarrCustomFilter {
         Get-StarrCustomFilter -InstanceName 'Main' -CustomFilterId 1
 
     .EXAMPLE
-        Get-StarrCustomFilter -Url 'http://localhost:8989' -ApiKey '<api-key>'
+        Get-StarrCustomFilter -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

@@ -4,7 +4,7 @@
         Retrieves Sonarr blocklist records.
 
     .DESCRIPTION
-        This function exposes only the paged blocklist parameters supported by Sonarr.
+        This function retrieves one page of Sonarr blocklist records. You can filter records by series or protocol and control their order.
 
     .PARAMETER InstanceName
         The optional saved Sonarr instance name.

@@ -1,10 +1,10 @@
-﻿function Get-StarrTask {
+function Get-StarrTask {
     <#
     .SYNOPSIS
         Retrieves system tasks from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves system tasks from an inferred or named Starr instance, or from an explicit URL and API key.
+    This function retrieves scheduled system tasks.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
@@ -28,7 +28,7 @@
         Get-StarrTask -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrTask -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrTask -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

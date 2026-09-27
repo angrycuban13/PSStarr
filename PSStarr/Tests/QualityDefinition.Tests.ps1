@@ -1,16 +1,22 @@
 ﻿BeforeDiscovery {
-    Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
+    Import-Module (& "$PSScriptRoot/Get-PSStarrTestModulePath.ps1") -Force
 }
 
 Describe 'Quality definition GET wrappers' {
     InModuleScope PSStarr {
         BeforeEach {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ id = 1 } }
+            Mock Invoke-StarrApiRequest { [PSCustomObject]@{ id = 1 } }
         }
 
         It '<Command> delegates a named GET to <Path>' -ForEach @(
-            @{ Command = 'Get-StarrQualityDefinition'; Path = 'qualitydefinition' }
-            @{ Command = 'Get-StarrQualityDefinitionLimit'; Path = 'qualitydefinition/limits' }
+            @{
+                Command = 'Get-StarrQualityDefinition'
+                Path    = 'qualitydefinition'
+            }
+            @{
+                Command = 'Get-StarrQualityDefinitionLimit'
+                Path    = 'qualitydefinition/limits'
+            }
         ) {
             $expectedPath = $Path
             $result = & $Command -InstanceName Main
@@ -61,8 +67,8 @@ Describe 'Quality definition GET wrappers' {
 
         It 'preserves collection output' {
             Mock Invoke-StarrApiRequest {
-                [pscustomobject]@{ id = 1 }
-                [pscustomobject]@{ id = 2 }
+                [PSCustomObject]@{ id = 1 }
+                [PSCustomObject]@{ id = 2 }
             }
 
             $result = @(Get-StarrQualityDefinition -InstanceName Main)

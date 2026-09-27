@@ -1,11 +1,11 @@
-BeforeDiscovery {
-    Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
+﻿BeforeDiscovery {
+    Import-Module (& "$PSScriptRoot/Get-PSStarrTestModulePath.ps1") -Force
 }
 
 Describe 'Application-specific queue commands' {
     InModuleScope PSStarr {
         BeforeEach {
-            Mock Get-StarrQueue { [pscustomobject]@{ ok = $true } }
+            Mock Get-StarrQueue { [PSCustomObject]@{ ok = $true } }
         }
 
         It 'forwards only Radarr queue parameters with a Radarr discriminator' {

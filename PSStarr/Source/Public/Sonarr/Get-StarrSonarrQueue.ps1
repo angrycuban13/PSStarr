@@ -4,7 +4,7 @@
         Retrieves the Sonarr download queue.
 
     .DESCRIPTION
-        This function exposes only the queue parameters supported by Sonarr and delegates the request to the shared queue implementation.
+        This function retrieves one page of the Sonarr queue. You can filter items by series, protocol, language, quality, or status.
 
     .PARAMETER InstanceName
         The optional saved Sonarr instance name.

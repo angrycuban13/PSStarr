@@ -4,7 +4,7 @@ function Get-StarrAutoTaggingSchema {
         Retrieves auto-tagging schemas from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves auto-tagging schemas from an inferred or named Starr instance, or from an explicit URL and API key.
+    This function retrieves auto-tagging schemas.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
@@ -25,7 +25,7 @@ function Get-StarrAutoTaggingSchema {
         Get-StarrAutoTaggingSchema -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrAutoTaggingSchema -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrAutoTaggingSchema -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

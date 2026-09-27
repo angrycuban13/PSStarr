@@ -1,11 +1,11 @@
-BeforeDiscovery {
-    Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
+﻿BeforeDiscovery {
+    Import-Module (& "$PSScriptRoot/Get-PSStarrTestModulePath.ps1") -Force
 }
 
 Describe 'Discoverable Prowlarr and tag reads' {
     InModuleScope PSStarr {
         BeforeEach {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ ok = $true } }
+            Mock Invoke-StarrApiRequest { [PSCustomObject]@{ ok = $true } }
         }
 
         It 'retrieves all configured Prowlarr indexers through API v1' {

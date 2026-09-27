@@ -1,10 +1,10 @@
-﻿function Get-StarrRootFolder {
+function Get-StarrRootFolder {
     <#
     .SYNOPSIS
         Retrieves root folders from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves root folders from an inferred or named Starr instance, or from an explicit URL and API key.
+    This function retrieves root folders.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
@@ -28,7 +28,7 @@
         Get-StarrRootFolder -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrRootFolder -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrRootFolder -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

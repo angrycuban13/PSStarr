@@ -1,10 +1,10 @@
-﻿function Get-StarrQueueStatus {
+function Get-StarrQueueStatus {
     <#
     .SYNOPSIS
         Retrieves queue status from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves queue status from an inferred or named Starr instance, or from an explicit URL and API key.
+    This function retrieves download-queue status.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
@@ -25,7 +25,7 @@
         Get-StarrQueueStatus -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrQueueStatus -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrQueueStatus -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

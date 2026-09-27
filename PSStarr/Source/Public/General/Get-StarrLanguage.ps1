@@ -1,10 +1,10 @@
-﻿function Get-StarrLanguage {
+function Get-StarrLanguage {
     <#
     .SYNOPSIS
         Retrieves language settings from Radarr or Sonarr.
 
     .DESCRIPTION
-        This function retrieves language settings using an inferred or named instance, or explicit connection credentials.
+    This function retrieves language settings.
 
     .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.
@@ -28,7 +28,7 @@
         Get-StarrLanguage -InstanceName 'Main' -LanguageId 1
 
     .EXAMPLE
-        Get-StarrLanguage -Url 'http://localhost:8989' -ApiKey '<api-key>'
+        Get-StarrLanguage -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

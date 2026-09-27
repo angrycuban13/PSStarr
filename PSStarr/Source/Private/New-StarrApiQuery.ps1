@@ -4,7 +4,7 @@
         Creates a Starr API query from bound command parameters.
 
     .DESCRIPTION
-        This function maps documented PowerShell parameters to their Starr API query-string names.
+        This function creates a Starr API query from supplied command parameters.
 
     .PARAMETER BoundParameters
         The calling command's bound parameter dictionary.

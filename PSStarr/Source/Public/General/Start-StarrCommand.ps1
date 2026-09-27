@@ -1,10 +1,10 @@
-﻿function Start-StarrCommand {
+function Start-StarrCommand {
     <#
     .SYNOPSIS
         Submits an application command using the legacy command name.
 
     .DESCRIPTION
-        This function is the compatibility name for Invoke-StarrCommand. It submits a command asynchronously through Radarr or Sonarr API v3. New code should use Invoke-StarrCommand.
+    This function submits a command to Radarr or Sonarr. The command name remains available for compatibility. Use Invoke-StarrCommand in new code.
 
     .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.
@@ -25,7 +25,7 @@
         Start-StarrCommand -InstanceName Main -CommandName 'RefreshMovie' -Arguments @{ movieIds = @(42) }
 
     .EXAMPLE
-        Start-StarrCommand -Url 'http://localhost:8989' -ApiKey '<api-key>' -CommandName 'RefreshSeries' -WhatIf
+        Start-StarrCommand -Url 'http://localhost:8989' -ApiKey 'example-api-key' -CommandName 'RefreshSeries' -WhatIf
 
     .INPUTS
         None.

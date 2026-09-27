@@ -1,10 +1,10 @@
-﻿function Get-StarrRadarrNamingExample {
+function Get-StarrRadarrNamingExample {
     <#
     .SYNOPSIS
         Retrieves Radarr naming example results.
 
     .DESCRIPTION
-        This function previews movie and folder naming without saving settings. With no custom parameters, Radarr uses saved naming settings. Custom previews require NamingConfigId because Radarr otherwise discards query overrides. Supply all relevant custom settings: omitted custom fields use server model defaults rather than merging with saved settings.
+        This function previews movie and folder names without saving settings. Radarr uses saved settings when no custom parameters are present. Custom previews require NamingConfigId. Supply all relevant custom settings. Radarr applies default values to omitted fields instead of saved values.
 
     .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.
@@ -40,7 +40,7 @@
         Get-StarrRadarrNamingExample -InstanceName 'Main' -NamingConfigId 1 -StandardMovieFormat '{Movie Title} ({Release Year})' -MovieFolderFormat '{Movie Title} ({Release Year})'
 
     .EXAMPLE
-        Get-StarrRadarrNamingExample -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrRadarrNamingExample -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

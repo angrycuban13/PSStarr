@@ -1,10 +1,10 @@
-﻿function Start-StarrRadarrMovieRename {
+function Start-StarrRadarrMovieRename {
     <#
     .SYNOPSIS
         Starts renaming files for selected Radarr movies.
 
     .DESCRIPTION
-        This function submits the typed RenameMovie command to Radarr API v3. Use Get-StarrRadarrRenamePreview first to inspect proposed filenames. A successful response means Radarr accepted the asynchronous command.
+        This function starts renaming files for selected Radarr movies. Use Get-StarrRadarrRenamePreview to inspect proposed names first. A successful response means Radarr accepted the command. It does not mean that renaming completed. WhatIf prevents command submission.
 
     .PARAMETER InstanceName
         The optional saved Radarr instance name. The matching instance is inferred when omitted.
@@ -22,7 +22,7 @@
         Start-StarrRadarrMovieRename -InstanceName RadarrMain -MovieId 42,43
 
     .EXAMPLE
-        Start-StarrRadarrMovieRename -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieId 42 -WhatIf
+        Start-StarrRadarrMovieRename -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieId 42 -WhatIf
 
     .INPUTS
         None.

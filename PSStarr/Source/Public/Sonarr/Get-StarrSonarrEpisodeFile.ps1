@@ -1,10 +1,10 @@
-﻿function Get-StarrSonarrEpisodeFile {
+function Get-StarrSonarrEpisodeFile {
     <#
     .SYNOPSIS
         Retrieves Sonarr episode files from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves Sonarr episode files from an inferred or named Starr instance, or from an explicit URL and API key. Specify at least one episode-file selector: EpisodeFileId, SeriesId, or EpisodeFileIdFilter.
+        This function retrieves Sonarr episode files. Specify EpisodeFileId, SeriesId, or EpisodeFileIdFilter to select the files.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
@@ -31,7 +31,7 @@
         Get-StarrSonarrEpisodeFile -InstanceName 'Main' -SeriesId 123
 
     .EXAMPLE
-        Get-StarrSonarrEpisodeFile -Url 'http://localhost:8989' -ApiKey '<api-key>' -EpisodeFileIdFilter 456,789
+        Get-StarrSonarrEpisodeFile -Url 'http://localhost:8989' -ApiKey 'example-api-key' -EpisodeFileIdFilter 456,789
 
     .EXAMPLE
         Get-StarrSonarrSeries -SeriesId 123 | Get-StarrSonarrEpisodeFile
@@ -88,8 +88,18 @@
 
         if (@($selectors).Count -eq 0) {
             $message = 'Specify at least one of EpisodeFileId, SeriesId, or EpisodeFileIdFilter.'
+
             $exception = [System.ArgumentException]::new($message)
-            $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrEpisodeFileSelectorInvalid' -TargetObject $selectors -Activity $MyInvocation.MyCommand.Name
+
+            $errorRecordParameters = @{
+                Exception    = $exception
+                Category     = 'InvalidArgument'
+                ErrorId      = 'StarrEpisodeFileSelectorInvalid'
+                TargetObject = $selectors
+                Activity     = $MyInvocation.MyCommand.Name
+            }
+
+            $errorRecord = New-StarrErrorRecord @errorRecordParameters
 
             $PSCmdlet.ThrowTerminatingError($errorRecord)
         }

@@ -1,10 +1,10 @@
-function Get-StarrHistory {
+﻿function Get-StarrHistory {
     <#
     .SYNOPSIS
         Retrieves history from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves paged history or history scoped by date, Radarr movie, or Sonarr series using documented filters.
+    This function retrieves paged history or history for a specified date, Radarr movie, or Sonarr series.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
@@ -216,27 +216,64 @@ function Get-StarrHistory {
 
     if (@($selectors).Count -gt 1) {
         $message = 'Specify only one of Since, MovieId, or SeriesId.'
+
         $exception = [System.ArgumentException]::new($message)
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrHistorySelectorConflict' -TargetObject $selectors -Activity $MyInvocation.MyCommand.Name
+
+        $errorRecordParameters = @{
+            Exception    = $exception
+            Category     = 'InvalidArgument'
+            ErrorId      = 'StarrHistorySelectorConflict'
+            TargetObject = $selectors
+            Activity     = $MyInvocation.MyCommand.Name
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
 
         $PSCmdlet.ThrowTerminatingError($errorRecord)
     }
 
-    $hasRadarrParameters = $PSBoundParameters.ContainsKey('MovieId') -or $PSBoundParameters.ContainsKey('MovieIdFilter') -or $PSBoundParameters.ContainsKey('IncludeMovie')
-    $hasSonarrParameters = @('SeriesId', 'SeriesIdFilter', 'SeasonNumber', 'EpisodeId', 'IncludeSeries', 'IncludeEpisode') | Where-Object { $PSBoundParameters.ContainsKey($_) }
+    $radarrParameters = @('MovieId', 'MovieIdFilter', 'IncludeMovie') | Where-Object { $PSBoundParameters.ContainsKey($_) }
 
-    if ($hasRadarrParameters -and @($hasSonarrParameters).Count -gt 0) {
+    $sonarrParameters = @('SeriesId', 'SeriesIdFilter', 'SeasonNumber', 'EpisodeId', 'IncludeSeries', 'IncludeEpisode') | Where-Object { $PSBoundParameters.ContainsKey($_) }
+
+    $hasAnyRadarrParameter = @($radarrParameters).Count -gt 0
+
+    $hasAnySonarrParameter = @($sonarrParameters).Count -gt 0
+
+    if ($hasAnyRadarrParameter -and $hasAnySonarrParameter) {
         $message = 'Radarr-specific and Sonarr-specific history parameters cannot be combined.'
+
         $exception = [System.ArgumentException]::new($message)
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrApplicationParameterConflict' -TargetObject $PSBoundParameters -Activity $MyInvocation.MyCommand.Name
+
+        $errorRecordParameters = @{
+            Exception    = $exception
+            Category     = 'InvalidArgument'
+            ErrorId      = 'StarrApplicationParameterConflict'
+            TargetObject = $PSBoundParameters
+            Activity     = $MyInvocation.MyCommand.Name
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
 
         $PSCmdlet.ThrowTerminatingError($errorRecord)
     }
 
-    if (($Application -eq 'Radarr' -and @($hasSonarrParameters).Count -gt 0) -or ($Application -eq 'Sonarr' -and $hasRadarrParameters)) {
+    $hasApplicationParameterMismatch = ($Application -eq 'Radarr' -and $hasAnySonarrParameter) -or ($Application -eq 'Sonarr' -and $hasAnyRadarrParameter)
+
+    if ($hasApplicationParameterMismatch) {
         $message = "$Application does not support the supplied application-specific history parameters."
+
         $exception = [System.ArgumentException]::new($message)
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrApplicationParameterMismatch' -TargetObject $PSBoundParameters -Activity $MyInvocation.MyCommand.Name
+
+        $errorRecordParameters = @{
+            Exception    = $exception
+            Category     = 'InvalidArgument'
+            ErrorId      = 'StarrApplicationParameterMismatch'
+            TargetObject = $PSBoundParameters
+            Activity     = $MyInvocation.MyCommand.Name
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
 
         $PSCmdlet.ThrowTerminatingError($errorRecord)
     }
@@ -287,8 +324,18 @@ function Get-StarrHistory {
 
     if ($unsupportedParameters.Count -gt 0) {
         $message = "$route history does not support: $($unsupportedParameters -join ', ')."
+
         $exception = [System.ArgumentException]::new($message)
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrHistoryParameterNotSupported' -TargetObject $unsupportedParameters -Activity $MyInvocation.MyCommand.Name
+
+        $errorRecordParameters = @{
+            Exception    = $exception
+            Category     = 'InvalidArgument'
+            ErrorId      = 'StarrHistoryParameterNotSupported'
+            TargetObject = $unsupportedParameters
+            Activity     = $MyInvocation.MyCommand.Name
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
 
         $PSCmdlet.ThrowTerminatingError($errorRecord)
     }
@@ -337,10 +384,10 @@ function Get-StarrHistory {
         $request.Query = $query
     }
 
-    if ($Application -eq 'Radarr' -or $hasRadarrParameters) {
+    if ($Application -eq 'Radarr' -or $hasAnyRadarrParameter) {
         $request.ExpectedApplication = 'Radarr'
     }
-    elseif ($Application -eq 'Sonarr' -or @($hasSonarrParameters).Count -gt 0) {
+    elseif ($Application -eq 'Sonarr' -or $hasAnySonarrParameter) {
         $request.ExpectedApplication = 'Sonarr'
     }
 

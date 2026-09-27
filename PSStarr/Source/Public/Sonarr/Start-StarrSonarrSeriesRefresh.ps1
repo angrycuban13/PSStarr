@@ -1,10 +1,10 @@
-﻿function Start-StarrSonarrSeriesRefresh {
+function Start-StarrSonarrSeriesRefresh {
     <#
     .SYNOPSIS
         Starts metadata refreshes for selected Sonarr series.
 
     .DESCRIPTION
-        This function submits the typed RefreshSeries command to Sonarr API v3. A successful response means Sonarr accepted the asynchronous command, not that every refresh completed.
+        This function starts an asynchronous metadata refresh for selected series. A successful response means Sonarr accepted the command, not that every refresh completed.
 
     .PARAMETER InstanceName
         The optional saved Sonarr instance name. The matching instance is inferred when omitted.
@@ -22,7 +22,7 @@
         Start-StarrSonarrSeriesRefresh -InstanceName SonarrMain -SeriesId 42
 
     .EXAMPLE
-        Start-StarrSonarrSeriesRefresh -Url 'http://localhost:8989' -ApiKey '<api-key>' -SeriesId 42,43 -WhatIf
+        Start-StarrSonarrSeriesRefresh -Url 'http://localhost:8989' -ApiKey 'example-api-key' -SeriesId 42,43 -WhatIf
 
     .INPUTS
         None.

@@ -1,10 +1,10 @@
-﻿function Get-StarrProwlarrIndexer {
+function Get-StarrProwlarrIndexer {
     <#
     .SYNOPSIS
         Retrieves every configured Prowlarr indexer or one indexer by ID.
 
     .DESCRIPTION
-        This function reads Prowlarr indexer resources through API v1. Unlike Get-StarrProwlarrIndexerStatus, the list route returns configured indexers regardless of failure state. Recognizable provider credentials are redacted from returned resources.
+        This function retrieves configured Prowlarr indexers, regardless of failure state. Use Get-StarrProwlarrIndexerStatus to retrieve failure states. Recognizable provider credentials are redacted.
 
     .PARAMETER InstanceName
         The optional saved Prowlarr instance name. The matching instance is inferred when omitted.
@@ -22,7 +22,7 @@
         Get-StarrProwlarrIndexer -InstanceName ProwlarrMain
 
     .EXAMPLE
-        Get-StarrProwlarrIndexer -Url 'http://localhost:9696' -ApiKey '<api-key>' -IndexerId 4
+        Get-StarrProwlarrIndexer -Url 'http://localhost:9696' -ApiKey 'example-api-key' -IndexerId 4
 
     .INPUTS
         None.

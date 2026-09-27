@@ -1,10 +1,10 @@
-﻿function Get-StarrProwlarrAppProfile {
+function Get-StarrProwlarrAppProfile {
     <#
     .SYNOPSIS
         Retrieves Prowlarr application profiles.
 
     .DESCRIPTION
-        This function retrieves application profiles that control how Prowlarr synchronizes indexers with connected applications.
+        This function retrieves Prowlarr profiles that control indexer synchronization with connected applications.
 
     .PARAMETER InstanceName
         The saved Prowlarr instance name. When omitted, the only matching instance is used.
@@ -25,7 +25,7 @@
         Get-StarrProwlarrAppProfile -InstanceName Main -AppProfileId 1
 
     .EXAMPLE
-        Get-StarrProwlarrAppProfile -Url 'http://localhost:9696' -ApiKey '<api-key>'
+        Get-StarrProwlarrAppProfile -Url 'http://localhost:9696' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

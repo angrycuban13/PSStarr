@@ -1,10 +1,10 @@
-﻿function Start-StarrRadarrCollectionRefresh {
+function Start-StarrRadarrCollectionRefresh {
     <#
     .SYNOPSIS
         Starts refreshing selected Radarr collections.
 
     .DESCRIPTION
-        This function submits the typed RefreshCollections command to Radarr API v3. A successful response means Radarr accepted the asynchronous command, not that every refresh completed.
+        This function starts a Radarr collection refresh. A successful response means Radarr accepted the command. It does not mean that every refresh completed. WhatIf prevents command submission.
 
     .PARAMETER InstanceName
         The optional saved Radarr instance name. The matching instance is inferred when omitted.
@@ -22,7 +22,7 @@
         Start-StarrRadarrCollectionRefresh -InstanceName RadarrMain -CollectionId 7,8
 
     .EXAMPLE
-        Start-StarrRadarrCollectionRefresh -Url 'http://localhost:7878' -ApiKey '<api-key>' -CollectionId 7 -WhatIf
+        Start-StarrRadarrCollectionRefresh -Url 'http://localhost:7878' -ApiKey 'example-api-key' -CollectionId 7 -WhatIf
 
     .INPUTS
         None.

@@ -4,7 +4,7 @@
         Imports the persisted PSStarr configuration without decrypting secrets.
 
     .DESCRIPTION
-        This function imports the persisted PSStarr configuration and ensures its instance collection is usable while preserving encrypted values.
+        This function imports the saved PSStarr configuration. It preserves encrypted values and returns a usable instance collection.
 
     .EXAMPLE
         Import-StarrConfiguration

@@ -1,10 +1,10 @@
-﻿function Get-StarrSystemStatus {
+function Get-StarrSystemStatus {
     <#
     .SYNOPSIS
         Retrieves system status information from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves system status information from an inferred or named Starr instance, or from an explicit URL and API key.
+    This function retrieves application system status.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
@@ -25,7 +25,7 @@
         Get-StarrSystemStatus -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrSystemStatus -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrSystemStatus -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

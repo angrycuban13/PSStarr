@@ -1,5 +1,5 @@
 ﻿BeforeDiscovery {
-    Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
+    Import-Module (& "$PSScriptRoot/Get-PSStarrTestModulePath.ps1") -Force
 }
 
 Describe 'InstanceName parameter contract' {
@@ -24,7 +24,7 @@ Describe 'InstanceName parameter contract' {
         }
 
         It 'routes a canonical InstanceName through an endpoint wrapper' {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ appName = 'Starr' } }
+            Mock Invoke-StarrApiRequest { [PSCustomObject]@{ appName = 'Starr' } }
 
             Get-StarrSystemStatus -InstanceName Main
 
@@ -34,7 +34,7 @@ Describe 'InstanceName parameter contract' {
         }
 
         It 'routes the legacy Name alias through an endpoint wrapper' {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ appName = 'Starr' } }
+            Mock Invoke-StarrApiRequest { [PSCustomObject]@{ appName = 'Starr' } }
 
             Get-StarrSystemStatus -Name Main
 

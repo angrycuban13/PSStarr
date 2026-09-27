@@ -1,12 +1,12 @@
 ﻿BeforeDiscovery {
-    Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
+    Import-Module (& "$PSScriptRoot/Get-PSStarrTestModulePath.ps1") -Force
 }
 
 Describe 'Invoke-StarrApiRequest' {
     InModuleScope PSStarr {
         BeforeEach {
             Mock Write-PSStarrLogEntry
-            Mock Invoke-RestMethod { [pscustomobject]@{ ok = $true } }
+            Mock Invoke-RestMethod { [PSCustomObject]@{ ok = $true } }
         }
 
         It 'uses an explicit instance and constructs normalized URL and header' {
@@ -18,7 +18,15 @@ Describe 'Invoke-StarrApiRequest' {
         }
 
         It 'resolves a named instance' {
-            Mock Get-StarrConfiguration { @{ Instances = @{ Main = @{ Application = 'Radarr'; Url = 'http://localhost:7878/'; ApiKey = 'fake' } } } }
+            Mock Get-StarrConfiguration { @{
+                    Instances = @{
+                        Main = @{
+                            Application = 'Radarr'
+                            Url         = 'http://localhost:7878/'
+                            ApiKey      = 'fake'
+                        }
+                    }
+                } }
             Invoke-StarrApiRequest -InstanceName Main -Endpoint system/status
             Should -Invoke Invoke-RestMethod -Times 1 -ParameterFilter { $Uri -eq 'http://localhost:7878/api/v3/system/status' }
         }
@@ -29,7 +37,15 @@ Describe 'Invoke-StarrApiRequest' {
         }
 
         It 'rejects a named instance of the wrong application' {
-            Mock Get-StarrConfiguration { @{ Instances = @{ Main = @{ Application = 'Sonarr'; Url = 'http://localhost:8989'; ApiKey = 'fake' } } } }
+            Mock Get-StarrConfiguration { @{
+                    Instances = @{
+                        Main = @{
+                            Application = 'Sonarr'
+                            Url         = 'http://localhost:8989'
+                            ApiKey      = 'fake'
+                        }
+                    }
+                } }
             { Invoke-StarrApiRequest -InstanceName Main -Endpoint movie -ExpectedApplication Radarr -ErrorAction Stop } | Should -Throw "*not 'Radarr'*"
             Should -Invoke Invoke-RestMethod -Times 0
         }
@@ -40,7 +56,10 @@ Describe 'Invoke-StarrApiRequest' {
         }
 
         It 'serializes and escapes query values deterministically' {
-            Invoke-StarrApiRequest -Url 'http://localhost:7878' -ApiKey fake -Endpoint queue -Query @{ page = 2; include = 'a b' }
+            Invoke-StarrApiRequest -Url 'http://localhost:7878' -ApiKey fake -Endpoint queue -Query @{
+                page    = 2
+                include = 'a b'
+            }
             Should -Invoke Invoke-RestMethod -Times 1 -ParameterFilter { $Uri -eq 'http://localhost:7878/api/v3/queue?include=a%20b&page=2' }
         }
 
@@ -56,10 +75,10 @@ Describe 'Invoke-StarrApiRequest' {
         It 'enumerates collection responses on the pipeline' {
             Mock Invoke-RestMethod {
                 Write-Output @(
-                    [pscustomobject]@{
+                    [PSCustomObject]@{
                         id = 1
                     }
-                    [pscustomobject]@{
+                    [PSCustomObject]@{
                         id = 2
                     }
                 ) -NoEnumerate
@@ -91,7 +110,15 @@ Describe 'Invoke-StarrApiRequest instance inference' {
 
         It 'uses the only configured instance when Name is omitted' {
             Mock Get-StarrConfiguration {
-                @{ Instances = @{ Main = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = 'fake' } } }
+                @{
+                    Instances = @{
+                        Main = @{
+                            Application = 'Radarr'
+                            Url         = 'http://localhost:7878'
+                            ApiKey      = 'fake'
+                        }
+                    }
+                }
             }
 
             Invoke-StarrApiRequest -Endpoint health
@@ -105,8 +132,16 @@ Describe 'Invoke-StarrApiRequest instance inference' {
             Mock Get-StarrConfiguration {
                 @{
                     Instances = @{
-                        RadarrMain = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = 'radarr-key' }
-                        SonarrMain = @{ Application = 'Sonarr'; Url = 'http://localhost:8989'; ApiKey = 'sonarr-key' }
+                        RadarrMain = @{
+                            Application = 'Radarr'
+                            Url         = 'http://localhost:7878'
+                            ApiKey      = 'radarr-key'
+                        }
+                        SonarrMain = @{
+                            Application = 'Sonarr'
+                            Url         = 'http://localhost:8989'
+                            ApiKey      = 'sonarr-key'
+                        }
                     }
                 }
             }
@@ -123,8 +158,16 @@ Describe 'Invoke-StarrApiRequest instance inference' {
             Mock Get-StarrConfiguration {
                 @{
                     Instances = @{
-                        RadarrMain   = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = 'radarr-key' }
-                        ProwlarrMain = @{ Application = 'Prowlarr'; Url = 'http://localhost:9696'; ApiKey = 'prowlarr-key' }
+                        RadarrMain   = @{
+                            Application = 'Radarr'
+                            Url         = 'http://localhost:7878'
+                            ApiKey      = 'radarr-key'
+                        }
+                        ProwlarrMain = @{
+                            Application = 'Prowlarr'
+                            Url         = 'http://localhost:9696'
+                            ApiKey      = 'prowlarr-key'
+                        }
                     }
                 }
             }
@@ -141,8 +184,16 @@ Describe 'Invoke-StarrApiRequest instance inference' {
             Mock Get-StarrConfiguration {
                 @{
                     Instances = @{
-                        Main  = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = 'fake' }
-                        FourK = @{ Application = 'Radarr'; Url = 'http://localhost:7879'; ApiKey = 'fake' }
+                        Main  = @{
+                            Application = 'Radarr'
+                            Url         = 'http://localhost:7878'
+                            ApiKey      = 'fake'
+                        }
+                        FourK = @{
+                            Application = 'Radarr'
+                            Url         = 'http://localhost:7879'
+                            ApiKey      = 'fake'
+                        }
                     }
                 }
             }
@@ -155,7 +206,14 @@ Describe 'Invoke-StarrApiRequest instance inference' {
 
         It 'rejects inference when no compatible instance exists' {
             Mock Get-StarrConfiguration {
-                @{ Instances = @{ Main = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = 'fake' } } }
+                @{ Instances = @{
+                        Main = @{
+                            Application = 'Radarr'
+                            Url         = 'http://localhost:7878'
+                            ApiKey      = 'fake'
+                        }
+                    }
+                }
             }
 
             { Invoke-StarrApiRequest -Endpoint series -ExpectedApplication Sonarr -ErrorAction Stop } | Should -Throw '*No Starr instances for Sonarr*'

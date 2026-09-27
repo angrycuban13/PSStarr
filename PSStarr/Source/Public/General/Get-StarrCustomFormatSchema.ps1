@@ -4,7 +4,7 @@ function Get-StarrCustomFormatSchema {
         Retrieves custom-format schemas from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves custom-format schemas from an inferred or named Starr instance, or from an explicit URL and API key.
+    This function retrieves custom-format schemas.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
@@ -25,7 +25,7 @@ function Get-StarrCustomFormatSchema {
         Get-StarrCustomFormatSchema -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrCustomFormatSchema -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrCustomFormatSchema -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

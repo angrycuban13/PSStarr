@@ -1,0 +1,92 @@
+name: Feature request
+description: Propose a change that fits the supported PSStarr scope.
+title: "[Feature]: "
+labels:
+    - enhancement
+body:
+    - type: markdown
+      attributes:
+          value: |
+              PSStarr provides reusable configuration, transport, and API endpoint commands for Radarr, Sonarr, and Prowlarr.
+
+              Do not include API keys, passwords, tokens, or other secrets. Remove secrets from commands, URLs, errors, and logs.
+
+    - type: textarea
+      id: use-case
+      attributes:
+          label: Use case
+          description: Describe the task that PSStarr cannot complete now. Explain who needs the change and why.
+      validations:
+          required: true
+
+    - type: textarea
+      id: proposed-behavior
+      attributes:
+          label: Proposed behavior
+          description: Describe the command or behavior that you want. Include example PowerShell syntax if it clarifies the request.
+      validations:
+          required: true
+
+    - type: dropdown
+      id: application-scope
+      attributes:
+          label: Application scope
+          description: Select each application that needs this change.
+          multiple: true
+          options:
+              - Radarr
+              - Sonarr
+              - Prowlarr
+              - Shared PSStarr behavior
+      validations:
+          required: true
+
+    - type: dropdown
+      id: change-scope
+      attributes:
+          label: Change scope
+          description: Select the main part of PSStarr that needs the change.
+          options:
+              - Read command
+              - State-changing command
+              - Saved configuration
+              - HTTP transport
+              - Output type or format
+              - Documentation
+              - Other supported module behavior
+      validations:
+          required: true
+
+    - type: textarea
+      id: scope-limits
+      attributes:
+          label: Scope and limits
+          description: State what the feature must include and what it does not need to include.
+      validations:
+          required: true
+
+    - type: textarea
+      id: alternatives
+      attributes:
+          label: Current alternatives
+          description: Describe any command or process that you use now. Enter "None" if no alternative exists.
+      validations:
+          required: true
+
+    - type: textarea
+      id: additional-context
+      attributes:
+          label: Additional context
+          description: Add links to relevant upstream API documentation or related issues.
+
+    - type: checkboxes
+      id: acknowledgements
+      attributes:
+          label: Acknowledgements
+          options:
+              - label: I searched the existing issues for this request.
+                required: true
+              - label: This request applies to Radarr, Sonarr, Prowlarr, or shared PSStarr behavior.
+                required: true
+              - label: I removed API keys, credentials, tokens, and other secrets from this request.
+                required: true

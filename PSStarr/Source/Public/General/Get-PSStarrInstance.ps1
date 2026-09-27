@@ -1,10 +1,10 @@
-function Get-PSStarrInstance {
+﻿function Get-PSStarrInstance {
     <#
     .SYNOPSIS
         Retrieves saved PSStarr instances without exposing API keys.
 
     .DESCRIPTION
-        This function retrieves saved Starr instances and their encryption modes without exposing API keys.
+    This function retrieves saved Starr instances and their encryption modes. It does not expose API keys.
 
     .PARAMETER Name
         The name of the saved Starr instance.
@@ -48,10 +48,27 @@ function Get-PSStarrInstance {
     }
     catch {
         $message = "Unable to load the saved Starr instance configuration. $($_.Exception.Message)"
-        $exception = [System.InvalidOperationException]::new($message, $_.Exception)
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category ReadError -ErrorId 'StarrConfigurationReadFailed' -TargetObject $Name -Activity $MyInvocation.MyCommand.Name
 
-        Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -LogMessage $message
+        $exception = [System.InvalidOperationException]::new($message, $_.Exception)
+
+        $errorRecordParameters = @{
+            Exception    = $exception
+            Category     = 'ReadError'
+            ErrorId      = 'StarrConfigurationReadFailed'
+            TargetObject = $Name
+            Activity     = $MyInvocation.MyCommand.Name
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
+
+        $errorHandlerParameters = @{
+            Cmdlet              = $PSCmdlet
+            ErrorRecord         = $errorRecord
+            OriginalErrorAction = $originalErrorAction
+            LogMessage          = $message
+        }
+
+        Invoke-StarrFunctionErrorHandler @errorHandlerParameters
         return
     }
 

@@ -1,10 +1,10 @@
-﻿function Get-StarrProwlarrApplicationSchema {
+function Get-StarrProwlarrApplicationSchema {
     <#
     .SYNOPSIS
         Retrieves supported Prowlarr application-integration definitions.
 
     .DESCRIPTION
-        This function retrieves provider definitions used when configuring application integrations in Prowlarr. Provider secret values are redacted; do not submit returned objects as updates.
+        This function retrieves definitions for Prowlarr application providers. It redacts provider secrets. Do not use returned objects for updates.
 
     .PARAMETER InstanceName
         The saved Prowlarr instance name. When omitted, the only matching instance is used.
@@ -19,7 +19,7 @@
         Get-StarrProwlarrApplicationSchema -InstanceName Main
 
     .EXAMPLE
-        Get-StarrProwlarrApplicationSchema -Url 'http://localhost:9696' -ApiKey '<api-key>'
+        Get-StarrProwlarrApplicationSchema -Url 'http://localhost:9696' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

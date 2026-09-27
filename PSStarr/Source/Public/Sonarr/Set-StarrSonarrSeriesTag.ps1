@@ -1,10 +1,10 @@
-﻿function Set-StarrSonarrSeriesTag {
+function Set-StarrSonarrSeriesTag {
     <#
     .SYNOPSIS
         Adds or removes tags on Sonarr series.
 
     .DESCRIPTION
-        This function updates only series tags through the Sonarr API v3 bulk series editor. It adds or removes the supplied existing tag identifiers without replacing unrelated tags, changing monitoring settings, or moving files. WhatIf prevents the request entirely.
+        This function adds or removes existing tags from selected series. It preserves unrelated tags, monitoring settings, and files. WhatIf prevents the change.
 
     .PARAMETER InstanceName
         The optional saved Sonarr instance name. The matching instance is inferred when omitted.
@@ -31,7 +31,7 @@
         Set-StarrSonarrSeriesTag -InstanceName Main -SeriesId 42,43 -TagName reviewed -Action Add
 
     .EXAMPLE
-        Set-StarrSonarrSeriesTag -Url 'http://localhost:8989' -ApiKey '<api-key>' -SeriesId 42 -TagId 7,8 -Action Remove -WhatIf
+        Set-StarrSonarrSeriesTag -Url 'http://localhost:8989' -ApiKey 'example-api-key' -SeriesId 42 -TagId 7,8 -Action Remove -WhatIf
 
         Previews removing tags without contacting Sonarr.
 

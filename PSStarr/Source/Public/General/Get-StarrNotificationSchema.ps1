@@ -1,10 +1,10 @@
-﻿function Get-StarrNotificationSchema {
+function Get-StarrNotificationSchema {
     <#
     .SYNOPSIS
         Retrieves notification schemas from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves notification schemas from an inferred or named Starr instance, or from an explicit URL and API key.
+    This function retrieves notification schemas.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
@@ -25,7 +25,7 @@
         Get-StarrNotificationSchema -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrNotificationSchema -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrNotificationSchema -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

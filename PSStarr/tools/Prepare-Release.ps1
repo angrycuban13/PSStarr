@@ -34,7 +34,7 @@ System.Management.Automation.PSCustomObject. This script returns the prepared ve
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
 param(
     [Parameter(Mandatory)]
-    [ValidatePattern('^\d+\.\d+\.\d+$')]
+    [ValidatePattern('^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$')]
     [System.String]
     $Version,
 
@@ -62,8 +62,8 @@ $manifest = Import-PowerShellDataFile -Path $resolvedManifestPath
 $currentVersion = [System.Version]$manifest.ModuleVersion
 $targetVersion = [System.Version]$Version
 
-if ($targetVersion -lt $currentVersion) {
-    throw "Version $Version cannot be lower than the current module version $currentVersion."
+if ($targetVersion -le $currentVersion) {
+    throw "Version $Version must be greater than the current module version $currentVersion."
 }
 
 $manifestContent = Get-Content -LiteralPath $resolvedManifestPath -Raw
@@ -139,7 +139,7 @@ if ($PSCmdlet.ShouldProcess($targetDescription, "Prepare PSStarr $Version releas
 
     Set-Content -LiteralPath $resolvedChangelogPath -Value $updatedChangelogContent -NoNewline
 
-    [pscustomobject]@{
+    [PSCustomObject]@{
         Version       = $Version
         ReleaseDate   = $ReleaseDate.ToString('yyyy-MM-dd')
         ManifestPath  = $resolvedManifestPath

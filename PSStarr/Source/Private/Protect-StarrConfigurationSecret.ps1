@@ -4,7 +4,7 @@
         Protects a secret for persistent PSStarr configuration.
 
     .DESCRIPTION
-        This function returns plaintext or a versioned DPAPI or AES-256 encrypted envelope for a configuration secret.
+        This function protects a configuration secret with the selected storage mode. It never selects plaintext storage after an encryption failure.
 
     .PARAMETER Secret
         The plaintext secret to protect.

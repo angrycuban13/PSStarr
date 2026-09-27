@@ -1,11 +1,11 @@
-BeforeDiscovery {
-    Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
+﻿BeforeDiscovery {
+    Import-Module (& "$PSScriptRoot/Get-PSStarrTestModulePath.ps1") -Force
 }
 
 Describe 'Command facade compatibility' {
     InModuleScope PSStarr {
         BeforeEach {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ id = 9 } }
+            Mock Invoke-StarrApiRequest { [PSCustomObject]@{ id = 9 } }
         }
 
         It 'starts a Radarr movie search with a typed body' {
@@ -46,10 +46,35 @@ Describe 'Command facade compatibility' {
         }
 
         It '<Command> does not contact an application under WhatIf' -ForEach @(
-            @{ Command = 'Start-StarrRadarrMovieSearch'; Parameters = @{ Name = 'RadarrMain'; MovieId = @(42) } }
-            @{ Command = 'Start-StarrRadarrMovieRename'; Parameters = @{ Name = 'RadarrMain'; MovieId = @(42) } }
-            @{ Command = 'Start-StarrSonarrSeriesSearch'; Parameters = @{ Name = 'SonarrMain'; SeriesId = 42 } }
-            @{ Command = 'Start-StarrSonarrEpisodeFileRename'; Parameters = @{ Name = 'SonarrMain'; SeriesId = 42; EpisodeFileId = @(100) } }
+            @{
+                Command    = 'Start-StarrRadarrMovieSearch'
+                Parameters = @{
+                    Name    = 'RadarrMain'
+                    MovieId = @(42)
+                }
+            }
+            @{
+                Command    = 'Start-StarrRadarrMovieRename'
+                Parameters = @{
+                    Name    = 'RadarrMain'
+                    MovieId = @(42)
+                }
+            }
+            @{
+                Command    = 'Start-StarrSonarrSeriesSearch'
+                Parameters = @{
+                    Name     = 'SonarrMain'
+                    SeriesId = 42
+                }
+            }
+            @{
+                Command    = 'Start-StarrSonarrEpisodeFileRename'
+                Parameters = @{
+                    Name          = 'SonarrMain'
+                    SeriesId      = 42
+                    EpisodeFileId = @(100)
+                }
+            }
         ) {
             & $Command @Parameters -WhatIf
 

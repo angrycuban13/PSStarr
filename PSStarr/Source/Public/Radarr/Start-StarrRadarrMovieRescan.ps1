@@ -1,10 +1,10 @@
-﻿function Start-StarrRadarrMovieRescan {
+function Start-StarrRadarrMovieRescan {
     <#
     .SYNOPSIS
         Starts rescanning a Radarr movie folder.
 
     .DESCRIPTION
-        This function submits the typed RescanMovie command to Radarr API v3. A successful response means Radarr accepted the asynchronous command, not that the rescan completed.
+        This function starts a rescan for selected Radarr movies. A successful response means Radarr accepted the command. It does not mean that the rescan completed. WhatIf prevents command submission.
 
     .PARAMETER InstanceName
         The optional saved Radarr instance name. The matching instance is inferred when omitted.
@@ -22,7 +22,7 @@
         Start-StarrRadarrMovieRescan -InstanceName RadarrMain -MovieId 42
 
     .EXAMPLE
-        Start-StarrRadarrMovieRescan -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieId 42 -WhatIf
+        Start-StarrRadarrMovieRescan -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieId 42 -WhatIf
 
     .INPUTS
         None.

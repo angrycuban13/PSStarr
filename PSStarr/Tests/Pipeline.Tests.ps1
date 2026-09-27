@@ -1,19 +1,19 @@
 ﻿BeforeDiscovery {
-    Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
+    Import-Module (& "$PSScriptRoot/Get-PSStarrTestModulePath.ps1") -Force
 }
 
 Describe 'GET endpoint pipeline support' {
     InModuleScope PSStarr {
         BeforeEach {
             Mock Invoke-StarrApiRequest {
-                [pscustomobject]@{
+                [PSCustomObject]@{
                     ok = $true
                 }
             }
         }
 
         It 'accepts a Sonarr series when retrieving episodes' {
-            [pscustomobject]@{
+            [PSCustomObject]@{
                 Id = 123
             } | Get-StarrSonarrEpisode -InstanceName 'Main'
 
@@ -25,7 +25,7 @@ Describe 'GET endpoint pipeline support' {
         }
 
         It 'accepts a Sonarr series when retrieving episode files' {
-            [pscustomobject]@{
+            [PSCustomObject]@{
                 Id = 123
             } | Get-StarrSonarrEpisodeFile -InstanceName 'Main'
 
@@ -37,7 +37,7 @@ Describe 'GET endpoint pipeline support' {
         }
 
         It 'accepts a Radarr movie when retrieving movie files' {
-            [pscustomobject]@{
+            [PSCustomObject]@{
                 Id = 123
             } | Get-StarrRadarrMovieFile -InstanceName 'Main'
 
@@ -50,7 +50,7 @@ Describe 'GET endpoint pipeline support' {
         }
 
         It 'accepts a Radarr movie when retrieving credits' {
-            [pscustomobject]@{
+            [PSCustomObject]@{
                 Id = 123
             } | Get-StarrRadarrCredit -InstanceName 'Main'
 
@@ -62,7 +62,7 @@ Describe 'GET endpoint pipeline support' {
         }
 
         It 'accepts a Radarr movie when retrieving alternative titles' {
-            [pscustomobject]@{
+            [PSCustomObject]@{
                 Id = 123
             } | Get-StarrRadarrAlternativeTitle -InstanceName 'Main'
 
@@ -74,7 +74,7 @@ Describe 'GET endpoint pipeline support' {
         }
 
         It 'accepts a Radarr movie when retrieving extra files' {
-            [pscustomobject]@{
+            [PSCustomObject]@{
                 Id = 123
             } | Get-StarrRadarrExtraFile -InstanceName 'Main'
 
@@ -86,7 +86,7 @@ Describe 'GET endpoint pipeline support' {
         }
 
         It 'accepts a Radarr movie when calculating its folder' {
-            [pscustomobject]@{
+            [PSCustomObject]@{
                 Id = 123
             } | Get-StarrRadarrMovieFolder -InstanceName 'Main'
 
@@ -97,7 +97,7 @@ Describe 'GET endpoint pipeline support' {
         }
 
         It 'accepts a Radarr movie when previewing renames' {
-            [pscustomobject]@{
+            [PSCustomObject]@{
                 Id = 123
             } | Get-StarrRadarrRenamePreview -InstanceName 'Main'
 
@@ -110,7 +110,7 @@ Describe 'GET endpoint pipeline support' {
         }
 
         It 'accepts a Radarr movie when searching releases' {
-            [pscustomobject]@{
+            [PSCustomObject]@{
                 Id = 123
             } | Get-StarrRadarrRelease -InstanceName 'Main'
 
@@ -122,7 +122,7 @@ Describe 'GET endpoint pipeline support' {
         }
 
         It 'accepts a Sonarr series when calculating its folder' {
-            [pscustomobject]@{
+            [PSCustomObject]@{
                 Id = 123
             } | Get-StarrSonarrSeriesFolder -InstanceName 'Main'
 
@@ -133,7 +133,7 @@ Describe 'GET endpoint pipeline support' {
         }
 
         It 'accepts a Sonarr series when previewing renames' {
-            [pscustomobject]@{
+            [PSCustomObject]@{
                 Id = 123
             } | Get-StarrSonarrRenamePreview -InstanceName 'Main'
 
@@ -145,7 +145,7 @@ Describe 'GET endpoint pipeline support' {
         }
 
         It 'accepts a Sonarr episode when searching releases' {
-            [pscustomobject]@{
+            [PSCustomObject]@{
                 Id = 123
             } | Get-StarrSonarrRelease -InstanceName 'Main'
 
@@ -158,10 +158,10 @@ Describe 'GET endpoint pipeline support' {
 
         It 'makes one request for each pipeline object' {
             @(
-                [pscustomobject]@{
+                [PSCustomObject]@{
                     Id = 123
                 }
-                [pscustomobject]@{
+                [PSCustomObject]@{
                     Id = 456
                 }
             ) | Get-StarrSonarrEpisodeFile -InstanceName 'Main'

@@ -12,7 +12,7 @@
     RootModule           = 'PSStarr.psm1'
 
     # Version number of this module.
-    ModuleVersion        = '1.0.0'
+    ModuleVersion        = '1.0.1'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -100,19 +100,19 @@
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags       = @('Radarr', 'Sonarr', 'Prowlarr')
+            Tags         = @('Radarr', 'Sonarr', 'Prowlarr')
 
             # A URL to the license for this module.
-            LicenseUri = 'https://github.com/angrycuban13/PSStarr/blob/main/LICENSE'
+            LicenseUri   = 'https://github.com/angrycuban13/PSStarr/blob/main/LICENSE'
 
             # A URL to the main website for this project.
-            ProjectUri = 'https://github.com/angrycuban13/PSStarr'
+            ProjectUri   = 'https://github.com/angrycuban13/PSStarr'
 
             # A URL to an icon representing this module.
             # IconUri = ''
 
             # ReleaseNotes of this module
-            ReleaseNotes = 'PSStarr 1.0.0 release. See https://github.com/angrycuban13/PSStarr/blob/main/CHANGELOG.md.'
+            ReleaseNotes = 'PSStarr 1.0.1 release. See https://github.com/angrycuban13/PSStarr/blob/main/CHANGELOG.md.'
 
             # Prerelease string of this module
             # Prerelease = ''

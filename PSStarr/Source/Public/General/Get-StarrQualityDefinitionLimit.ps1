@@ -1,10 +1,10 @@
-﻿function Get-StarrQualityDefinitionLimit {
+function Get-StarrQualityDefinitionLimit {
     <#
     .SYNOPSIS
         Retrieves quality definition limits from Radarr or Sonarr.
 
     .DESCRIPTION
-        This function retrieves quality definition limits using an inferred or named instance, or explicit connection credentials.
+    This function retrieves quality-definition limits.
 
     .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.
@@ -22,7 +22,7 @@
         Get-StarrQualityDefinitionLimit -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrQualityDefinitionLimit -Url 'http://localhost:8989' -ApiKey '<api-key>'
+        Get-StarrQualityDefinitionLimit -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

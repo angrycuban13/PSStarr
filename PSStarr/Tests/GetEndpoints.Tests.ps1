@@ -1,51 +1,176 @@
 ﻿BeforeDiscovery {
-    Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
+    Import-Module (& "$PSScriptRoot/Get-PSStarrTestModulePath.ps1") -Force
 }
 
 Describe 'GET endpoint wrappers' {
     InModuleScope PSStarr {
         BeforeEach {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ ok = $true } }
+            Mock Invoke-StarrApiRequest { [PSCustomObject]@{ ok = $true } }
         }
 
         It '<Command> delegates to <Endpoint>' -ForEach @(
-            @{ Command = 'Get-StarrHealth'; Endpoint = 'health' }
-            @{ Command = 'Get-StarrTag'; Endpoint = 'tag' }
-            @{ Command = 'Get-StarrTagDetail'; Endpoint = 'tag/detail' }
-            @{ Command = 'Get-StarrQualityProfile'; Endpoint = 'qualityprofile' }
-            @{ Command = 'Get-StarrQualityProfileSchema'; Endpoint = 'qualityprofile/schema' }
-            @{ Command = 'Get-StarrRootFolder'; Endpoint = 'rootfolder' }
-            @{ Command = 'Get-StarrQueue'; Endpoint = 'queue' }
-            @{ Command = 'Get-StarrQueueDetail'; Endpoint = 'queue/details' }
-            @{ Command = 'Get-StarrQueueStatus'; Endpoint = 'queue/status' }
-            @{ Command = 'Get-StarrCommand'; Endpoint = 'command' }
-            @{ Command = 'Get-StarrAutoTagging'; Endpoint = 'autotagging' }
-            @{ Command = 'Get-StarrAutoTaggingSchema'; Endpoint = 'autotagging/schema' }
-            @{ Command = 'Get-StarrDiskSpace'; Endpoint = 'diskspace' }
-            @{ Command = 'Get-StarrBackup'; Endpoint = 'system/backup' }
-            @{ Command = 'Get-StarrTask'; Endpoint = 'system/task' }
-            @{ Command = 'Get-StarrUpdate'; Endpoint = 'update' }
-            @{ Command = 'Get-StarrDownloadClient'; Endpoint = 'downloadclient' }
-            @{ Command = 'Get-StarrDownloadClientSchema'; Endpoint = 'downloadclient/schema' }
-            @{ Command = 'Get-StarrIndexer'; Endpoint = 'indexer' }
-            @{ Command = 'Get-StarrIndexerSchema'; Endpoint = 'indexer/schema' }
-            @{ Command = 'Get-StarrNotification'; Endpoint = 'notification' }
-            @{ Command = 'Get-StarrNotificationSchema'; Endpoint = 'notification/schema' }
-            @{ Command = 'Get-StarrRemotePathMapping'; Endpoint = 'remotepathmapping' }
-            @{ Command = 'Get-StarrCustomFormat'; Endpoint = 'customformat' }
-            @{ Command = 'Get-StarrCustomFormatSchema'; Endpoint = 'customformat/schema' }
-            @{ Command = 'Get-StarrCalendar'; Endpoint = 'calendar' }
-            @{ Command = 'Get-StarrRadarrMovie'; Endpoint = 'movie'; App = 'Radarr' }
-            @{ Command = 'Get-StarrRadarrCollection'; Endpoint = 'collection'; App = 'Radarr' }
-            @{ Command = 'Get-StarrRadarrMovieFile'; Endpoint = 'moviefile'; App = 'Radarr'; Arguments = @{ MovieIdFilter = 1 } }
-            @{ Command = 'Get-StarrRadarrCredit'; Endpoint = 'credit'; App = 'Radarr' }
-            @{ Command = 'Get-StarrRadarrMissing'; Endpoint = 'wanted/missing'; App = 'Radarr' }
-            @{ Command = 'Get-StarrRadarrCutoff'; Endpoint = 'wanted/cutoff'; App = 'Radarr' }
-            @{ Command = 'Get-StarrSonarrSeries'; Endpoint = 'series'; App = 'Sonarr' }
-            @{ Command = 'Get-StarrSonarrEpisode'; Endpoint = 'episode'; App = 'Sonarr'; Arguments = @{ SeriesId = 1 } }
-            @{ Command = 'Get-StarrSonarrEpisodeFile'; Endpoint = 'episodefile'; App = 'Sonarr'; Arguments = @{ SeriesId = 1 } }
-            @{ Command = 'Get-StarrSonarrMissing'; Endpoint = 'wanted/missing'; App = 'Sonarr' }
-            @{ Command = 'Get-StarrSonarrCutoff'; Endpoint = 'wanted/cutoff'; App = 'Sonarr' }
+            @{
+                Command  = 'Get-StarrHealth'
+                Endpoint = 'health'
+            }
+            @{
+                Command  = 'Get-StarrTag'
+                Endpoint = 'tag'
+            }
+            @{
+                Command  = 'Get-StarrTagDetail'
+                Endpoint = 'tag/detail'
+            }
+            @{
+                Command  = 'Get-StarrQualityProfile'
+                Endpoint = 'qualityprofile'
+            }
+            @{
+                Command  = 'Get-StarrQualityProfileSchema'
+                Endpoint = 'qualityprofile/schema'
+            }
+            @{
+                Command  = 'Get-StarrRootFolder'
+                Endpoint = 'rootfolder'
+            }
+            @{
+                Command  = 'Get-StarrQueue'
+                Endpoint = 'queue'
+            }
+            @{
+                Command  = 'Get-StarrQueueDetail'
+                Endpoint = 'queue/details'
+            }
+            @{
+                Command  = 'Get-StarrQueueStatus'
+                Endpoint = 'queue/status'
+            }
+            @{
+                Command  = 'Get-StarrCommand'
+                Endpoint = 'command'
+            }
+            @{
+                Command  = 'Get-StarrAutoTagging'
+                Endpoint = 'autotagging'
+            }
+            @{
+                Command  = 'Get-StarrAutoTaggingSchema'
+                Endpoint = 'autotagging/schema'
+            }
+            @{
+                Command  = 'Get-StarrDiskSpace'
+                Endpoint = 'diskspace'
+            }
+            @{
+                Command  = 'Get-StarrBackup'
+                Endpoint = 'system/backup'
+            }
+            @{
+                Command  = 'Get-StarrTask'
+                Endpoint = 'system/task'
+            }
+            @{
+                Command  = 'Get-StarrUpdate'
+                Endpoint = 'update'
+            }
+            @{
+                Command  = 'Get-StarrDownloadClient'
+                Endpoint = 'downloadclient'
+            }
+            @{
+                Command  = 'Get-StarrDownloadClientSchema'
+                Endpoint = 'downloadclient/schema'
+            }
+            @{
+                Command  = 'Get-StarrIndexer'
+                Endpoint = 'indexer'
+            }
+            @{
+                Command  = 'Get-StarrIndexerSchema'
+                Endpoint = 'indexer/schema'
+            }
+            @{
+                Command  = 'Get-StarrNotification'
+                Endpoint = 'notification'
+            }
+            @{
+                Command  = 'Get-StarrNotificationSchema'
+                Endpoint = 'notification/schema'
+            }
+            @{
+                Command  = 'Get-StarrRemotePathMapping'
+                Endpoint = 'remotepathmapping'
+            }
+            @{
+                Command  = 'Get-StarrCustomFormat'
+                Endpoint = 'customformat'
+            }
+            @{
+                Command  = 'Get-StarrCustomFormatSchema'
+                Endpoint = 'customformat/schema'
+            }
+            @{
+                Command  = 'Get-StarrCalendar'
+                Endpoint = 'calendar'
+            }
+            @{
+                Command  = 'Get-StarrRadarrMovie'
+                Endpoint = 'movie'
+                App      = 'Radarr'
+            }
+            @{
+                Command  = 'Get-StarrRadarrCollection'
+                Endpoint = 'collection'
+                App      = 'Radarr'
+            }
+            @{
+                Command   = 'Get-StarrRadarrMovieFile'
+                Endpoint  = 'moviefile'
+                App       = 'Radarr'
+                Arguments = @{ MovieIdFilter = 1 }
+            }
+            @{
+                Command  = 'Get-StarrRadarrCredit'
+                Endpoint = 'credit'
+                App      = 'Radarr'
+            }
+            @{
+                Command  = 'Get-StarrRadarrMissing'
+                Endpoint = 'wanted/missing'
+                App      = 'Radarr'
+            }
+            @{
+                Command  = 'Get-StarrRadarrCutoff'
+                Endpoint = 'wanted/cutoff'
+                App      = 'Radarr'
+            }
+            @{
+                Command  = 'Get-StarrSonarrSeries'
+                Endpoint = 'series'
+                App      = 'Sonarr'
+            }
+            @{
+                Command   = 'Get-StarrSonarrEpisode'
+                Endpoint  = 'episode'
+                App       = 'Sonarr'
+                Arguments = @{ SeriesId = 1 }
+            }
+            @{
+                Command   = 'Get-StarrSonarrEpisodeFile'
+                Endpoint  = 'episodefile'
+                App       = 'Sonarr'
+                Arguments = @{ SeriesId = 1 }
+            }
+            @{
+                Command  = 'Get-StarrSonarrMissing'
+                Endpoint = 'wanted/missing'
+                App      = 'Sonarr'
+            }
+            @{
+                Command  = 'Get-StarrSonarrCutoff'
+                Endpoint = 'wanted/cutoff'
+                App      = 'Sonarr'
+            }
         ) {
             $expectedEndpoint = $Endpoint
             $expectedApp = Get-Variable -Name App -ValueOnly -ErrorAction SilentlyContinue

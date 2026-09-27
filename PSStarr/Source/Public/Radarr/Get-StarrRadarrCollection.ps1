@@ -1,10 +1,10 @@
-﻿function Get-StarrRadarrCollection {
+function Get-StarrRadarrCollection {
     <#
     .SYNOPSIS
         Retrieves Radarr collections from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves Radarr collections from an inferred or named Starr instance, or from an explicit URL and API key.
+        This function retrieves Radarr collections.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
@@ -28,7 +28,7 @@
         Get-StarrRadarrCollection -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrRadarrCollection -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrRadarrCollection -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

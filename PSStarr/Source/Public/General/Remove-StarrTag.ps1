@@ -1,10 +1,10 @@
-﻿function Remove-StarrTag {
+function Remove-StarrTag {
     <#
     .SYNOPSIS
         Removes an application tag from Radarr or Sonarr.
 
     .DESCRIPTION
-        This function removes an existing tag through API v3 using the shared transport. It supports confirmation and WhatIf. The application determines whether a tag that is still in use can be removed.
+    This function removes a tag. It supports confirmation and WhatIf. The application can reject removal when a resource uses the tag.
 
     .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured Radarr or Sonarr instance is used.
@@ -25,7 +25,7 @@
         Remove-StarrTag -InstanceName Main -TagName reviewed
 
     .EXAMPLE
-        Remove-StarrTag -Url 'http://localhost:8989' -ApiKey '<api-key>' -TagId 7 -WhatIf
+        Remove-StarrTag -Url 'http://localhost:8989' -ApiKey 'example-api-key' -TagId 7 -WhatIf
 
     .INPUTS
         None.

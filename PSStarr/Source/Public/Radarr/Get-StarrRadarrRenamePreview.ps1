@@ -1,10 +1,10 @@
-﻿function Get-StarrRadarrRenamePreview {
+function Get-StarrRadarrRenamePreview {
     <#
     .SYNOPSIS
         Retrieves Radarr rename results.
 
     .DESCRIPTION
-        This function retrieves proposed movie-file renames without changing filenames. Radarr inspects the selected movies to calculate naming previews.
+        This function retrieves proposed movie-file names without renaming files. Radarr inspects the selected movies to calculate the names.
 
     .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.
@@ -22,7 +22,7 @@
         Get-StarrRadarrRenamePreview -InstanceName 'Main' -MovieIdFilter 42,43
 
     .EXAMPLE
-        Get-StarrRadarrRenamePreview -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieIdFilter 42,43
+        Get-StarrRadarrRenamePreview -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieIdFilter 42,43
 
     .EXAMPLE
         Get-StarrRadarrMovie -MovieId 42 | Get-StarrRadarrRenamePreview

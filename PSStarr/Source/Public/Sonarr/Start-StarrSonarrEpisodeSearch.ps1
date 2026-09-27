@@ -1,10 +1,10 @@
-﻿function Start-StarrSonarrEpisodeSearch {
+function Start-StarrSonarrEpisodeSearch {
     <#
     .SYNOPSIS
         Starts a Sonarr search for selected episodes.
 
     .DESCRIPTION
-        This function submits the typed EpisodeSearch command to Sonarr API v3. The search contacts configured indexers and can consume provider quotas; a successful response means Sonarr accepted the asynchronous command, not that releases were found or downloaded.
+        This function starts an asynchronous search for selected episodes. The search contacts configured indexers and can consume provider quotas. A successful response means Sonarr accepted the search, not that Sonarr found or downloaded releases.
 
     .PARAMETER InstanceName
         The optional saved Sonarr instance name. The matching instance is inferred when omitted.
@@ -22,7 +22,7 @@
         Start-StarrSonarrEpisodeSearch -InstanceName SonarrMain -EpisodeId 101,102
 
     .EXAMPLE
-        Start-StarrSonarrEpisodeSearch -Url 'http://localhost:8989' -ApiKey '<api-key>' -EpisodeId 101 -WhatIf
+        Start-StarrSonarrEpisodeSearch -Url 'http://localhost:8989' -ApiKey 'example-api-key' -EpisodeId 101 -WhatIf
 
     .INPUTS
         None.

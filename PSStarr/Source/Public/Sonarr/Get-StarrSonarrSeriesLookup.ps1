@@ -1,10 +1,10 @@
-﻿function Get-StarrSonarrSeriesLookup {
+function Get-StarrSonarrSeriesLookup {
     <#
     .SYNOPSIS
         Searches Sonarr metadata providers for series to add.
 
     .DESCRIPTION
-        This function searches Sonarr metadata providers by term or TVDB ID. It returns candidates and does not add series.
+        This function searches Sonarr metadata providers by term or TVDB identifier. It returns candidates and does not add a series.
 
     .PARAMETER InstanceName
         The name of the saved Starr instance.
@@ -22,7 +22,7 @@
         Get-StarrSonarrSeriesLookup -InstanceName 'RadarrMain' -Term 'example'
 
     .EXAMPLE
-        Get-StarrSonarrSeriesLookup -Url 'http://localhost:7878' -ApiKey '<api-key>' -Term 'example'
+        Get-StarrSonarrSeriesLookup -Url 'http://localhost:7878' -ApiKey 'example-api-key' -Term 'example'
 
     .INPUTS
         None.

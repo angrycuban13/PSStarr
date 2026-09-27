@@ -1,10 +1,10 @@
-﻿function Start-StarrSonarrSeriesFolderRename {
+function Start-StarrSonarrSeriesFolderRename {
     <#
     .SYNOPSIS
         Starts renaming selected Sonarr series folders.
 
     .DESCRIPTION
-        This function submits the typed RenameSeries command to Sonarr API v3. A successful response means Sonarr accepted the asynchronous command, not that every folder was renamed.
+        This function starts an asynchronous folder rename for selected series. A successful response means Sonarr accepted the command, not that Sonarr renamed every folder.
 
     .PARAMETER InstanceName
         The optional saved Sonarr instance name. The matching instance is inferred when omitted.
@@ -22,7 +22,7 @@
         Start-StarrSonarrSeriesFolderRename -InstanceName SonarrMain -SeriesId 42,43
 
     .EXAMPLE
-        Start-StarrSonarrSeriesFolderRename -Url 'http://localhost:8989' -ApiKey '<api-key>' -SeriesId 42 -WhatIf
+        Start-StarrSonarrSeriesFolderRename -Url 'http://localhost:8989' -ApiKey 'example-api-key' -SeriesId 42 -WhatIf
 
     .INPUTS
         None.

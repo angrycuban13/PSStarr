@@ -4,7 +4,7 @@ function Get-StarrApiInfo {
         Retrieves API information from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves API information from an inferred or named Starr instance, or from an explicit URL and API key.
+    This function retrieves API information for a Starr application.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
@@ -25,7 +25,7 @@ function Get-StarrApiInfo {
         Get-StarrApiInfo -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrApiInfo -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrApiInfo -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

@@ -4,7 +4,7 @@
         Writes readable entries to the PSStarr log.
 
     .DESCRIPTION
-        This function writes readable plain-text entries to the cross-platform PSStarr log.
+        This function writes plain-text entries to the PSStarr log. It can also write messages to the console.
 
     .PARAMETER Message
         The text written to the log.
@@ -161,7 +161,9 @@
 
                     Move-Item -LiteralPath $logFullPath -Destination $archivePath -Force -ErrorAction Stop
 
-                    Get-ChildItem -Path $LogFileDirectory -Filter "${logBaseName}_*.log" -ErrorAction SilentlyContinue | Sort-Object -Property LastWriteTime -Descending | Select-Object -Skip $MaxLogsToKeep | ForEach-Object {
+                    $expiredLogFiles = Get-ChildItem -Path $LogFileDirectory -Filter "${logBaseName}_*.log" -ErrorAction SilentlyContinue | Sort-Object -Property LastWriteTime -Descending | Select-Object -Skip $MaxLogsToKeep
+
+                    $expiredLogFiles | ForEach-Object {
                         try {
                             Remove-Item -LiteralPath $_.FullName -Force -ErrorAction Stop
                         }
@@ -204,6 +206,7 @@
         $encoding = [Text.UTF8Encoding]::new($false)
         $maxAttempts = $RetryCount + 1
 
+        # Retry only file-sharing failures. Report other write failures immediately.
         for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
             $fileStream = $null
             $streamWriter = $null

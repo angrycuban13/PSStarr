@@ -1,10 +1,10 @@
-﻿function Get-StarrRadarrCutoffUnmet {
+function Get-StarrRadarrCutoffUnmet {
     <#
     .SYNOPSIS
         Retrieves Radarr movies that have not met their quality cutoff.
 
     .DESCRIPTION
-        This function retrieves one page of wanted Radarr movies whose downloaded files have not met the configured quality-profile cutoff.
+        This function retrieves one page of wanted Radarr movies whose files have not met the configured quality cutoff.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
@@ -37,7 +37,7 @@
         Get-StarrRadarrCutoffUnmet -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrRadarrCutoffUnmet -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrRadarrCutoffUnmet -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

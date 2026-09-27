@@ -1,10 +1,10 @@
-﻿function Get-StarrRadarrParse {
+function Get-StarrRadarrParse {
     <#
     .SYNOPSIS
         Retrieves Radarr parse results.
 
     .DESCRIPTION
-        This function asks Radarr to parse a release title and return recognized movie information without adding or downloading the movie.
+        This function returns movie information that Radarr recognizes in a release title. It does not add or download the movie.
 
     .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.
@@ -22,7 +22,7 @@
         Get-StarrRadarrParse -InstanceName 'Main' -Title 'Example.Movie.2024.1080p'
 
     .EXAMPLE
-        Get-StarrRadarrParse -Url 'http://localhost:7878' -ApiKey '<api-key>' -Title 'Example.Movie.2024.1080p'
+        Get-StarrRadarrParse -Url 'http://localhost:7878' -ApiKey 'example-api-key' -Title 'Example.Movie.2024.1080p'
 
     .INPUTS
         None.

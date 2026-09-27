@@ -1,10 +1,10 @@
-﻿function Get-StarrQualityProfileSchema {
+function Get-StarrQualityProfileSchema {
     <#
     .SYNOPSIS
         Retrieves quality-profile schemas from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves quality-profile schemas from an inferred or named Starr instance, or from an explicit URL and API key.
+    This function retrieves quality-profile schemas.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
@@ -25,7 +25,7 @@
         Get-StarrQualityProfileSchema -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrQualityProfileSchema -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrQualityProfileSchema -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

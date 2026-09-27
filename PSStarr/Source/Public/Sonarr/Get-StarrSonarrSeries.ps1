@@ -1,10 +1,10 @@
-﻿function Get-StarrSonarrSeries {
+function Get-StarrSonarrSeries {
     <#
     .SYNOPSIS
         Retrieves Sonarr series from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves Sonarr series from an inferred or named Starr instance, or from an explicit URL and API key.
+        This function retrieves Sonarr series. You can select one series by its internal identifier or TVDB identifier.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
@@ -31,7 +31,7 @@
         Get-StarrSonarrSeries -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrSonarrSeries -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrSonarrSeries -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

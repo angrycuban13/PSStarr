@@ -1,3 +1,4 @@
-/PSStarr/Output/
-/PSStarr/docs/research/
-/PSStarr/ROADMAP.md
+**/Output/
+**/docs/research
+site/
+.venv/

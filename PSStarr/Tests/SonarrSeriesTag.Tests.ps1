@@ -1,11 +1,18 @@
 ﻿BeforeDiscovery {
-    Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
+    Import-Module (& "$PSScriptRoot/Get-PSStarrTestModulePath.ps1") -Force
 }
 
 InModuleScope PSStarr {
     Describe 'Sonarr bulk series tag changes' {
         BeforeEach {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ id = 42 }; [pscustomobject]@{ id = 43 } }
+            Mock Invoke-StarrApiRequest {
+                [PSCustomObject]@{
+                    id = 42
+                }
+                [PSCustomObject]@{
+                    id = 43
+                }
+            }
         }
 
         It 'adds tags with a narrow body and preserves response objects' {

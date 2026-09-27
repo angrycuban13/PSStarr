@@ -1,10 +1,10 @@
-﻿function Get-StarrIndexer {
+function Get-StarrIndexer {
     <#
     .SYNOPSIS
         Retrieves indexers from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves indexers from an inferred or named Starr instance, or from an explicit URL and API key.
+    This function retrieves indexers.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
@@ -28,7 +28,7 @@
         Get-StarrIndexer -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrIndexer -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrIndexer -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

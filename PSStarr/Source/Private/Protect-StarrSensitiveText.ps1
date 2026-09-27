@@ -4,7 +4,7 @@
         Redacts sensitive values from text.
 
     .DESCRIPTION
-        This function replaces each supplied sensitive value in text with a redaction marker.
+        This function redacts each supplied sensitive value from text.
 
     .PARAMETER Text
         The text to sanitize.
@@ -37,7 +37,9 @@
         $SensitiveValue
     )
 
-    if ($null -eq $Text) { return $null }
+    if ($null -eq $Text) {
+        return $null
+    }
 
     $sanitized = $Text
 

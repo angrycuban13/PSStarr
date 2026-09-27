@@ -1,10 +1,10 @@
-﻿function Get-StarrImportList {
+function Get-StarrImportList {
     <#
     .SYNOPSIS
         Retrieves import list settings from Radarr or Sonarr.
 
     .DESCRIPTION
-        This function retrieves import list settings using an inferred or named instance, or explicit connection credentials.
+    This function retrieves import-list settings.
 
     .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.
@@ -28,7 +28,7 @@
         Get-StarrImportList -InstanceName 'Main' -ImportListId 1
 
     .EXAMPLE
-        Get-StarrImportList -Url 'http://localhost:8989' -ApiKey '<api-key>'
+        Get-StarrImportList -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

@@ -1,10 +1,10 @@
-﻿function Get-StarrRadarrImportListExclusion {
+function Get-StarrRadarrImportListExclusion {
     <#
     .SYNOPSIS
         Retrieves Radarr import-list exclusions.
 
     .DESCRIPTION
-        This function retrieves one page of Radarr import-list exclusions or an individual exclusion by its internal ID. Paging metadata is preserved. It does not fetch all pages or use the deprecated unpaged route.
+        This function retrieves one page of Radarr import-list exclusions or one exclusion by identifier. Paged results include paging metadata. It does not retrieve all pages.
 
     .PARAMETER InstanceName
         The saved instance name. When omitted, the only matching Radarr instance is used.
@@ -37,7 +37,7 @@
         Get-StarrRadarrImportListExclusion -InstanceName 'Main' -ExclusionId 7
 
     .EXAMPLE
-        Get-StarrRadarrImportListExclusion -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrRadarrImportListExclusion -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

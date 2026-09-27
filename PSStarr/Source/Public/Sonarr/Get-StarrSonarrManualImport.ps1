@@ -1,10 +1,10 @@
-﻿function Get-StarrSonarrManualImport {
+function Get-StarrSonarrManualImport {
     <#
     .SYNOPSIS
         Retrieves Sonarr manual-import candidates.
 
     .DESCRIPTION
-        This function inspects candidate files on the Sonarr host without importing them. Folder/download inspection and existing series inspection are separate operations. This GET may scan server storage and take time.
+        This function inspects import candidates on the Sonarr host without importing them. Folder, download, and existing-series inspections are separate operations. Inspection may scan server storage and take time.
 
     .PARAMETER InstanceName
         The optional saved instance name. When omitted, the matching instance is inferred.
@@ -34,7 +34,7 @@
         Get-StarrSonarrManualImport -InstanceName Main -Folder '/downloads/example'
 
     .EXAMPLE
-        Get-StarrSonarrManualImport -Url 'http://localhost:8989' -ApiKey '<api-key>' -Folder '/downloads/example'
+        Get-StarrSonarrManualImport -Url 'http://localhost:8989' -ApiKey 'example-api-key' -Folder '/downloads/example'
 
     .EXAMPLE
         Get-StarrSonarrManualImport -InstanceName Main -SeriesId 42 -SeasonNumber 0

@@ -1,10 +1,10 @@
-﻿function Get-StarrSonarrRelease {
+function Get-StarrSonarrRelease {
     <#
     .SYNOPSIS
         Retrieves Sonarr release search results.
 
     .DESCRIPTION
-        This function retrieves RSS release results when no selector is given, or searches indexers for one episode or a complete series/season pair. This GET can contact indexers, consume quotas, take time, and populate server caches. It does not download releases.
+        This function retrieves RSS releases when you omit selectors. It searches indexers for an episode or a series and season when you supply selectors. A search can consume provider quotas, take time, and populate server caches. This function does not download releases.
 
     .PARAMETER InstanceName
         The optional saved instance name. When omitted, the matching instance is inferred.
@@ -28,7 +28,7 @@
         Get-StarrSonarrRelease -InstanceName Main -EpisodeId 42
 
     .EXAMPLE
-        Get-StarrSonarrRelease -Url 'http://localhost:8989' -ApiKey '<api-key>' -EpisodeId 42
+        Get-StarrSonarrRelease -Url 'http://localhost:8989' -ApiKey 'example-api-key' -EpisodeId 42
 
     .EXAMPLE
         Get-StarrSonarrRelease -InstanceName Main

@@ -4,7 +4,7 @@
         Retrieves Sonarr calendar records.
 
     .DESCRIPTION
-        This function exposes only Sonarr calendar parameters and provides typed tag-identifier filtering.
+        This function retrieves Sonarr calendar episodes. You can select a date range and filter by monitoring state or tag identifier.
 
     .PARAMETER InstanceName
         The optional saved Sonarr instance name.

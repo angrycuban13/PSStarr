@@ -4,7 +4,7 @@ function Get-StarrDelayProfile {
         Retrieves delay profile settings from Radarr or Sonarr.
 
     .DESCRIPTION
-        This function retrieves delay profile settings using an inferred or named instance, or explicit connection credentials.
+    This function retrieves delay-profile settings.
 
     .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.
@@ -28,7 +28,7 @@ function Get-StarrDelayProfile {
         Get-StarrDelayProfile -InstanceName 'Main' -DelayProfileId 1
 
     .EXAMPLE
-        Get-StarrDelayProfile -Url 'http://localhost:8989' -ApiKey '<api-key>'
+        Get-StarrDelayProfile -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

@@ -1,10 +1,10 @@
-﻿function Get-StarrRadarrAlternativeTitle {
+function Get-StarrRadarrAlternativeTitle {
     <#
     .SYNOPSIS
         Retrieves Radarr alternative titles.
 
     .DESCRIPTION
-        This function retrieves Radarr alternative titles through the shared transport. Use AlternativeTitleId for an individual title, or movie filters for a list.
+        This function retrieves Radarr alternative titles. AlternativeTitleId selects one title. Movie filters select a list.
 
     .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.
@@ -31,7 +31,7 @@
         Get-StarrRadarrAlternativeTitle -InstanceName 'Main' -AlternativeTitleId 7
 
     .EXAMPLE
-        Get-StarrRadarrAlternativeTitle -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieId 42
+        Get-StarrRadarrAlternativeTitle -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieId 42
 
     .EXAMPLE
         Get-StarrRadarrMovie -MovieId 42 | Get-StarrRadarrAlternativeTitle
@@ -42,7 +42,7 @@
         This function accepts objects with an Id property representing a Radarr movie.
 
     .OUTPUTS
-        [System.Object]
+        [PSStarr.Radarr.AlternativeTitle]
 
         This function returns deserialized alternative titles.
     #>

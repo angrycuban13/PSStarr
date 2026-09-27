@@ -1,10 +1,10 @@
-﻿function Get-StarrRadarrMovie {
+function Get-StarrRadarrMovie {
     <#
     .SYNOPSIS
         Retrieves Radarr movies from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves Radarr movies from an inferred or named Starr instance, or from an explicit URL and API key.
+        This function retrieves Radarr movies.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
@@ -34,7 +34,7 @@
         Get-StarrRadarrMovie -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrRadarrMovie -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrRadarrMovie -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

@@ -1,10 +1,10 @@
-﻿function Get-StarrRadarrRelease {
+function Get-StarrRadarrRelease {
     <#
     .SYNOPSIS
         Retrieves Radarr release results.
 
     .DESCRIPTION
-        This function retrieves available releases through Radarr. A movie identifier performs an indexer search; omitting it fetches RSS releases. These requests can contact indexers and update server caches, but do not download releases.
+        This function retrieves available Radarr releases. A movie identifier starts an indexer search. Without it, the function retrieves RSS releases. Requests can contact indexers and update server caches. They do not download releases.
 
     .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.
@@ -22,7 +22,7 @@
         Get-StarrRadarrRelease -InstanceName 'Main' -MovieId 42
 
     .EXAMPLE
-        Get-StarrRadarrRelease -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieId 42
+        Get-StarrRadarrRelease -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieId 42
 
     .EXAMPLE
         Get-StarrRadarrRelease -InstanceName 'Main'

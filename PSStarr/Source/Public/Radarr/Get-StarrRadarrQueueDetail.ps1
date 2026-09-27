@@ -4,7 +4,7 @@
         Retrieves Radarr queue details.
 
     .DESCRIPTION
-        This function exposes only the queue-detail parameters supported by Radarr.
+        This function retrieves Radarr queue details.
 
     .PARAMETER InstanceName
         The optional saved Radarr instance name.

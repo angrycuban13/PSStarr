@@ -4,12 +4,18 @@
 
 Describe 'Opt-in live GET requests' -Tag Integration {
     BeforeAll {
-        Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
+        Import-Module (& "$PSScriptRoot/Get-PSStarrTestModulePath.ps1") -Force
     }
 
     It 'reads <Application> system status' -Skip:(-not $liveEnabled) -ForEach @(
-        @{ Application = 'Radarr'; Prefix = 'PSSTARR_RADARR' }
-        @{ Application = 'Sonarr'; Prefix = 'PSSTARR_SONARR' }
+        @{
+            Application = 'Radarr'
+            Prefix      = 'PSSTARR_RADARR'
+        }
+        @{
+            Application = 'Sonarr'
+            Prefix      = 'PSSTARR_SONARR'
+        }
     ) {
         $url = [System.Environment]::GetEnvironmentVariable("${Prefix}_URL", 'Process')
         $apiKey = [System.Environment]::GetEnvironmentVariable("${Prefix}_API_KEY", 'Process')

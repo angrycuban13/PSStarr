@@ -1,11 +1,18 @@
 ﻿BeforeDiscovery {
-    Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
+    Import-Module (& "$PSScriptRoot/Get-PSStarrTestModulePath.ps1") -Force
 }
 
 InModuleScope PSStarr {
     Describe 'Prowlarr history GET routing' {
         BeforeEach {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ records = @([pscustomobject]@{ id = 42 }); totalRecords = 1 } }
+            Mock Invoke-StarrApiRequest {
+                [PSCustomObject]@{
+                    records      = @([PSCustomObject]@{
+                            id = 42
+                        })
+                    totalRecords = 1
+                }
+            }
         }
 
         It 'preserves the paging envelope without fetching additional pages' {
@@ -42,7 +49,10 @@ InModuleScope PSStarr {
         }
 
         It 'passes indexer history limits and preserves lists' {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ id = 1 }; [pscustomobject]@{ id = 2 } }
+            Mock Invoke-StarrApiRequest {
+                [PSCustomObject]@{ id = 1 }
+                [PSCustomObject]@{ id = 2 }
+            }
             @(Get-StarrProwlarrHistory -Url 'http://localhost:9696/base' -ApiKey fixture-key -IndexerId 7 -EventType releaseGrabbed -Limit 20).Count | Should -Be 2
 
             Should -Invoke Invoke-StarrApiRequest -Times 1 -Exactly -ParameterFilter {
@@ -73,7 +83,7 @@ InModuleScope PSStarr {
 
     Describe 'Prowlarr development configuration GET routing' {
         BeforeEach {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ id = 1 } }
+            Mock Invoke-StarrApiRequest { [PSCustomObject]@{ id = 1 } }
         }
 
         It 'reads current settings without a query' {

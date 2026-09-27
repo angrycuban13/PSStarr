@@ -1,10 +1,10 @@
-﻿function Get-StarrSonarrCalendarEntry {
+function Get-StarrSonarrCalendarEntry {
     <#
     .SYNOPSIS
         Retrieves Sonarr calendar episode.
 
     .DESCRIPTION
-        This function retrieves one calendar episode by its episode identifier.
+        This function retrieves one Sonarr calendar episode by its episode identifier.
 
     .PARAMETER InstanceName
         The optional saved instance name. When omitted, the matching instance is inferred.
@@ -22,7 +22,7 @@
         Get-StarrSonarrCalendarEntry -InstanceName Main -EpisodeId 42
 
     .EXAMPLE
-        Get-StarrSonarrCalendarEntry -Url 'http://localhost:8989' -ApiKey '<api-key>' -EpisodeId 42
+        Get-StarrSonarrCalendarEntry -Url 'http://localhost:8989' -ApiKey 'example-api-key' -EpisodeId 42
 
     .INPUTS
         None.

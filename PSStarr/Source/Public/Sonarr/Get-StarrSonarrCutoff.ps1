@@ -4,7 +4,7 @@
         Retrieves Sonarr cutoff-unmet records using the legacy command name.
 
     .DESCRIPTION
-        This function preserves the original command name and delegates to Get-StarrSonarrCutoffUnmet, which more clearly describes the returned wanted records.
+        This function retrieves Sonarr cutoff-unmet records. This compatibility name has the same behavior as Get-StarrSonarrCutoffUnmet.
 
     .PARAMETER InstanceName
         The optional saved Sonarr instance name.

@@ -1,5 +1,5 @@
 ﻿BeforeDiscovery {
-    Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
+    Import-Module (& "$PSScriptRoot/Get-PSStarrTestModulePath.ps1") -Force
 }
 
 Describe 'Starr instance configuration' {
@@ -34,7 +34,14 @@ Describe 'Starr instance configuration' {
 
         It 'replaces a instance by key' {
             Mock Import-Configuration {
-                @{ Instances = @{ Main = @{ Application = 'Radarr'; Url = 'http://old'; ApiKey = 'old' } } }
+                @{ Instances = @{
+                        Main = @{
+                            Application = 'Radarr'
+                            Url         = 'http://old'
+                            ApiKey      = 'old'
+                        }
+                    }
+                }
             }
 
             Set-PSStarrInstance -Name Main -Application Radarr -Url 'http://localhost:7878' -ApiKey new -EncryptionMode None
@@ -73,7 +80,13 @@ Describe 'Starr instance configuration' {
 
         It 'does not reveal API keys when retrieving a instance' {
             Mock Import-Configuration {
-                @{ Instances = @{ Main = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = 'secret' } } }
+                @{ Instances = @{ Main = @{
+                            Application = 'Radarr'
+                            Url         = 'http://localhost:7878'
+                            ApiKey      = 'secret'
+                        }
+                    }
+                }
             }
             (Get-PSStarrInstance -Name Main).ApiKey | Should -Be '********'
         }
@@ -111,8 +124,16 @@ Describe 'Starr instance configuration' {
         It 'exports the reduced configuration when instances remain' {
             Mock Import-Configuration {
                 @{ Instances = @{
-                        Main      = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = 'secret' }
-                        Secondary = @{ Application = 'Sonarr'; Url = 'http://localhost:8989'; ApiKey = 'secret' }
+                        Main      = @{
+                            Application = 'Radarr'
+                            Url         = 'http://localhost:7878'
+                            ApiKey      = 'secret'
+                        }
+                        Secondary = @{
+                            Application = 'Sonarr'
+                            Url         = 'http://localhost:8989'
+                            ApiKey      = 'secret'
+                        }
                     }
                 }
             }
@@ -161,7 +182,13 @@ Describe 'Starr instance configuration' {
 
         It 'deletes the final configuration and prunes empty module and author directories' {
             Mock Import-Configuration {
-                @{ Instances = @{ Main = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = 'secret' } } }
+                @{ Instances = @{ Main = @{
+                            Application = 'Radarr'
+                            Url         = 'http://localhost:7878'
+                            ApiKey      = 'secret'
+                        }
+                    }
+                }
             }
             Mock Get-ConfigurationPath { 'C:\Config\AngryCuban13\PSStarr' }
             Mock Test-Path { $true }
@@ -179,12 +206,18 @@ Describe 'Starr instance configuration' {
 
         It 'preserves a nonempty author directory' {
             Mock Import-Configuration {
-                @{ Instances = @{ Main = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = 'secret' } } }
+                @{ Instances = @{ Main = @{
+                            Application = 'Radarr'
+                            Url         = 'http://localhost:7878'
+                            ApiKey      = 'secret'
+                        }
+                    }
+                }
             }
             Mock Get-ConfigurationPath { 'C:\Config\AngryCuban13\PSStarr' }
             Mock Test-Path { $true }
             Mock Get-ChildItem { @() } -ParameterFilter { $LiteralPath -eq 'C:\Config\AngryCuban13\PSStarr' }
-            Mock Get-ChildItem { @([pscustomobject]@{ Name = 'OtherModule' }) } -ParameterFilter { $LiteralPath -eq 'C:\Config\AngryCuban13' }
+            Mock Get-ChildItem { @([PSCustomObject]@{ Name = 'OtherModule' }) } -ParameterFilter { $LiteralPath -eq 'C:\Config\AngryCuban13' }
             Mock Remove-Item
 
             Remove-PSStarrInstance -Name Main -Confirm:$false
@@ -195,7 +228,14 @@ Describe 'Starr instance configuration' {
 
         It 'does not change persistence when the instance is missing' {
             Mock Import-Configuration {
-                @{ Instances = @{ Other = @{ Application = 'Radarr'; Url = 'http://localhost:7878'; ApiKey = 'secret' } } }
+                @{ Instances = @{
+                        Other = @{
+                            Application = 'Radarr'
+                            Url         = 'http://localhost:7878'
+                            ApiKey      = 'secret'
+                        }
+                    }
+                }
             }
             Mock Remove-Item
 

@@ -4,7 +4,7 @@
         Retrieves Sonarr history.
 
     .DESCRIPTION
-        This function retrieves paged Sonarr history, history since a timestamp, or history for one series without exposing Radarr-only parameters.
+        This function retrieves one page of Sonarr history, history after a time, or history for one series and optional season.
 
     .PARAMETER InstanceName
         The optional saved Sonarr instance name.

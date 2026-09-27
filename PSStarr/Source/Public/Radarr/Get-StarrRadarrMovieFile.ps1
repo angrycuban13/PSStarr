@@ -1,10 +1,10 @@
-﻿function Get-StarrRadarrMovieFile {
+function Get-StarrRadarrMovieFile {
     <#
     .SYNOPSIS
         Retrieves Radarr movie files from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves Radarr movie files from an inferred or named Starr instance, or from an explicit URL and API key.
+        This function retrieves Radarr movie-file records.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
@@ -31,7 +31,7 @@
         Get-StarrRadarrMovieFile -InstanceName 'Main' -MovieIdFilter 123
 
     .EXAMPLE
-        Get-StarrRadarrMovieFile -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieFileIdFilter 456,789
+        Get-StarrRadarrMovieFile -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieFileIdFilter 456,789
 
     .EXAMPLE
         Get-StarrRadarrMovie -MovieId 123 | Get-StarrRadarrMovieFile
@@ -88,8 +88,18 @@
 
         if (@($selectors).Count -eq 0) {
             $message = 'Specify at least one of MovieFileId, MovieIdFilter, or MovieFileIdFilter.'
+
             $exception = [System.ArgumentException]::new($message)
-            $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrMovieFileSelectorInvalid' -TargetObject $selectors -Activity $MyInvocation.MyCommand.Name
+
+            $errorRecordParameters = @{
+                Exception    = $exception
+                Category     = 'InvalidArgument'
+                ErrorId      = 'StarrMovieFileSelectorInvalid'
+                TargetObject = $selectors
+                Activity     = $MyInvocation.MyCommand.Name
+            }
+
+            $errorRecord = New-StarrErrorRecord @errorRecordParameters
 
             $PSCmdlet.ThrowTerminatingError($errorRecord)
         }

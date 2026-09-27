@@ -1,10 +1,10 @@
-﻿function Get-StarrSonarrNamingExample {
+function Get-StarrSonarrNamingExample {
     <#
     .SYNOPSIS
         Retrieves Sonarr filename examples.
 
     .DESCRIPTION
-        This function retrieves filename examples using saved Sonarr naming settings or a supplied configuration. Custom fields require NamingConfigId greater than zero; otherwise Sonarr ignores them. Custom configuration is not merged with saved settings. This function does not save settings or rename files.
+        This function returns filename examples from saved naming settings or a supplied configuration. Custom fields require a NamingConfigId greater than zero. Sonarr does not merge supplied fields with saved settings. This function does not save settings or rename files.
 
     .PARAMETER InstanceName
         The optional saved instance name. When omitted, the matching instance is inferred.
@@ -55,7 +55,7 @@
         Get-StarrSonarrNamingExample -InstanceName Main
 
     .EXAMPLE
-        Get-StarrSonarrNamingExample -Url 'http://localhost:8989' -ApiKey '<api-key>'
+        Get-StarrSonarrNamingExample -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 
     .EXAMPLE
         Get-StarrSonarrNamingExample -InstanceName Main -NamingConfigId 1 -RenameEpisodes $true -ReplaceIllegalCharacters $true -ColonReplacementFormat 0 -MultiEpisodeStyle 0 -StandardEpisodeFormat '{Series Title} - S{season:00}E{episode:00}' -DailyEpisodeFormat '{Series Title} - {Air-Date}' -AnimeEpisodeFormat '{Series Title} - S{season:00}E{episode:00}' -SeriesFolderFormat '{Series Title}' -SeasonFolderFormat 'Season {season:00}' -SpecialsFolderFormat 'Specials'

@@ -1,10 +1,10 @@
-﻿function Get-StarrProwlarrIndexerProxySchema {
+function Get-StarrProwlarrIndexerProxySchema {
     <#
     .SYNOPSIS
         Retrieves Prowlarr IndexerProxySchema resources.
 
     .DESCRIPTION
-        This function retrieves Prowlarr IndexerProxySchema resources through API v1 using the shared transport. Provider secret values are redacted; do not submit returned objects as updates.
+        This function retrieves schemas for Prowlarr indexer proxies. It redacts provider secrets. Do not use returned objects for updates.
 
     .PARAMETER InstanceName
         The saved Prowlarr instance name. When omitted, the only matching instance is used.
@@ -19,7 +19,7 @@
         Get-StarrProwlarrIndexerProxySchema -InstanceName Main
 
     .EXAMPLE
-        Get-StarrProwlarrIndexerProxySchema -Url 'http://localhost:9696' -ApiKey '<api-key>'
+        Get-StarrProwlarrIndexerProxySchema -Url 'http://localhost:9696' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

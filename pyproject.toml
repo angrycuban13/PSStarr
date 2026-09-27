@@ -1,0 +1,13 @@
+[project]
+name = "psstarr-docs"
+version = "0.0.0"
+description = "Documentation tooling for PSStarr."
+requires-python = ">=3.13"
+dependencies = []
+
+[dependency-groups]
+docs = ["zensical==0.0.65"]
+
+[tool.uv]
+package = false
+default-groups = ["docs"]

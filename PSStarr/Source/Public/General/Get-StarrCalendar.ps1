@@ -4,7 +4,7 @@ function Get-StarrCalendar {
         Retrieves calendar records from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves calendar records from an inferred or named Starr instance, or from an explicit URL and API key.
+    This function retrieves calendar records.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
@@ -49,7 +49,7 @@ function Get-StarrCalendar {
         Get-StarrCalendar -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrCalendar -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrCalendar -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.
@@ -124,16 +124,36 @@ function Get-StarrCalendar {
 
     if ($PSBoundParameters.ContainsKey('Start') -and $PSBoundParameters.ContainsKey('End') -and $Start -gt $End) {
         $message = 'Start must be earlier than or equal to End.'
+
         $exception = [System.ArgumentException]::new($message)
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrDateRangeInvalid' -TargetObject $PSBoundParameters -Activity $MyInvocation.MyCommand.Name
+
+        $errorRecordParameters = @{
+            Exception    = $exception
+            Category     = 'InvalidArgument'
+            ErrorId      = 'StarrDateRangeInvalid'
+            TargetObject = $PSBoundParameters
+            Activity     = $MyInvocation.MyCommand.Name
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
 
         $PSCmdlet.ThrowTerminatingError($errorRecord)
     }
 
     if ($PSBoundParameters.ContainsKey('Tags') -and $PSBoundParameters.ContainsKey('TagIdFilter')) {
         $message = 'Tags and TagIdFilter cannot be combined.'
+
         $exception = [System.ArgumentException]::new($message)
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrCalendarTagFilterConflict' -TargetObject $PSBoundParameters -Activity $MyInvocation.MyCommand.Name
+
+        $errorRecordParameters = @{
+            Exception    = $exception
+            Category     = 'InvalidArgument'
+            ErrorId      = 'StarrCalendarTagFilterConflict'
+            TargetObject = $PSBoundParameters
+            Activity     = $MyInvocation.MyCommand.Name
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
 
         $PSCmdlet.ThrowTerminatingError($errorRecord)
     }
@@ -142,8 +162,18 @@ function Get-StarrCalendar {
 
     if ($Application -eq 'Radarr' -and @($sonarrParameters).Count -gt 0) {
         $message = "Radarr calendar does not support: $($sonarrParameters -join ', ')."
+
         $exception = [System.ArgumentException]::new($message)
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrApplicationParameterMismatch' -TargetObject $sonarrParameters -Activity $MyInvocation.MyCommand.Name
+
+        $errorRecordParameters = @{
+            Exception    = $exception
+            Category     = 'InvalidArgument'
+            ErrorId      = 'StarrApplicationParameterMismatch'
+            TargetObject = $sonarrParameters
+            Activity     = $MyInvocation.MyCommand.Name
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
 
         $PSCmdlet.ThrowTerminatingError($errorRecord)
     }

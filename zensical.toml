@@ -1,0 +1,85 @@
+[project]
+site_name = "PSStarr"
+site_description = "PSStarr is a PowerShell client module for Radarr, Sonarr, and Prowlarr."
+site_url = "https://psstarr.xyz"
+site_author = "AngryCuban13"
+repo_url = "https://github.com/angrycuban13/PSStarr"
+repo_name = "PSStarr"
+edit_uri = "edit/main/docs/"
+docs_dir = "docs"
+site_dir = "site"
+strict = true
+copyright = "Copyright &copy; 2026 AngryCuban13"
+
+extra_css = ["stylesheets/extra.css"]
+
+[project.theme]
+logo = "material/powershell"
+variant = "modern"
+language = "en"
+features = [
+    "content.action.view",
+    "content.code.annotate",
+    "content.code.copy",
+    "content.code.select",
+    "content.footnote.tooltips",
+    "content.tabs.link",
+    "content.tooltips",
+    "navigation.footer",
+    "navigation.instant",
+    "navigation.instant.prefetch",
+    "navigation.instant.progress",
+    "navigation.indexes",
+    "navigation.path",
+    "navigation.tabs",
+    "navigation.tabs.sticky",
+    "navigation.top",
+    "navigation.tracking",
+    "search.highlight",
+    "toc.follow",
+]
+
+[project.theme.icon]
+next = "lucide/square-chevron-right"
+previous = "lucide/square-chevron-left"
+top = "lucide/square-chevron-up"
+search = "lucide/search-code"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+primary = "blue"
+accent = "blue"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to light mode"
+
+[[project.theme.palette]]
+scheme = "default"
+primary = "blue"
+accent = "blue"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to dark mode"
+
+[project.extra]
+generator = false
+
+[project.plugins.awesome-nav]
+enabled = true
+
+[project.markdown_extensions.admonition]
+[project.markdown_extensions.attr_list]
+[project.markdown_extensions.footnotes]
+[project.markdown_extensions.pymdownx.details]
+
+[project.markdown_extensions.pymdownx.highlight]
+anchor_linenums = true
+line_spans = "__span"
+pygments_lang_class = true
+
+[project.markdown_extensions.pymdownx.inlinehilite]
+[project.markdown_extensions.pymdownx.snippets]
+[project.markdown_extensions.pymdownx.superfences]
+
+[project.markdown_extensions.pymdownx.emoji]
+emoji_index = "zensical.extensions.emoji.twemoji"
+emoji_generator = "zensical.extensions.emoji.to_svg"

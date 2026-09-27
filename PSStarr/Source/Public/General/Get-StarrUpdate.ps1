@@ -1,10 +1,10 @@
-﻿function Get-StarrUpdate {
+function Get-StarrUpdate {
     <#
     .SYNOPSIS
         Retrieves available updates from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves available updates from an inferred or named Starr instance, or from an explicit URL and API key.
+    This function retrieves available application updates.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
@@ -25,7 +25,7 @@
         Get-StarrUpdate -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrUpdate -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrUpdate -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

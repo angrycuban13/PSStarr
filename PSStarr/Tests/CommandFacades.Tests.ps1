@@ -1,5 +1,5 @@
-BeforeDiscovery {
-    Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
+﻿BeforeDiscovery {
+    Import-Module (& "$PSScriptRoot/Get-PSStarrTestModulePath.ps1") -Force
 }
 
 InModuleScope PSStarr {
@@ -42,9 +42,15 @@ InModuleScope PSStarr {
         @{
             Command      = 'Start-StarrSonarrSeasonSearch'
             Application  = 'Sonarr'
-            Arguments    = @{ SeriesId = 42; SeasonNumber = 1 }
+            Arguments    = @{
+                SeriesId     = 42
+                SeasonNumber = 1
+            }
             CommandName  = 'SeasonSearch'
-            ExpectedBody = @{ seriesId = 42; seasonNumber = 1 }
+            ExpectedBody = @{
+                seriesId     = 42
+                seasonNumber = 1
+            }
         }
         @{
             Command      = 'Start-StarrSonarrSeriesFolderRename'
@@ -69,7 +75,12 @@ InModuleScope PSStarr {
         }
     ) {
         BeforeEach {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ id = 42; status = 'queued' } }
+            Mock Invoke-StarrApiRequest {
+                [PSCustomObject]@{
+                    id     = 42
+                    status = 'queued'
+                }
+            }
             Mock Get-StarrConfiguration { throw 'Unexpected configuration read.' }
         }
 
@@ -119,7 +130,12 @@ InModuleScope PSStarr {
 
     Describe 'Start-StarrRadarrMovieFileRename typed command facade' {
         BeforeEach {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ id = 42; status = 'queued' } }
+            Mock Invoke-StarrApiRequest {
+                [PSCustomObject]@{
+                    id     = 42
+                    status = 'queued'
+                }
+            }
         }
 
         It 'submits movieId and files using the upstream property names' {
@@ -134,7 +150,12 @@ InModuleScope PSStarr {
 
     Describe 'Typed command facade shared connection contract' {
         BeforeEach {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ id = 42; status = 'queued' } }
+            Mock Invoke-StarrApiRequest {
+                [PSCustomObject]@{
+                    id     = 42
+                    status = 'queued'
+                }
+            }
         }
 
         It 'supports explicit credentials' {
@@ -161,16 +182,52 @@ InModuleScope PSStarr {
         }
 
         It 'rejects non-positive resource identifiers' -ForEach @(
-            @{ Command = 'Start-StarrRadarrCollectionRefresh'; Arguments = @{ CollectionId = 0 } }
-            @{ Command = 'Start-StarrRadarrMovieRefresh'; Arguments = @{ MovieId = 0 } }
-            @{ Command = 'Start-StarrRadarrMovieFileRename'; Arguments = @{ MovieId = 42; MovieFileId = 0 } }
-            @{ Command = 'Start-StarrRadarrMovieRescan'; Arguments = @{ MovieId = 0 } }
-            @{ Command = 'Start-StarrRadarrMovieFolderRename'; Arguments = @{ MovieId = 0 } }
-            @{ Command = 'Start-StarrSonarrEpisodeSearch'; Arguments = @{ EpisodeId = 0 } }
-            @{ Command = 'Start-StarrSonarrSeasonSearch'; Arguments = @{ SeriesId = 0; SeasonNumber = 1 } }
-            @{ Command = 'Start-StarrSonarrSeriesFolderRename'; Arguments = @{ SeriesId = 0 } }
-            @{ Command = 'Start-StarrSonarrSeriesRescan'; Arguments = @{ SeriesId = 0 } }
-            @{ Command = 'Start-StarrSonarrSeriesRefresh'; Arguments = @{ SeriesId = 0 } }
+            @{
+                Command   = 'Start-StarrRadarrCollectionRefresh'
+                Arguments = @{ CollectionId = 0 }
+            }
+            @{
+                Command   = 'Start-StarrRadarrMovieRefresh'
+                Arguments = @{ MovieId = 0 }
+            }
+            @{
+                Command   = 'Start-StarrRadarrMovieFileRename'
+                Arguments = @{
+                    MovieId     = 42
+                    MovieFileId = 0
+                }
+            }
+            @{
+                Command   = 'Start-StarrRadarrMovieRescan'
+                Arguments = @{ MovieId = 0 }
+            }
+            @{
+                Command   = 'Start-StarrRadarrMovieFolderRename'
+                Arguments = @{ MovieId = 0 }
+            }
+            @{
+                Command   = 'Start-StarrSonarrEpisodeSearch'
+                Arguments = @{ EpisodeId = 0 }
+            }
+            @{
+                Command   = 'Start-StarrSonarrSeasonSearch'
+                Arguments = @{
+                    SeriesId     = 0
+                    SeasonNumber = 1
+                }
+            }
+            @{
+                Command   = 'Start-StarrSonarrSeriesFolderRename'
+                Arguments = @{ SeriesId = 0 }
+            }
+            @{
+                Command   = 'Start-StarrSonarrSeriesRescan'
+                Arguments = @{ SeriesId = 0 }
+            }
+            @{
+                Command   = 'Start-StarrSonarrSeriesRefresh'
+                Arguments = @{ SeriesId = 0 }
+            }
         ) {
             { & $Command @Arguments -InstanceName Main -Confirm:$false } | Should -Throw
 
@@ -178,4 +235,3 @@ InModuleScope PSStarr {
         }
     }
 }
-

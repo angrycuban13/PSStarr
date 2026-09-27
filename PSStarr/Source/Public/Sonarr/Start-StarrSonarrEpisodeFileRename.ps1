@@ -1,10 +1,10 @@
-﻿function Start-StarrSonarrEpisodeFileRename {
+function Start-StarrSonarrEpisodeFileRename {
     <#
     .SYNOPSIS
         Starts renaming selected Sonarr episode files.
 
     .DESCRIPTION
-        This function submits the typed RenameFiles command to Sonarr API v3. Use Get-StarrSonarrRenamePreview first to inspect proposed filenames. A successful response means Sonarr accepted the asynchronous command.
+        This function starts an asynchronous rename of selected episode files. Use Get-StarrSonarrRenamePreview first to inspect the proposed names. A successful response means Sonarr accepted the command, not that the rename completed.
 
     .PARAMETER InstanceName
         The optional saved Sonarr instance name. The matching instance is inferred when omitted.
@@ -25,7 +25,7 @@
         Start-StarrSonarrEpisodeFileRename -InstanceName SonarrMain -SeriesId 42 -EpisodeFileId 100,101
 
     .EXAMPLE
-        Start-StarrSonarrEpisodeFileRename -Url 'http://localhost:8989' -ApiKey '<api-key>' -SeriesId 42 -EpisodeFileId 100 -WhatIf
+        Start-StarrSonarrEpisodeFileRename -Url 'http://localhost:8989' -ApiKey 'example-api-key' -SeriesId 42 -EpisodeFileId 100 -WhatIf
 
     .INPUTS
         None.

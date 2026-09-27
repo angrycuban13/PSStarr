@@ -1,11 +1,11 @@
 ﻿BeforeDiscovery {
-    Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
+    Import-Module (& "$PSScriptRoot/Get-PSStarrTestModulePath.ps1") -Force
 }
 
 Describe 'Get-StarrSystemStatus' {
     InModuleScope PSStarr {
         BeforeEach {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ appName = 'Starr' } }
+            Mock Invoke-StarrApiRequest { [PSCustomObject]@{ appName = 'Starr' } }
         }
 
         It 'delegates named requests to the transport' {
@@ -17,8 +17,14 @@ Describe 'Get-StarrSystemStatus' {
         }
 
         It 'delegates an explicit <Application> URL to the transport' -ForEach @(
-            @{ Application = 'Radarr'; Url = 'http://localhost:7878' }
-            @{ Application = 'Sonarr'; Url = 'http://localhost:8989' }
+            @{
+                Application = 'Radarr'
+                Url         = 'http://localhost:7878'
+            }
+            @{
+                Application = 'Sonarr'
+                Url         = 'http://localhost:8989'
+            }
         ) {
             $expectedUrl = $Url
 

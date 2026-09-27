@@ -1,10 +1,10 @@
-﻿function Get-StarrSonarrImportListExclusion {
+function Get-StarrSonarrImportListExclusion {
     <#
     .SYNOPSIS
         Retrieves Sonarr import-list exclusions.
 
     .DESCRIPTION
-        This function retrieves one page of Sonarr import-list exclusions or an individual exclusion by its internal ID. Paging metadata is preserved. It does not fetch all pages or use the deprecated unpaged route.
+        This function retrieves one import-list exclusion by identifier or one page of exclusions. It preserves paging metadata and does not retrieve all pages.
 
     .PARAMETER InstanceName
         The saved instance name. When omitted, the only matching Sonarr instance is used.
@@ -37,7 +37,7 @@
         Get-StarrSonarrImportListExclusion -InstanceName 'Main' -ExclusionId 7
 
     .EXAMPLE
-        Get-StarrSonarrImportListExclusion -Url 'http://localhost:8989' -ApiKey '<api-key>'
+        Get-StarrSonarrImportListExclusion -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

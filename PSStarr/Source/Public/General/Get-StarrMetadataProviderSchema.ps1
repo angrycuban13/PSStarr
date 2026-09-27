@@ -1,10 +1,10 @@
-﻿function Get-StarrMetadataProviderSchema {
+function Get-StarrMetadataProviderSchema {
     <#
     .SYNOPSIS
         Retrieves metadata provider schemas from Radarr or Sonarr.
 
     .DESCRIPTION
-        This function retrieves metadata provider schemas using an inferred or named instance, or explicit connection credentials.
+    This function retrieves metadata-provider schemas.
 
     .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.
@@ -22,7 +22,7 @@
         Get-StarrMetadataProviderSchema -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrMetadataProviderSchema -Url 'http://localhost:8989' -ApiKey '<api-key>'
+        Get-StarrMetadataProviderSchema -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

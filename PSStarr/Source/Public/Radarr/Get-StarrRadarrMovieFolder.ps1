@@ -1,10 +1,10 @@
-﻿function Get-StarrRadarrMovieFolder {
+function Get-StarrRadarrMovieFolder {
     <#
     .SYNOPSIS
         Retrieves Radarr movie folder results.
 
     .DESCRIPTION
-        This function retrieves the computed folder name for a movie using Radarr naming settings. It does not list files, create folders, or move movies.
+        This function retrieves the folder name that Radarr calculates for a movie. It does not list files, create folders, or move movies.
 
     .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.
@@ -22,7 +22,7 @@
         Get-StarrRadarrMovieFolder -InstanceName 'Main' -MovieId 42
 
     .EXAMPLE
-        Get-StarrRadarrMovieFolder -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieId 42
+        Get-StarrRadarrMovieFolder -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieId 42
 
     .EXAMPLE
         Get-StarrRadarrMovie -MovieId 42 | Get-StarrRadarrMovieFolder

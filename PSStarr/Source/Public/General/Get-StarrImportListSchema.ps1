@@ -1,10 +1,10 @@
-﻿function Get-StarrImportListSchema {
+function Get-StarrImportListSchema {
     <#
     .SYNOPSIS
         Retrieves import list schemas from Radarr or Sonarr.
 
     .DESCRIPTION
-        This function retrieves import list schemas using an inferred or named instance, or explicit connection credentials.
+    This function retrieves import-list schemas.
 
     .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.
@@ -22,7 +22,7 @@
         Get-StarrImportListSchema -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrImportListSchema -Url 'http://localhost:8989' -ApiKey '<api-key>'
+        Get-StarrImportListSchema -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

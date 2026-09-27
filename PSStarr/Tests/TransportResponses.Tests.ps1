@@ -1,5 +1,5 @@
 ﻿BeforeDiscovery {
-    Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
+    Import-Module (& "$PSScriptRoot/Get-PSStarrTestModulePath.ps1") -Force
 }
 
 Describe 'Transport response shapes and HTTP failures' {
@@ -10,12 +10,12 @@ Describe 'Transport response shapes and HTTP failures' {
 
         It 'preserves a paged response and its records' {
             Mock Invoke-RestMethod {
-                [pscustomobject]@{
+                [PSCustomObject]@{
                     page         = 1
                     totalRecords = 2
                     records      = @(
-                        [pscustomobject]@{ id = 10 }
-                        [pscustomobject]@{ id = 20 }
+                        [PSCustomObject]@{ id = 10 }
+                        [PSCustomObject]@{ id = 20 }
                     )
                 }
             }
@@ -29,7 +29,7 @@ Describe 'Transport response shapes and HTTP failures' {
         }
 
         It 'returns no objects for an empty list' {
-            Mock Invoke-RestMethod { Write-Output -NoEnumerate @() }
+            Mock Invoke-RestMethod { Write-Output @() -NoEnumerate }
 
             @(Invoke-StarrApiRequest -Url 'http://localhost:7878' -ApiKey fixture-key -Endpoint health).Count | Should -Be 0
         }
@@ -41,12 +41,36 @@ Describe 'Transport response shapes and HTTP failures' {
         }
 
         It 'sanitizes HTTP <Status> with <Shape> error details' -ForEach @(
-            @{ Status = 400; Shape = 'JSON array'; Detail = '[{"errorMessage":"invalid fixture-key"}]' }
-            @{ Status = 401; Shape = 'JSON object'; Detail = '{"message":"unauthorized fixture-key"}' }
-            @{ Status = 403; Shape = 'plain text'; Detail = 'forbidden fixture-key' }
-            @{ Status = 404; Shape = 'empty'; Detail = '' }
-            @{ Status = 429; Shape = 'JSON object'; Detail = '{"message":"rate limited fixture-key"}' }
-            @{ Status = 500; Shape = 'HTML'; Detail = '<html>failed fixture-key</html>' }
+            @{
+                Status = 400
+                Shape  = 'JSON array'
+                Detail = '[{"errorMessage":"invalid fixture-key"}]'
+            }
+            @{
+                Status = 401
+                Shape  = 'JSON object'
+                Detail = '{"message":"unauthorized fixture-key"}'
+            }
+            @{
+                Status = 403
+                Shape  = 'plain text'
+                Detail = 'forbidden fixture-key'
+            }
+            @{
+                Status = 404
+                Shape  = 'empty'
+                Detail = ''
+            }
+            @{
+                Status = 429
+                Shape  = 'JSON object'
+                Detail = '{"message":"rate limited fixture-key"}'
+            }
+            @{
+                Status = 500
+                Shape  = 'HTML'
+                Detail = '<html>failed fixture-key</html>'
+            }
         ) {
             $httpResponse = [System.Net.Http.HttpResponseMessage]::new([System.Net.HttpStatusCode] $Status)
             $exception = [Microsoft.PowerShell.Commands.HttpResponseException]::new("HTTP $Status fixture-key", $httpResponse)

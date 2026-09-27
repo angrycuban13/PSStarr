@@ -1,10 +1,10 @@
-﻿function Get-StarrHealth {
+function Get-StarrHealth {
     <#
     .SYNOPSIS
         Retrieves health information from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves health information from an inferred or named Starr instance, or from an explicit URL and API key.
+    This function retrieves application health information.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.
@@ -25,7 +25,7 @@
         Get-StarrHealth -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrHealth -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrHealth -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.
