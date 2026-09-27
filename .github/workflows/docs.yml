@@ -59,7 +59,7 @@ jobs:
                   Set-PSRepository PSGallery -InstallationPolicy Trusted
                   Install-Module Configuration -RequiredVersion 1.6.0 -Scope CurrentUser -Force
                   Install-Module Microsoft.PowerShell.PlatyPS -RequiredVersion 1.0.3 -Scope CurrentUser -Force
-                  Install-Module ModuleBuilder -Scope CurrentUser -Force
+                  Install-Module ModuleBuilder -RequiredVersion 3.2.18 -Scope CurrentUser -Force
 
             - name: Build the module and regenerate command documentation
               run: |
