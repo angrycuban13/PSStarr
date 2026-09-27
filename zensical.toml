@@ -14,7 +14,8 @@ copyright = "Copyright &copy; 2026 AngryCuban13"
 extra_css = ["stylesheets/extra.css"]
 
 [project.theme]
-logo = "material/powershell"
+logo = "images/logo.svg"
+favicon = "images/favicon.png"
 variant = "modern"
 language = "en"
 features = [
