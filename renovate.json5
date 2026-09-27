@@ -1,0 +1,63 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": [
+        "config:recommended",
+        "helpers:pinGitHubActionDigests"
+    ],
+    "timezone": "America/Chicago",
+    "schedule": ["before 5am on monday"],
+    "dependencyDashboard": true,
+    "labels": ["dependencies"],
+    "prConcurrentLimit": 5,
+    "prHourlyLimit": 2,
+    "minimumReleaseAge": "3 days",
+    "rebaseWhen": "behind-base-branch",
+    "semanticCommits": "enabled",
+    "semanticCommitType": "chore",
+    "platformAutomerge": false,
+    "packageRules": [
+        {
+            "description": "Automerge low-risk updates after all checks pass",
+            "matchUpdateTypes": ["patch", "digest", "pin", "pinDigest"],
+            "automerge": true,
+            "automergeType": "pr"
+        },
+        {
+            "description": "Keep Python runtime updates manual",
+            "matchManagers": ["pyenv"],
+            "automerge": false
+        },
+        {
+            "description": "Group PowerShell build-tool updates",
+            "matchManagers": ["custom.regex"],
+            "matchDatasources": ["nuget"],
+            "groupName": "PowerShell build tools"
+        },
+        {
+            "description": "Group documentation dependency updates",
+            "matchManagers": ["pep621"],
+            "groupName": "documentation dependencies"
+        }
+    ],
+    "customManagers": [
+        {
+            "customType": "regex",
+            "managerFilePatterns": ["/^\\.github/workflows/[^/]+\\.ya?ml$/"],
+            "matchStrings": [
+                "Install-Module\\s+(?<depName>[A-Za-z0-9.]+)\\s+-RequiredVersion\\s+(?<currentValue>[0-9A-Za-z.-]+)"
+            ],
+            "datasourceTemplate": "nuget",
+            "registryUrlTemplate": "https://www.powershellgallery.com/api/v2",
+            "versioningTemplate": "loose"
+        },
+        {
+            "customType": "regex",
+            "managerFilePatterns": ["/^\\.github/workflows/docs\\.yml$/"],
+            "matchStrings": [
+                "uses:\\s+astral-sh/setup-uv@[^\\s]+[\\s\\S]{0,160}?version:\\s+\"(?<currentValue>[0-9.]+)\""
+            ],
+            "depNameTemplate": "astral-sh/uv",
+            "datasourceTemplate": "github-releases"
+        }
+    ]
+}
