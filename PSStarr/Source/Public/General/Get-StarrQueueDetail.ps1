@@ -107,21 +107,48 @@
         $IncludeEpisode
     )
 
-    $hasRadarrParameters = @('MovieId', 'IncludeMovie') | Where-Object { $PSBoundParameters.ContainsKey($_) }
-    $hasSonarrParameters = @('SeriesId', 'EpisodeIdFilter', 'IncludeSeries', 'IncludeEpisode') | Where-Object { $PSBoundParameters.ContainsKey($_) }
+    $radarrParameters = @('MovieId', 'IncludeMovie') | Where-Object { $PSBoundParameters.ContainsKey($_) }
 
-    if (@($hasRadarrParameters).Count -gt 0 -and @($hasSonarrParameters).Count -gt 0) {
+    $sonarrParameters = @('SeriesId', 'EpisodeIdFilter', 'IncludeSeries', 'IncludeEpisode') | Where-Object { $PSBoundParameters.ContainsKey($_) }
+
+    $hasAnyRadarrParameter = @($radarrParameters).Count -gt 0
+
+    $hasAnySonarrParameter = @($sonarrParameters).Count -gt 0
+
+    if ($hasAnyRadarrParameter -and $hasAnySonarrParameter) {
         $message = 'Radarr-specific and Sonarr-specific queue parameters cannot be combined.'
+
         $exception = [System.ArgumentException]::new($message)
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrApplicationParameterConflict' -TargetObject $PSBoundParameters -Activity $MyInvocation.MyCommand.Name
+
+        $errorRecordParameters = @{
+            Exception    = $exception
+            Category     = 'InvalidArgument'
+            ErrorId      = 'StarrApplicationParameterConflict'
+            TargetObject = $PSBoundParameters
+            Activity     = $MyInvocation.MyCommand.Name
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
 
         $PSCmdlet.ThrowTerminatingError($errorRecord)
     }
 
-    if (($Application -eq 'Radarr' -and @($hasSonarrParameters).Count -gt 0) -or ($Application -eq 'Sonarr' -and @($hasRadarrParameters).Count -gt 0)) {
+    $hasApplicationParameterMismatch = ($Application -eq 'Radarr' -and $hasAnySonarrParameter) -or ($Application -eq 'Sonarr' -and $hasAnyRadarrParameter)
+
+    if ($hasApplicationParameterMismatch) {
         $message = "$Application does not support the supplied application-specific queue-detail parameters."
+
         $exception = [System.ArgumentException]::new($message)
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrApplicationParameterMismatch' -TargetObject $PSBoundParameters -Activity $MyInvocation.MyCommand.Name
+
+        $errorRecordParameters = @{
+            Exception    = $exception
+            Category     = 'InvalidArgument'
+            ErrorId      = 'StarrApplicationParameterMismatch'
+            TargetObject = $PSBoundParameters
+            Activity     = $MyInvocation.MyCommand.Name
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
 
         $PSCmdlet.ThrowTerminatingError($errorRecord)
     }
@@ -136,6 +163,7 @@
     if ($PSBoundParameters.ContainsKey('Application')) {
         $request.ExpectedApplication = $Application
     }
+
     $query = New-StarrApiQuery -BoundParameters $PSBoundParameters -ParameterMap @{
         MovieId         = 'movieId'
         IncludeMovie    = 'includeMovie'
@@ -148,11 +176,12 @@
     if ($query.Count -gt 0) {
         $request.Query = $query
     }
-    if ($Application -eq 'Radarr' -or $PSBoundParameters.ContainsKey('MovieId') -or $PSBoundParameters.ContainsKey('IncludeMovie')) {
+
+    if ($Application -eq 'Radarr' -or $hasAnyRadarrParameter) {
         $request.ExpectedApplication = 'Radarr'
     }
 
-    if ($Application -eq 'Sonarr' -or $PSBoundParameters.ContainsKey('SeriesId') -or $PSBoundParameters.ContainsKey('EpisodeIdFilter') -or $PSBoundParameters.ContainsKey('IncludeSeries') -or $PSBoundParameters.ContainsKey('IncludeEpisode')) {
+    if ($Application -eq 'Sonarr' -or $hasAnySonarrParameter) {
         $request.ExpectedApplication = 'Sonarr'
     }
 

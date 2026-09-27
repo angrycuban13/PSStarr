@@ -125,16 +125,36 @@
 
         if (@($selectors).Count -eq 0) {
             $message = 'Specify at least one of EpisodeId, SeriesId, EpisodeIdFilter, or EpisodeFileId.'
+
             $exception = [System.ArgumentException]::new($message)
-            $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrEpisodeSelectorInvalid' -TargetObject $selectors -Activity $MyInvocation.MyCommand.Name
+
+            $errorRecordParameters = @{
+                Exception    = $exception
+                Category     = 'InvalidArgument'
+                ErrorId      = 'StarrEpisodeSelectorInvalid'
+                TargetObject = $selectors
+                Activity     = $MyInvocation.MyCommand.Name
+            }
+
+            $errorRecord = New-StarrErrorRecord @errorRecordParameters
 
             $PSCmdlet.ThrowTerminatingError($errorRecord)
         }
 
         if ($PSBoundParameters.ContainsKey('SeasonNumber') -and -not $PSBoundParameters.ContainsKey('SeriesId')) {
             $message = 'SeasonNumber requires SeriesId.'
+
             $exception = [System.ArgumentException]::new($message)
-            $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrEpisodeSeasonSelectorInvalid' -TargetObject $SeasonNumber -Activity $MyInvocation.MyCommand.Name
+
+            $errorRecordParameters = @{
+                Exception    = $exception
+                Category     = 'InvalidArgument'
+                ErrorId      = 'StarrEpisodeSeasonSelectorInvalid'
+                TargetObject = $SeasonNumber
+                Activity     = $MyInvocation.MyCommand.Name
+            }
+
+            $errorRecord = New-StarrErrorRecord @errorRecordParameters
 
             $PSCmdlet.ThrowTerminatingError($errorRecord)
         }

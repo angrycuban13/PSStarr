@@ -161,7 +161,9 @@
 
                     Move-Item -LiteralPath $logFullPath -Destination $archivePath -Force -ErrorAction Stop
 
-                    Get-ChildItem -Path $LogFileDirectory -Filter "${logBaseName}_*.log" -ErrorAction SilentlyContinue | Sort-Object -Property LastWriteTime -Descending | Select-Object -Skip $MaxLogsToKeep | ForEach-Object {
+                    $expiredLogFiles = Get-ChildItem -Path $LogFileDirectory -Filter "${logBaseName}_*.log" -ErrorAction SilentlyContinue | Sort-Object -Property LastWriteTime -Descending | Select-Object -Skip $MaxLogsToKeep
+
+                    $expiredLogFiles | ForEach-Object {
                         try {
                             Remove-Item -LiteralPath $_.FullName -Force -ErrorAction Stop
                         }

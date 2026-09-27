@@ -37,7 +37,9 @@
         $SensitiveValue
     )
 
-    if ($null -eq $Text) { return $null }
+    if ($null -eq $Text) {
+        return $null
+    }
 
     $sanitized = $Text
 

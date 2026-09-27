@@ -88,8 +88,18 @@
 
         if (@($selectors).Count -eq 0) {
             $message = 'Specify at least one of EpisodeFileId, SeriesId, or EpisodeFileIdFilter.'
+
             $exception = [System.ArgumentException]::new($message)
-            $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrEpisodeFileSelectorInvalid' -TargetObject $selectors -Activity $MyInvocation.MyCommand.Name
+
+            $errorRecordParameters = @{
+                Exception    = $exception
+                Category     = 'InvalidArgument'
+                ErrorId      = 'StarrEpisodeFileSelectorInvalid'
+                TargetObject = $selectors
+                Activity     = $MyInvocation.MyCommand.Name
+            }
+
+            $errorRecord = New-StarrErrorRecord @errorRecordParameters
 
             $PSCmdlet.ThrowTerminatingError($errorRecord)
         }
