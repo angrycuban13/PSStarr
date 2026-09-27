@@ -68,10 +68,9 @@ jobs:
 
             - name: Check generated command documentation
               run: |
-                  $changes = @(git status --porcelain -- docs/modules)
+                  git diff --exit-code -- docs/modules
 
-                  if ($changes.Count -gt 0) {
-                      $changes | Write-Host
+                  if ($LASTEXITCODE -ne 0) {
                       throw 'Generated command documentation is not current. Run ci/New-ModuleDocs.ps1 and commit the result.'
                   }
 
