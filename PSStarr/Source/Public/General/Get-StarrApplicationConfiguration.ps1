@@ -95,8 +95,18 @@
 
     if ($PSBoundParameters.ContainsKey('Application') -and $Section -notin $supportedSections[$Application]) {
         $message = "$Application does not support the $Section configuration section."
+
         $exception = [System.ArgumentException]::new($message)
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrConfigurationSectionNotSupported' -TargetObject $Section -Activity $MyInvocation.MyCommand.Name
+
+        $errorRecordParameters = @{
+            Exception    = $exception
+            Category     = 'InvalidArgument'
+            ErrorId      = 'StarrConfigurationSectionNotSupported'
+            TargetObject = $Section
+            Activity     = $MyInvocation.MyCommand.Name
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
 
         $PSCmdlet.ThrowTerminatingError($errorRecord)
     }

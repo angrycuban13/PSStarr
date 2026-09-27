@@ -92,7 +92,17 @@
         }
 
         $exception = [System.Management.Automation.ItemNotFoundException]::new("Tag '$TagName' was not found in $applicationLabel.")
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category ObjectNotFound -ErrorId 'StarrTagNotFound' -TargetObject $TagName -Activity $MyInvocation.MyCommand.Name -RecommendedAction 'Specify an existing exact tag name or use TagId.'
+
+        $errorRecordParameters = @{
+            Exception         = $exception
+            Category          = 'ObjectNotFound'
+            ErrorId           = 'StarrTagNotFound'
+            TargetObject      = $TagName
+            Activity          = $MyInvocation.MyCommand.Name
+            RecommendedAction = 'Specify an existing exact tag name or use TagId.'
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
 
         throw $errorRecord
     }
@@ -106,7 +116,17 @@
         }
 
         $exception = [System.IO.InvalidDataException]::new("Tag name '$TagName' matched multiple tags in $applicationLabel.")
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidData -ErrorId 'StarrTagNameAmbiguous' -TargetObject $TagName -Activity $MyInvocation.MyCommand.Name -RecommendedAction 'Use TagId to select one tag explicitly.'
+
+        $errorRecordParameters = @{
+            Exception         = $exception
+            Category          = 'InvalidData'
+            ErrorId           = 'StarrTagNameAmbiguous'
+            TargetObject      = $TagName
+            Activity          = $MyInvocation.MyCommand.Name
+            RecommendedAction = 'Use TagId to select one tag explicitly.'
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
 
         throw $errorRecord
     }

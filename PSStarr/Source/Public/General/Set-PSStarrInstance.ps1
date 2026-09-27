@@ -93,11 +93,30 @@
     }
     catch {
         $message = "Unable to load the saved Starr instance configuration. $($_.Exception.Message)"
-        $message = Protect-StarrSensitiveText -Text $message -SensitiveValue @($ApiKey)
-        $exception = [System.InvalidOperationException]::new($message, $_.Exception)
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category ReadError -ErrorId 'StarrConfigurationReadFailed' -TargetObject $Name -Activity $MyInvocation.MyCommand.Name
 
-        Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -LogMessage $message -SensitiveValue @($ApiKey)
+        $message = Protect-StarrSensitiveText -Text $message -SensitiveValue @($ApiKey)
+
+        $exception = [System.InvalidOperationException]::new($message, $_.Exception)
+
+        $errorRecordParameters = @{
+            Exception    = $exception
+            Category     = 'ReadError'
+            ErrorId      = 'StarrConfigurationReadFailed'
+            TargetObject = $Name
+            Activity     = $MyInvocation.MyCommand.Name
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
+
+        $errorHandlerParameters = @{
+            Cmdlet              = $PSCmdlet
+            ErrorRecord         = $errorRecord
+            OriginalErrorAction = $originalErrorAction
+            LogMessage          = $message
+            SensitiveValue      = @($ApiKey)
+        }
+
+        Invoke-StarrFunctionErrorHandler @errorHandlerParameters
         return
     }
 
@@ -108,20 +127,52 @@
 
         if ($missingParameters.Count -gt 0) {
             $message = "A new Starr instance requires these parameters: $($missingParameters -join ', ')."
-            $exception = [System.ArgumentException]::new($message)
-            $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrConfigurationRequiredParameterMissing' -TargetObject $Name -Activity $MyInvocation.MyCommand.Name
 
-            Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction
+            $exception = [System.ArgumentException]::new($message)
+
+            $errorRecordParameters = @{
+                Exception    = $exception
+                Category     = 'InvalidArgument'
+                ErrorId      = 'StarrConfigurationRequiredParameterMissing'
+                TargetObject = $Name
+                Activity     = $MyInvocation.MyCommand.Name
+            }
+
+            $errorRecord = New-StarrErrorRecord @errorRecordParameters
+
+            $errorHandlerParameters = @{
+                Cmdlet              = $PSCmdlet
+                ErrorRecord         = $errorRecord
+                OriginalErrorAction = $originalErrorAction
+            }
+
+            Invoke-StarrFunctionErrorHandler @errorHandlerParameters
             return
         }
     }
 
     if ($PSBoundParameters.ContainsKey('ApiKey') -and $ApiKey -eq '********') {
         $message = 'The redacted API-key placeholder cannot be saved as an API key.'
-        $exception = [System.ArgumentException]::new($message)
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrConfigurationRedactedApiKeyRejected' -TargetObject $Name -Activity $MyInvocation.MyCommand.Name
 
-        Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction
+        $exception = [System.ArgumentException]::new($message)
+
+        $errorRecordParameters = @{
+            Exception    = $exception
+            Category     = 'InvalidArgument'
+            ErrorId      = 'StarrConfigurationRedactedApiKeyRejected'
+            TargetObject = $Name
+            Activity     = $MyInvocation.MyCommand.Name
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
+
+        $errorHandlerParameters = @{
+            Cmdlet              = $PSCmdlet
+            ErrorRecord         = $errorRecord
+            OriginalErrorAction = $originalErrorAction
+        }
+
+        Invoke-StarrFunctionErrorHandler @errorHandlerParameters
         return
     }
 
@@ -183,11 +234,30 @@
     }
     catch {
         $message = "Unable to protect the API key for Starr instance '$Name'. $($_.Exception.Message)"
-        $message = Protect-StarrSensitiveText -Text $message -SensitiveValue @($ApiKey, $plainApiKey)
-        $exception = [System.Security.Cryptography.CryptographicException]::new($message, $_.Exception)
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category SecurityError -ErrorId 'StarrConfigurationEncryptionFailed' -TargetObject $Name -Activity $MyInvocation.MyCommand.Name
 
-        Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -LogMessage $message -SensitiveValue @($ApiKey, $plainApiKey)
+        $message = Protect-StarrSensitiveText -Text $message -SensitiveValue @($ApiKey, $plainApiKey)
+
+        $exception = [System.Security.Cryptography.CryptographicException]::new($message, $_.Exception)
+
+        $errorRecordParameters = @{
+            Exception    = $exception
+            Category     = 'SecurityError'
+            ErrorId      = 'StarrConfigurationEncryptionFailed'
+            TargetObject = $Name
+            Activity     = $MyInvocation.MyCommand.Name
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
+
+        $errorHandlerParameters = @{
+            Cmdlet              = $PSCmdlet
+            ErrorRecord         = $errorRecord
+            OriginalErrorAction = $originalErrorAction
+            LogMessage          = $message
+            SensitiveValue      = @($ApiKey, $plainApiKey)
+        }
+
+        Invoke-StarrFunctionErrorHandler @errorHandlerParameters
         return
     }
 
@@ -198,15 +268,42 @@
     }
 
     try {
-        Export-Configuration -InputObject $configuration -CompanyName 'AngryCuban13' -Name 'PSStarr' -Scope User -AsHashtable
+        $exportParameters = @{
+            InputObject = $configuration
+            CompanyName = 'AngryCuban13'
+            Name        = 'PSStarr'
+            Scope       = 'User'
+            AsHashtable = $true
+        }
+
+        Export-Configuration @exportParameters
     }
     catch {
         $message = "Unable to save Starr instance '$Name'. $($_.Exception.Message)"
-        $message = Protect-StarrSensitiveText -Text $message -SensitiveValue @($ApiKey, $plainApiKey)
-        $exception = [System.InvalidOperationException]::new($message, $_.Exception)
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category WriteError -ErrorId 'StarrConfigurationWriteFailed' -TargetObject $Name -Activity $MyInvocation.MyCommand.Name
 
-        Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -LogMessage $message -SensitiveValue @($ApiKey, $plainApiKey)
+        $message = Protect-StarrSensitiveText -Text $message -SensitiveValue @($ApiKey, $plainApiKey)
+
+        $exception = [System.InvalidOperationException]::new($message, $_.Exception)
+
+        $errorRecordParameters = @{
+            Exception    = $exception
+            Category     = 'WriteError'
+            ErrorId      = 'StarrConfigurationWriteFailed'
+            TargetObject = $Name
+            Activity     = $MyInvocation.MyCommand.Name
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
+
+        $errorHandlerParameters = @{
+            Cmdlet              = $PSCmdlet
+            ErrorRecord         = $errorRecord
+            OriginalErrorAction = $originalErrorAction
+            LogMessage          = $message
+            SensitiveValue      = @($ApiKey, $plainApiKey)
+        }
+
+        Invoke-StarrFunctionErrorHandler @errorHandlerParameters
         return
     }
 

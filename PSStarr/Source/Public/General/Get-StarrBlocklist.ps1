@@ -131,16 +131,36 @@ function Get-StarrBlocklist {
 
     if ($hasRadarrParameters -and $hasSonarrParameters) {
         $message = 'MovieId or MovieIdFilter cannot be combined with SeriesIdFilter.'
+
         $exception = [System.ArgumentException]::new($message)
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrApplicationParameterConflict' -TargetObject $PSBoundParameters -Activity $MyInvocation.MyCommand.Name
+
+        $errorRecordParameters = @{
+            Exception    = $exception
+            Category     = 'InvalidArgument'
+            ErrorId      = 'StarrApplicationParameterConflict'
+            TargetObject = $PSBoundParameters
+            Activity     = $MyInvocation.MyCommand.Name
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
 
         $PSCmdlet.ThrowTerminatingError($errorRecord)
     }
 
     if (($Application -eq 'Radarr' -and $hasSonarrParameters) -or ($Application -eq 'Sonarr' -and $hasRadarrParameters)) {
         $message = "$Application does not support the supplied application-specific blocklist parameters."
+
         $exception = [System.ArgumentException]::new($message)
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidArgument -ErrorId 'StarrApplicationParameterMismatch' -TargetObject $PSBoundParameters -Activity $MyInvocation.MyCommand.Name
+
+        $errorRecordParameters = @{
+            Exception    = $exception
+            Category     = 'InvalidArgument'
+            ErrorId      = 'StarrApplicationParameterMismatch'
+            TargetObject = $PSBoundParameters
+            Activity     = $MyInvocation.MyCommand.Name
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
 
         $PSCmdlet.ThrowTerminatingError($errorRecord)
     }

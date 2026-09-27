@@ -101,15 +101,19 @@
         if ($PSBoundParameters.ContainsKey('Activity')) {
             $errRecord.CategoryInfo.Activity = $Activity
         }
+
         if ($PSBoundParameters.ContainsKey('TargetName')) {
             $errRecord.CategoryInfo.TargetName = $TargetName
         }
+
         if ($PSBoundParameters.ContainsKey('TargetType')) {
             $errRecord.CategoryInfo.TargetType = $TargetType
         }
+
         if ($PSBoundParameters.ContainsKey('Reason')) {
             $errRecord.CategoryInfo.Reason = $Reason
         }
+
         if ($PSBoundParameters.ContainsKey('RecommendedAction')) {
             $errRecord.ErrorDetails = [System.Management.Automation.ErrorDetails]::new($errRecord.Exception.Message)
             $errRecord.ErrorDetails.RecommendedAction = $RecommendedAction

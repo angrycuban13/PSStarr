@@ -45,10 +45,27 @@
     }
     catch {
         $message = "Unable to load the saved Starr instance configuration. $($_.Exception.Message)"
-        $exception = [System.InvalidOperationException]::new($message, $_.Exception)
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category ReadError -ErrorId 'StarrConfigurationReadFailed' -TargetObject $Name -Activity $MyInvocation.MyCommand.Name
 
-        Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -LogMessage $message
+        $exception = [System.InvalidOperationException]::new($message, $_.Exception)
+
+        $errorRecordParameters = @{
+            Exception    = $exception
+            Category     = 'ReadError'
+            ErrorId      = 'StarrConfigurationReadFailed'
+            TargetObject = $Name
+            Activity     = $MyInvocation.MyCommand.Name
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
+
+        $errorHandlerParameters = @{
+            Cmdlet              = $PSCmdlet
+            ErrorRecord         = $errorRecord
+            OriginalErrorAction = $originalErrorAction
+            LogMessage          = $message
+        }
+
+        Invoke-StarrFunctionErrorHandler @errorHandlerParameters
         return
     }
 
@@ -65,14 +82,39 @@
 
     if ($configuration.Instances.Count -gt 0) {
         try {
-            Export-Configuration -InputObject $configuration -CompanyName 'AngryCuban13' -Name 'PSStarr' -Scope User -AsHashtable
+            $exportParameters = @{
+                InputObject = $configuration
+                CompanyName = 'AngryCuban13'
+                Name        = 'PSStarr'
+                Scope       = 'User'
+                AsHashtable = $true
+            }
+
+            Export-Configuration @exportParameters
         }
         catch {
             $message = "Unable to save the Starr instance configuration after removing '$Name'. $($_.Exception.Message)"
-            $exception = [System.InvalidOperationException]::new($message, $_.Exception)
-            $errorRecord = New-StarrErrorRecord -Exception $exception -Category WriteError -ErrorId 'StarrConfigurationWriteFailed' -TargetObject $Name -Activity $MyInvocation.MyCommand.Name
 
-            Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -LogMessage $message
+            $exception = [System.InvalidOperationException]::new($message, $_.Exception)
+
+            $errorRecordParameters = @{
+                Exception    = $exception
+                Category     = 'WriteError'
+                ErrorId      = 'StarrConfigurationWriteFailed'
+                TargetObject = $Name
+                Activity     = $MyInvocation.MyCommand.Name
+            }
+
+            $errorRecord = New-StarrErrorRecord @errorRecordParameters
+
+            $errorHandlerParameters = @{
+                Cmdlet              = $PSCmdlet
+                ErrorRecord         = $errorRecord
+                OriginalErrorAction = $originalErrorAction
+                LogMessage          = $message
+            }
+
+            Invoke-StarrFunctionErrorHandler @errorHandlerParameters
         }
 
         return
@@ -82,10 +124,27 @@
 
     if ($null -eq $module) {
         $message = 'Unable to resolve the loaded PSStarr module.'
-        $exception = [System.InvalidOperationException]::new($message)
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category ResourceUnavailable -ErrorId 'StarrModuleNotLoaded' -TargetObject 'PSStarr' -Activity $MyInvocation.MyCommand.Name
 
-        Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -LogMessage $message
+        $exception = [System.InvalidOperationException]::new($message)
+
+        $errorRecordParameters = @{
+            Exception    = $exception
+            Category     = 'ResourceUnavailable'
+            ErrorId      = 'StarrModuleNotLoaded'
+            TargetObject = 'PSStarr'
+            Activity     = $MyInvocation.MyCommand.Name
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
+
+        $errorHandlerParameters = @{
+            Cmdlet              = $PSCmdlet
+            ErrorRecord         = $errorRecord
+            OriginalErrorAction = $originalErrorAction
+            LogMessage          = $message
+        }
+
+        Invoke-StarrFunctionErrorHandler @errorHandlerParameters
         return
     }
 
@@ -96,20 +155,57 @@
     }
     catch {
         $message = "Unable to resolve the PSStarr configuration path. $($_.Exception.Message)"
-        $exception = [System.InvalidOperationException]::new($message, $_.Exception)
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category ReadError -ErrorId 'StarrConfigurationPathFailed' -TargetObject $Name -Activity $MyInvocation.MyCommand.Name
 
-        Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -LogMessage $message
+        $exception = [System.InvalidOperationException]::new($message, $_.Exception)
+
+        $errorRecordParameters = @{
+            Exception    = $exception
+            Category     = 'ReadError'
+            ErrorId      = 'StarrConfigurationPathFailed'
+            TargetObject = $Name
+            Activity     = $MyInvocation.MyCommand.Name
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
+
+        $errorHandlerParameters = @{
+            Cmdlet              = $PSCmdlet
+            ErrorRecord         = $errorRecord
+            OriginalErrorAction = $originalErrorAction
+            LogMessage          = $message
+        }
+
+        Invoke-StarrFunctionErrorHandler @errorHandlerParameters
         return
     }
 
-    if ((Split-Path -Path $configurationPath -Leaf) -ne $module.Name -or
-        (Split-Path -Path $authorPath -Leaf) -ne $module.CompanyName) {
-        $message = "Configuration returned an unexpected path: '$configurationPath'."
-        $exception = [System.InvalidOperationException]::new($message)
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category InvalidData -ErrorId 'StarrConfigurationPathInvalid' -TargetObject $configurationPath -Activity $MyInvocation.MyCommand.Name
+    $hasExpectedModuleDirectory = (Split-Path -Path $configurationPath -Leaf) -eq $module.Name
 
-        Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -LogMessage $message
+    $hasExpectedAuthorDirectory = (Split-Path -Path $authorPath -Leaf) -eq $module.CompanyName
+
+    if (-not $hasExpectedModuleDirectory -or -not $hasExpectedAuthorDirectory) {
+        $message = "Configuration returned an unexpected path: '$configurationPath'."
+
+        $exception = [System.InvalidOperationException]::new($message)
+
+        $errorRecordParameters = @{
+            Exception    = $exception
+            Category     = 'InvalidData'
+            ErrorId      = 'StarrConfigurationPathInvalid'
+            TargetObject = $configurationPath
+            Activity     = $MyInvocation.MyCommand.Name
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
+
+        $errorHandlerParameters = @{
+            Cmdlet              = $PSCmdlet
+            ErrorRecord         = $errorRecord
+            OriginalErrorAction = $originalErrorAction
+            LogMessage          = $message
+        }
+
+        Invoke-StarrFunctionErrorHandler @errorHandlerParameters
         return
     }
 
@@ -130,9 +226,26 @@
     }
     catch {
         $message = "Unable to remove the final Starr instance configuration. $($_.Exception.Message)"
-        $exception = [System.IO.IOException]::new($message, $_.Exception)
-        $errorRecord = New-StarrErrorRecord -Exception $exception -Category WriteError -ErrorId 'StarrConfigurationRemoveFailed' -TargetObject $configurationPath -Activity $MyInvocation.MyCommand.Name
 
-        Invoke-StarrFunctionErrorHandler -Cmdlet $PSCmdlet -ErrorRecord $errorRecord -OriginalErrorAction $originalErrorAction -LogMessage $message
+        $exception = [System.IO.IOException]::new($message, $_.Exception)
+
+        $errorRecordParameters = @{
+            Exception    = $exception
+            Category     = 'WriteError'
+            ErrorId      = 'StarrConfigurationRemoveFailed'
+            TargetObject = $configurationPath
+            Activity     = $MyInvocation.MyCommand.Name
+        }
+
+        $errorRecord = New-StarrErrorRecord @errorRecordParameters
+
+        $errorHandlerParameters = @{
+            Cmdlet              = $PSCmdlet
+            ErrorRecord         = $errorRecord
+            OriginalErrorAction = $originalErrorAction
+            LogMessage          = $message
+        }
+
+        Invoke-StarrFunctionErrorHandler @errorHandlerParameters
     }
 }
