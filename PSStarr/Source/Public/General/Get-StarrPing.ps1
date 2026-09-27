@@ -4,7 +4,7 @@
         Retrieves a ping response from a Starr application.
 
     .DESCRIPTION
-        This function retrieves ping response using an inferred or named instance, or explicit connection credentials.
+    This function retrieves the application ping response.
 
     .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.

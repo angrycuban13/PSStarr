@@ -4,7 +4,7 @@
         Retrieves Radarr manual import results.
 
     .DESCRIPTION
-        This function inspects import candidates on the Radarr server without importing them. Inspection can scan server disks and read media files. Folder is a server-side path. A MovieId without DownloadId selects existing movie files; Radarr ignores Folder and FilterExistingFiles in that case.
+        This function inspects Radarr import candidates without importing them. Inspection can scan server disks and read media files. Folder identifies a server path. MovieId without DownloadId selects existing movie files. Radarr then ignores Folder and FilterExistingFiles.
 
     .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.

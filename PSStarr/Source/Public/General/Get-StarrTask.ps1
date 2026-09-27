@@ -4,7 +4,7 @@
         Retrieves system tasks from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves system tasks from an inferred or named Starr instance, or from an explicit URL and API key.
+    This function retrieves scheduled system tasks.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.

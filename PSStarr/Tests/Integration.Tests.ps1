@@ -8,8 +8,14 @@ Describe 'Opt-in live GET requests' -Tag Integration {
     }
 
     It 'reads <Application> system status' -Skip:(-not $liveEnabled) -ForEach @(
-        @{ Application = 'Radarr'; Prefix = 'PSSTARR_RADARR' }
-        @{ Application = 'Sonarr'; Prefix = 'PSSTARR_SONARR' }
+        @{
+            Application = 'Radarr'
+            Prefix      = 'PSSTARR_RADARR'
+        }
+        @{
+            Application = 'Sonarr'
+            Prefix      = 'PSSTARR_SONARR'
+        }
     ) {
         $url = [System.Environment]::GetEnvironmentVariable("${Prefix}_URL", 'Process')
         $apiKey = [System.Environment]::GetEnvironmentVariable("${Prefix}_API_KEY", 'Process')

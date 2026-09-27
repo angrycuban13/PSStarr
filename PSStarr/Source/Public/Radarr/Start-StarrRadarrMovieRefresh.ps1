@@ -4,7 +4,7 @@
         Starts metadata refreshes for selected Radarr movies.
 
     .DESCRIPTION
-        This function submits the typed RefreshMovie command to Radarr API v3. A successful response means Radarr accepted the asynchronous command, not that every refresh completed.
+        This function starts a refresh for selected Radarr movies. A successful response means Radarr accepted the command. It does not mean that every refresh completed. WhatIf prevents command submission.
 
     .PARAMETER InstanceName
         The optional saved Radarr instance name. The matching instance is inferred when omitted.

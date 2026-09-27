@@ -4,7 +4,7 @@
         Retrieves Sonarr episode files from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves Sonarr episode files from an inferred or named Starr instance, or from an explicit URL and API key. Specify at least one episode-file selector: EpisodeFileId, SeriesId, or EpisodeFileIdFilter.
+        This function retrieves Sonarr episode files. Specify EpisodeFileId, SeriesId, or EpisodeFileIdFilter to select the files.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.

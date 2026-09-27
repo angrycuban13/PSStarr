@@ -4,7 +4,7 @@
         Retrieves Radarr parse results.
 
     .DESCRIPTION
-        This function asks Radarr to parse a release title and return recognized movie information without adding or downloading the movie.
+        This function returns movie information that Radarr recognizes in a release title. It does not add or download the movie.
 
     .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.

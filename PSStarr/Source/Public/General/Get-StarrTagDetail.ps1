@@ -4,7 +4,7 @@
         Retrieves tag usage records using the legacy command name.
 
     .DESCRIPTION
-        This function retrieves relationships between tags and tagged resources. The name is retained for compatibility; Get-StarrTagUsage communicates the endpoint behavior more clearly. Use Get-StarrTag to retrieve tag definitions.
+    This function retrieves relationships between tags and resources. The command name remains available for compatibility. Use Get-StarrTagUsage in new code.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.

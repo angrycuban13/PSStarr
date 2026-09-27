@@ -4,7 +4,7 @@
         Removes an application tag from Radarr or Sonarr.
 
     .DESCRIPTION
-        This function removes an existing tag through API v3 using the shared transport. It supports confirmation and WhatIf. The application determines whether a tag that is still in use can be removed.
+    This function removes a tag. It supports confirmation and WhatIf. The application can reject removal when a resource uses the tag.
 
     .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured Radarr or Sonarr instance is used.

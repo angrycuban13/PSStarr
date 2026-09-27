@@ -4,7 +4,7 @@
         Searches Radarr metadata providers for movies to add.
 
     .DESCRIPTION
-        This function searches Radarr metadata providers by term, IMDb ID, or TMDB ID. It returns candidates and does not add movies.
+        This function searches Radarr metadata providers by term, IMDb identifier, or TMDB identifier. It returns candidates and does not add movies.
 
     .PARAMETER InstanceName
         The name of the saved Starr instance.

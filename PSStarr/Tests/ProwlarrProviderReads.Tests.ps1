@@ -4,19 +4,49 @@
 
 InModuleScope PSStarr {
     Describe '<Command> Prowlarr provider reads' -ForEach @(
-        @{ Command = 'Get-StarrProwlarrApplication'; ResourcePath = 'applications'; IdParameter = 'ApplicationId' }
-        @{ Command = 'Get-StarrProwlarrApplicationSchema'; ResourcePath = 'applications/schema'; IdParameter = $null }
-        @{ Command = 'Get-StarrProwlarrAppProfile'; ResourcePath = 'appprofile'; IdParameter = 'AppProfileId' }
-        @{ Command = 'Get-StarrProwlarrAppProfileSchema'; ResourcePath = 'appprofile/schema'; IdParameter = $null }
-        @{ Command = 'Get-StarrProwlarrIndexerProxy'; ResourcePath = 'indexerproxy'; IdParameter = 'IndexerProxyId' }
-        @{ Command = 'Get-StarrProwlarrIndexerProxySchema'; ResourcePath = 'indexerproxy/schema'; IdParameter = $null }
-        @{ Command = 'Get-StarrProwlarrIndexerCategory'; ResourcePath = 'indexer/categories'; IdParameter = $null }
-        @{ Command = 'Get-StarrProwlarrIndexerStatus'; ResourcePath = 'indexerstatus'; IdParameter = $null }
+        @{ Command       = 'Get-StarrProwlarrApplication'
+            ResourcePath = 'applications'
+            IdParameter  = 'ApplicationId'
+        }
+        @{ Command       = 'Get-StarrProwlarrApplicationSchema'
+            ResourcePath = 'applications/schema'
+            IdParameter  = $null
+        }
+        @{ Command       = 'Get-StarrProwlarrAppProfile'
+            ResourcePath = 'appprofile'
+            IdParameter  = 'AppProfileId'
+        }
+        @{ Command       = 'Get-StarrProwlarrAppProfileSchema'
+            ResourcePath = 'appprofile/schema'
+            IdParameter  = $null
+        }
+        @{ Command       = 'Get-StarrProwlarrIndexerProxy'
+            ResourcePath = 'indexerproxy'
+            IdParameter  = 'IndexerProxyId'
+        }
+        @{ Command       = 'Get-StarrProwlarrIndexerProxySchema'
+            ResourcePath = 'indexerproxy/schema'
+            IdParameter  = $null
+        }
+        @{ Command       = 'Get-StarrProwlarrIndexerCategory'
+            ResourcePath = 'indexer/categories'
+            IdParameter  = $null
+        }
+        @{ Command       = 'Get-StarrProwlarrIndexerStatus'
+            ResourcePath = 'indexerstatus'
+            IdParameter  = $null
+        }
     ) {
         BeforeEach {
             Mock Invoke-StarrApiRequest {
-                [pscustomobject]@{ id = 1; name = 'Fixture' }
-                [pscustomobject]@{ id = 2; name = 'Second' }
+                [PSCustomObject]@{
+                    id   = 1
+                    name = 'Fixture'
+                }
+                [PSCustomObject]@{
+                    id   = 2
+                    name = 'Second'
+                }
             }
         }
 
@@ -35,7 +65,7 @@ InModuleScope PSStarr {
             It 'requests an individual resource by ID' {
                 $arguments = @{ Name = 'Main' }
                 $arguments[$IdParameter] = 7
-                Mock Invoke-StarrApiRequest { [pscustomobject]@{ id = 7 } }
+                Mock Invoke-StarrApiRequest { [PSCustomObject]@{ id = 7 } }
 
                 (& $Command @arguments).id | Should -Be 7
 
@@ -60,7 +90,7 @@ InModuleScope PSStarr {
 
     Describe 'Prowlarr provider shared connection and output contract' {
         BeforeEach {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ id = 1 } }
+            Mock Invoke-StarrApiRequest { [PSCustomObject]@{ id = 1 } }
         }
 
         It 'supports explicit credentials and v1 routing' {
@@ -102,17 +132,36 @@ InModuleScope PSStarr {
         @{ Command = 'Get-StarrProwlarrIndexerProxySchema' }
     ) {
         It 'redacts private fields and presets without mutating server data' {
-            $script:providerFixture = [pscustomobject]@{
+            $script:providerFixture = [PSCustomObject]@{
                 id      = 1
                 fields  = @(
-                    [pscustomobject]@{ name = 'apiKey'; privacy = 'apiKey'; value = 'fixture-secret' }
-                    [pscustomobject]@{ name = 'other'; privacy = 'password'; value = 'fixture-password' }
-                    [pscustomobject]@{ name = 'account'; privacy = 'userName'; value = 'fixture-user' }
-                    [pscustomobject]@{ name = 'url'; privacy = 'normal'; value = 'http://localhost:7878' }
+                    [PSCustomObject]@{
+                        name    = 'apiKey'
+                        privacy = 'apiKey'
+                        value   = 'fixture-secret'
+                    }
+                    [PSCustomObject]@{
+                        name    = 'other'
+                        privacy = 'password'
+                        value   = 'fixture-password'
+                    }
+                    [PSCustomObject]@{
+                        name    = 'account'
+                        privacy = 'userName'
+                        value   = 'fixture-user'
+                    }
+                    [PSCustomObject]@{
+                        name    = 'url'
+                        privacy = 'normal'
+                        value   = 'http://localhost:7878'
+                    }
                 )
                 presets = @(
-                    [pscustomobject]@{
-                        fields = @([pscustomobject]@{ name = 'password'; value = 'fixture-preset' })
+                    [PSCustomObject]@{
+                        fields = @([PSCustomObject]@{
+                                name  = 'password'
+                                value = 'fixture-preset'
+                            })
                     }
                 )
             }
@@ -138,9 +187,21 @@ InModuleScope PSStarr {
         It 'supports dictionaries, empty arrays, booleans and null fields' {
             $fixture = @{
                 fields  = @(
-                    @{ name = 'credential'; type = 'password'; value = 'fixture-value' }
-                    @{ name = 'enabled'; privacy = 'normal'; value = $false }
-                    @{ name = 'empty'; privacy = 'normal'; value = $null }
+                    @{
+                        name  = 'credential'
+                        type  = 'password'
+                        value = 'fixture-value'
+                    }
+                    @{
+                        name    = 'enabled'
+                        privacy = 'normal'
+                        value   = $false
+                    }
+                    @{
+                        name    = 'empty'
+                        privacy = 'normal'
+                        value   = $null
+                    }
                 )
                 presets = @()
                 apiKey  = 'fixture-root-key'
@@ -158,10 +219,17 @@ InModuleScope PSStarr {
         }
 
         It 'redacts unknown non-normal privacy and case-insensitive names' {
-            $result = Protect-StarrProviderResource -Resource ([pscustomobject]@{
+            $result = Protect-StarrProviderResource -Resource ([PSCustomObject]@{
                     fields = @(
-                        [pscustomobject]@{ name = 'custom'; privacy = 'futurePrivate'; value = 'fixture-value' }
-                        [pscustomobject]@{ name = 'APIKEY'; value = 'fixture-key' }
+                        [PSCustomObject]@{
+                            name    = 'custom'
+                            privacy = 'futurePrivate'
+                            value   = 'fixture-value'
+                        }
+                        [PSCustomObject]@{
+                            name  = 'APIKEY'
+                            value = 'fixture-key'
+                        }
                     )
                 })
 

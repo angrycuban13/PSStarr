@@ -4,7 +4,7 @@
         Retrieves resources associated with application tags.
 
     .DESCRIPTION
-        This function reads tag usage records from the tag/detail endpoint. It reports relationships to tagged resources; use Get-StarrTag to retrieve tag definitions.
+    This function retrieves relationships between tags and resources. Use Get-StarrTag to retrieve tag definitions.
 
     .PARAMETER InstanceName
         The optional saved Starr instance name. The instance is inferred when omitted.

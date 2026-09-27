@@ -4,15 +4,25 @@
 
 InModuleScope PSStarr {
     Describe '<Application> exclusion GET requests' -ForEach @(
-        @{ Application = 'Radarr'; Command = 'Get-StarrRadarrImportListExclusion'; Resource = 'exclusions'; SortField = 'movieTitle' }
-        @{ Application = 'Sonarr'; Command = 'Get-StarrSonarrImportListExclusion'; Resource = 'importlistexclusion'; SortField = 'title' }
+        @{
+            Application = 'Radarr'
+            Command     = 'Get-StarrRadarrImportListExclusion'
+            Resource    = 'exclusions'
+            SortField   = 'movieTitle'
+        }
+        @{
+            Application = 'Sonarr'
+            Command     = 'Get-StarrSonarrImportListExclusion'
+            Resource    = 'importlistexclusion'
+            SortField   = 'title'
+        }
     ) {
         BeforeEach {
             Mock Invoke-StarrApiRequest {
-                [pscustomobject]@{
+                [PSCustomObject]@{
                     page         = 2
                     totalRecords = 1
-                    records      = @([pscustomobject]@{ id = 7 })
+                    records      = @([PSCustomObject]@{ id = 7 })
                 }
             }
         }
@@ -40,7 +50,7 @@ InModuleScope PSStarr {
         }
 
         It 'looks up an internal exclusion ID with explicit credentials' {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ id = 7 } }
+            Mock Invoke-StarrApiRequest { [PSCustomObject]@{ id = 7 } }
 
             $result = & $Command -Url 'http://localhost:8989/base' -ApiKey fixture-key -ExclusionId 7
 

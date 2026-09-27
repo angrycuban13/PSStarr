@@ -4,7 +4,7 @@
         Retrieves Radarr import list movie results.
 
     .DESCRIPTION
-        This function retrieves discovered movies from enabled import lists. Optional recommendation, trending, and popular results can cause Radarr to contact external metadata services; this command does not add movies.
+        This function retrieves movies from enabled import lists. Recommendation, trending, and popular results can contact external metadata services. It does not add movies.
 
     .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.

@@ -4,7 +4,7 @@
         Retrieves applications configured for synchronization from Prowlarr.
 
     .DESCRIPTION
-        This function retrieves configured application integrations that Prowlarr synchronizes with, such as Radarr or Sonarr. Provider secret values are redacted; do not submit returned objects as updates.
+        This function retrieves configured applications that Prowlarr synchronizes with. It redacts provider secrets. Do not use returned objects for updates.
 
     .PARAMETER InstanceName
         The saved Prowlarr instance name. When omitted, the only matching instance is used.

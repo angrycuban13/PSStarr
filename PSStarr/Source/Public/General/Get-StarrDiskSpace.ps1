@@ -4,7 +4,7 @@ function Get-StarrDiskSpace {
         Retrieves disk-space information from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves disk-space information from an inferred or named Starr instance, or from an explicit URL and API key.
+    This function retrieves disk-space information.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.

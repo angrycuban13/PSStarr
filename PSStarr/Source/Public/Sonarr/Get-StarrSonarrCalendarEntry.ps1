@@ -4,7 +4,7 @@
         Retrieves Sonarr calendar episode.
 
     .DESCRIPTION
-        This function retrieves one calendar episode by its episode identifier.
+        This function retrieves one Sonarr calendar episode by its episode identifier.
 
     .PARAMETER InstanceName
         The optional saved instance name. When omitted, the matching instance is inferred.

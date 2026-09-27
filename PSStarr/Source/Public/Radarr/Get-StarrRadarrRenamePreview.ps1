@@ -4,7 +4,7 @@
         Retrieves Radarr rename results.
 
     .DESCRIPTION
-        This function retrieves proposed movie-file renames without changing filenames. Radarr inspects the selected movies to calculate naming previews.
+        This function retrieves proposed movie-file names without renaming files. Radarr inspects the selected movies to calculate the names.
 
     .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.

@@ -4,7 +4,7 @@
         Starts renaming selected Sonarr episode files.
 
     .DESCRIPTION
-        This function submits the typed RenameFiles command to Sonarr API v3. Use Get-StarrSonarrRenamePreview first to inspect proposed filenames. A successful response means Sonarr accepted the asynchronous command.
+        This function starts an asynchronous rename of selected episode files. Use Get-StarrSonarrRenamePreview first to inspect the proposed names. A successful response means Sonarr accepted the command, not that the rename completed.
 
     .PARAMETER InstanceName
         The optional saved Sonarr instance name. The matching instance is inferred when omitted.

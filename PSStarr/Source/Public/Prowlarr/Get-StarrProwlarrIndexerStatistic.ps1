@@ -4,7 +4,7 @@
         Retrieves Prowlarr indexer statistics results.
 
     .DESCRIPTION
-        This function retrieves Prowlarr indexer statistics without changing settings. An unbounded date range can require a large server-side statistics query. Indexer, protocol, and tag filters are sent as comma-separated strings as required by this endpoint.
+        This function retrieves Prowlarr indexer statistics without changing settings. An unbounded date range can require a large statistics query.
 
     .PARAMETER InstanceName
         The saved Prowlarr instance name. When omitted, the only matching instance is used.

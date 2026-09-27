@@ -4,7 +4,7 @@
         Retrieves Prowlarr development settings.
 
     .DESCRIPTION
-        This function reads Prowlarr development configuration through API v1, optionally using its configuration identifier. It does not change application settings. Returned settings should be treated as private application configuration.
+        This function retrieves Prowlarr development settings. It can retrieve settings for one configuration identifier. Treat returned settings as private application configuration.
 
     .PARAMETER InstanceName
         The optional saved Prowlarr instance name. The matching instance is inferred when omitted.

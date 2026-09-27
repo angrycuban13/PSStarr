@@ -4,7 +4,7 @@
         Copies provider resources with secret values redacted.
 
     .DESCRIPTION
-        This function recursively copies provider resources, including fields and presets, without modifying the original objects. Fields marked with non-normal privacy, password input types, or credential names are redacted. Known credential properties are also redacted. This is not a general detector for secrets embedded in arbitrary text.
+        This function returns a sanitized copy of a provider resource. It redacts marked private fields, password fields, and known credential properties. It does not detect secrets in arbitrary text.
 
     .PARAMETER Resource
         The deserialized provider resource or nested value to copy safely.
@@ -43,6 +43,8 @@
             $properties[[System.String]$key] = $Resource[$key]
         }
     }
+
+    # Preserve nested collections as single values during recursive copying.
     elseif ($Resource -is [System.Collections.IEnumerable] -and $Resource -isnot [System.String]) {
         $items = @(
             foreach ($item in $Resource) {
@@ -88,8 +90,9 @@
         }
     }
 
-    $safeResource = [pscustomobject]$safe
+    $safeResource = [PSCustomObject]$safe
 
+    # Preserve PSStarr type names on the sanitized copy.
     $typeNames = @($Resource.PSObject.TypeNames | Where-Object { $_ -like 'PSStarr.*' })
 
     for ($index = $typeNames.Count - 1; $index -ge 0; $index--) {

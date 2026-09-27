@@ -4,7 +4,7 @@
         Retrieves health information from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves health information from an inferred or named Starr instance, or from an explicit URL and API key.
+    This function retrieves application health information.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.

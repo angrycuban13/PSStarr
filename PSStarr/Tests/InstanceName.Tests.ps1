@@ -24,7 +24,7 @@ Describe 'InstanceName parameter contract' {
         }
 
         It 'routes a canonical InstanceName through an endpoint wrapper' {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ appName = 'Starr' } }
+            Mock Invoke-StarrApiRequest { [PSCustomObject]@{ appName = 'Starr' } }
 
             Get-StarrSystemStatus -InstanceName Main
 
@@ -34,7 +34,7 @@ Describe 'InstanceName parameter contract' {
         }
 
         It 'routes the legacy Name alias through an endpoint wrapper' {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ appName = 'Starr' } }
+            Mock Invoke-StarrApiRequest { [PSCustomObject]@{ appName = 'Starr' } }
 
             Get-StarrSystemStatus -Name Main
 

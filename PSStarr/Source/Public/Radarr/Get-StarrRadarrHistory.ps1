@@ -4,7 +4,7 @@
         Retrieves Radarr history.
 
     .DESCRIPTION
-        This function retrieves paged Radarr history, history since a timestamp, or history for one movie without exposing Sonarr-only parameters.
+        This function retrieves paged Radarr history. It can retrieve records after a timestamp or records for one movie.
 
     .PARAMETER InstanceName
         The optional saved Radarr instance name.

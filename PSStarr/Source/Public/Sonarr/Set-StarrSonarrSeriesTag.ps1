@@ -4,7 +4,7 @@
         Adds or removes tags on Sonarr series.
 
     .DESCRIPTION
-        This function updates only series tags through the Sonarr API v3 bulk series editor. It adds or removes the supplied existing tag identifiers without replacing unrelated tags, changing monitoring settings, or moving files. WhatIf prevents the request entirely.
+        This function adds or removes existing tags from selected series. It preserves unrelated tags, monitoring settings, and files. WhatIf prevents the change.
 
     .PARAMETER InstanceName
         The optional saved Sonarr instance name. The matching instance is inferred when omitted.

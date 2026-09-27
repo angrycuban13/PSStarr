@@ -1,4 +1,4 @@
-BeforeDiscovery {
+﻿BeforeDiscovery {
     Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
 }
 
@@ -112,8 +112,14 @@ Describe 'Shared Radarr and Sonarr command discrimination' {
 Describe 'Application discrimination on unversioned and configuration reads' {
     InModuleScope PSStarr {
         It '<Command> forwards a Prowlarr discriminator on an unversioned route' -ForEach @(
-            @{ Command = 'Get-StarrApiInfo'; ExpectedEndpoint = 'api' }
-            @{ Command = 'Get-StarrPing'; ExpectedEndpoint = 'ping' }
+            @{
+                Command          = 'Get-StarrApiInfo'
+                ExpectedEndpoint = 'api'
+            }
+            @{
+                Command          = 'Get-StarrPing'
+                ExpectedEndpoint = 'ping'
+            }
         ) {
             Mock Invoke-StarrApiRequest { @() }
 
@@ -125,7 +131,7 @@ Describe 'Application discrimination on unversioned and configuration reads' {
         }
 
         It 'routes supported Prowlarr configuration through API v1 selection' {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ id = 1 } }
+            Mock Invoke-StarrApiRequest { [PSCustomObject]@{ id = 1 } }
 
             Get-StarrApplicationConfiguration -Url 'http://localhost:9696' -ApiKey test-key -Application Prowlarr -Section Ui
 

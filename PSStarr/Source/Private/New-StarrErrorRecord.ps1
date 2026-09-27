@@ -4,7 +4,7 @@
         Creates a new ErrorRecord object.
 
     .DESCRIPTION
-        This function creates a structured PowerShell error record.
+        This function creates a PowerShell error record with PSStarr error details.
 
     .PARAMETER Exception
         The exception represented by the new error record.

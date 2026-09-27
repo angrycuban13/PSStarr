@@ -4,7 +4,7 @@
         Retrieves Sonarr missing records from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves Sonarr missing records from an inferred or named Starr instance, or from an explicit URL and API key.
+        This function retrieves one missing episode by identifier or one page of missing episodes. You can filter the page by monitoring state.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.

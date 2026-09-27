@@ -4,7 +4,7 @@
         Retrieves Sonarr parsed release information.
 
     .DESCRIPTION
-        This function asks Sonarr to parse a release title. When Path is supplied, Sonarr parses the path instead, but still requires Title. No import or download is performed.
+        This function parses a release title or path. Path takes precedence, but Title remains required. This function does not import or download files.
 
     .PARAMETER InstanceName
         The optional saved instance name. When omitted, the matching instance is inferred.

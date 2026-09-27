@@ -4,7 +4,7 @@
         Formats an error record as readable diagnostic text.
 
     .DESCRIPTION
-        This function formats a PowerShell error record as readable diagnostic text for logging.
+        This function returns readable diagnostic text for a PowerShell error record.
 
     .PARAMETER ErrorRecord
         The PowerShell error record to format.

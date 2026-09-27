@@ -4,7 +4,7 @@
         Resolves an exact tag label to its resource identifier.
 
     .DESCRIPTION
-        This function retrieves application tags and resolves one case-insensitive exact label match. Missing and ambiguous labels produce structured error records before any write occurs.
+        This function returns the identifier for one exact tag-label match. The match is not case-sensitive. Missing or ambiguous labels prevent the write operation.
 
     .PARAMETER InstanceName
         The saved instance name used to retrieve tags.

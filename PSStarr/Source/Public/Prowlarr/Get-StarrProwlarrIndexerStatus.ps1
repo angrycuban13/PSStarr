@@ -4,7 +4,7 @@
         Retrieves Prowlarr indexer failure and backoff records.
 
     .DESCRIPTION
-        This function retrieves Prowlarr failure and backoff state through API v1. It does not return every configured indexer; use Get-StarrProwlarrIndexer for that inventory. An empty result normally means Prowlarr has no recorded indexer failures or temporary disablements.
+        This function retrieves Prowlarr indexer failures and temporary disablements. Use Get-StarrProwlarrIndexer to retrieve all configured indexers. An empty result normally means that Prowlarr has no recorded indexer failures or disablements.
 
     .PARAMETER InstanceName
         The saved Prowlarr instance name. When omitted, the only matching instance is used.

@@ -4,7 +4,7 @@
         Resolves the configuration encryption mode for the current platform.
 
     .DESCRIPTION
-        This function resolves an explicit encryption mode or selects DPAPI on Windows and plaintext storage on other platforms.
+        This function returns the selected encryption mode. The default is DPAPI on Windows and plaintext storage on other platforms.
 
     .PARAMETER EncryptionMode
         The requested configuration encryption mode.

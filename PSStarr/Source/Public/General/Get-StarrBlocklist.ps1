@@ -4,7 +4,7 @@ function Get-StarrBlocklist {
         Retrieves blocklist records from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves paged blocklist records from Radarr or Sonarr, or the Radarr blocklist for one movie.
+    This function retrieves paged Radarr or Sonarr blocklist records. It can also retrieve Radarr blocklist records for one movie.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.

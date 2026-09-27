@@ -4,7 +4,7 @@
         Starts a Sonarr search for one season.
 
     .DESCRIPTION
-        This function submits the typed SeasonSearch command to Sonarr API v3. The search contacts configured indexers and can consume provider quotas; a successful response means Sonarr accepted the asynchronous command, not that releases were found or downloaded.
+        This function starts an asynchronous search for one season. The search contacts configured indexers and can consume provider quotas. A successful response means Sonarr accepted the search, not that Sonarr found or downloaded releases.
 
     .PARAMETER InstanceName
         The optional saved Sonarr instance name. The matching instance is inferred when omitted.

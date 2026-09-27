@@ -4,7 +4,7 @@
         Retrieves Sonarr episodes that have not met their quality cutoff.
 
     .DESCRIPTION
-        This function retrieves wanted Sonarr episodes whose downloaded files have not met the configured quality-profile cutoff, or one cutoff-unmet record by episode ID.
+        This function retrieves wanted episodes whose files do not meet the quality cutoff. It returns one episode or one page of matching records.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.

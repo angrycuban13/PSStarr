@@ -4,7 +4,7 @@
         Retrieves the PSStarr AES-256 configuration key.
 
     .DESCRIPTION
-        This function reads and validates the separately supplied PSSTARR_AES_KEY environment variable.
+        This function returns a valid AES-256 key from the PSSTARR_AES_KEY environment variable.
 
     .EXAMPLE
         Get-StarrAesKey

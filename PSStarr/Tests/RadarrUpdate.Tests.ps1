@@ -4,11 +4,27 @@
 
 InModuleScope PSStarr {
     Describe '<Command> Radarr updates' -ForEach @(
-        @{ Command = 'Set-StarrRadarrMovieTag'; Resource = 'movie/editor'; Arguments = @{ MovieId = @(42, 43); TagId = @(2, 3); ApplyTags = 'Add' } }
-        @{ Command = 'Set-StarrRadarrCollectionMonitoring'; Resource = 'collection'; Arguments = @{ CollectionId = @(42, 43); Monitored = $true } }
+        @{
+            Command   = 'Set-StarrRadarrMovieTag'
+            Resource  = 'movie/editor'
+            Arguments = @{
+                MovieId   = @(42, 43)
+                TagId     = @(2, 3)
+                ApplyTags = 'Add'
+            }
+        }
+        @{
+            Command   = 'Set-StarrRadarrCollectionMonitoring'
+            Resource  = 'collection'
+            Arguments = @{
+                CollectionId = @(42, 43)
+                Monitored    = $true
+            }
+
+        }
     ) {
         BeforeEach {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ id = 42 } }
+            Mock Invoke-StarrApiRequest { [PSCustomObject]@{ id = 42 } }
         }
 
         It 'sends PUT with a named Radarr connection and returns the response' {

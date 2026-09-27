@@ -4,7 +4,7 @@
         Retrieves Sonarr filename examples.
 
     .DESCRIPTION
-        This function retrieves filename examples using saved Sonarr naming settings or a supplied configuration. Custom fields require NamingConfigId greater than zero; otherwise Sonarr ignores them. Custom configuration is not merged with saved settings. This function does not save settings or rename files.
+        This function returns filename examples from saved naming settings or a supplied configuration. Custom fields require a NamingConfigId greater than zero. Sonarr does not merge supplied fields with saved settings. This function does not save settings or rename files.
 
     .PARAMETER InstanceName
         The optional saved instance name. When omitted, the matching instance is inferred.

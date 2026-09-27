@@ -4,7 +4,7 @@
         Retrieves the Prowlarr application-profile schema.
 
     .DESCRIPTION
-        This function retrieves the schema used to configure Prowlarr application profiles.
+        This function retrieves the schema for Prowlarr application profiles.
 
     .PARAMETER InstanceName
         The saved Prowlarr instance name. When omitted, the only matching instance is used.

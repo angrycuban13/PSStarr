@@ -4,7 +4,7 @@
         Retrieves quality-profile schemas from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves quality-profile schemas from an inferred or named Starr instance, or from an explicit URL and API key.
+    This function retrieves quality-profile schemas.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.

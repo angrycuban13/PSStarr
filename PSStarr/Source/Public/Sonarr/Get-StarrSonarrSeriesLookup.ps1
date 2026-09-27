@@ -4,7 +4,7 @@
         Searches Sonarr metadata providers for series to add.
 
     .DESCRIPTION
-        This function searches Sonarr metadata providers by term or TVDB ID. It returns candidates and does not add series.
+        This function searches Sonarr metadata providers by term or TVDB identifier. It returns candidates and does not add a series.
 
     .PARAMETER InstanceName
         The name of the saved Starr instance.

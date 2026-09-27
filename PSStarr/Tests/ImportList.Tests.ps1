@@ -5,12 +5,18 @@
 Describe 'Import list GET wrappers' {
     InModuleScope PSStarr {
         BeforeEach {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ id = 1 } }
+            Mock Invoke-StarrApiRequest { [PSCustomObject]@{ id = 1 } }
         }
 
         It '<Command> delegates a named GET to <Path>' -ForEach @(
-            @{ Command = 'Get-StarrImportList'; Path = 'importlist' }
-            @{ Command = 'Get-StarrImportListSchema'; Path = 'importlist/schema' }
+            @{
+                Command = 'Get-StarrImportList'
+                Path    = 'importlist'
+            }
+            @{
+                Command = 'Get-StarrImportListSchema'
+                Path    = 'importlist/schema'
+            }
         ) {
             $expectedPath = $Path
             $result = & $Command -InstanceName Main
@@ -61,8 +67,8 @@ Describe 'Import list GET wrappers' {
 
         It 'preserves collection output' {
             Mock Invoke-StarrApiRequest {
-                [pscustomobject]@{ id = 1 }
-                [pscustomobject]@{ id = 2 }
+                [PSCustomObject]@{ id = 1 }
+                [PSCustomObject]@{ id = 2 }
             }
 
             $result = @(Get-StarrImportList -InstanceName Main)

@@ -4,7 +4,7 @@ function Get-StarrAutoTagging {
         Retrieves auto-tagging configurations from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves auto-tagging configurations from an inferred or named Starr instance, or from an explicit URL and API key.
+    This function retrieves auto-tagging configurations.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.

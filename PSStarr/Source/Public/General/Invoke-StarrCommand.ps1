@@ -4,7 +4,7 @@ function Invoke-StarrCommand {
         Submits an application command to Radarr or Sonarr.
 
     .DESCRIPTION
-        This function is the canonical advanced command-submission interface for Radarr and Sonarr API v3. Command names and arguments are application-specific, and the server validates them. A successful response means the asynchronous command was accepted, not completed.
+    This function submits an application-specific command to Radarr or Sonarr. A successful response means the server accepted the command, not that the command completed.
 
     .PARAMETER InstanceName
         The saved instance name. When omitted, the only compatible configured instance is used.

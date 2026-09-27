@@ -1,10 +1,10 @@
-function Get-StarrApplicationConfiguration {
+﻿function Get-StarrApplicationConfiguration {
     <#
     .SYNOPSIS
         Retrieves application configuration from a Starr application.
 
     .DESCRIPTION
-        This function retrieves a supported application configuration section, not PSStarr's saved connections. Metadata is Radarr-only; Prowlarr supports DownloadClient, Host, and Ui through this command. Host credentials are always replaced with [REDACTED]; returned host settings must not be submitted as a configuration update.
+    This function retrieves a supported application configuration section. It does not retrieve saved PSStarr connections. Host credentials are redacted. Do not use returned host settings in an update.
 
     .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.
@@ -123,6 +123,7 @@ function Get-StarrApplicationConfiguration {
         return $result
     }
 
+    # Copy host settings so redaction does not modify the transport response.
     foreach ($configuration in $result) {
         $safeConfiguration = [ordered]@{}
 
@@ -135,7 +136,7 @@ function Get-StarrApplicationConfiguration {
             }
         }
 
-        $safeOutput = [pscustomobject]$safeConfiguration
+        $safeOutput = [PSCustomObject]$safeConfiguration
 
         $typeNames = @($configuration.PSObject.TypeNames | Where-Object { $_ -like 'PSStarr.*' })
 

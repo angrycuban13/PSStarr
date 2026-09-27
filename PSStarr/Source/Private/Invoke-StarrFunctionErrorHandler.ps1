@@ -4,7 +4,7 @@
         Emits a sanitized error according to the caller's effective error action.
 
     .DESCRIPTION
-        This function optionally logs a sanitized error and emits it according to the caller's effective error action.
+        This function reports a sanitized operational error. It can also write the error to the PSStarr log.
 
     .PARAMETER Cmdlet
         The calling function's PSCmdlet object.

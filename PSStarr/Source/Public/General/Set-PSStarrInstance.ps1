@@ -4,7 +4,7 @@
         Creates or updates a saved PSStarr instance.
 
     .DESCRIPTION
-        This function creates or updates a named Starr instance in persistent user configuration. New instances require Application, Url, and ApiKey. Existing instances can update any subset of those values or change the API-key encryption mode.
+    This function creates or updates a saved Starr instance. A new instance requires Application, Url, and ApiKey. An update can change one or more values, including the encryption mode.
 
     .PARAMETER Name
         The name of the saved Starr instance.
@@ -172,6 +172,7 @@
             $plainApiKey = $ApiKey
             $protectedApiKey = Protect-StarrConfigurationSecret -Secret $plainApiKey -EncryptionMode $resolvedEncryptionMode
         }
+        # Re-encrypt the existing API key when only the encryption mode changes.
         elseif ($PSBoundParameters.ContainsKey('EncryptionMode')) {
             $plainApiKey = Unprotect-StarrConfigurationSecret -Value $existingInstance.ApiKey
             $protectedApiKey = Protect-StarrConfigurationSecret -Secret $plainApiKey -EncryptionMode $resolvedEncryptionMode

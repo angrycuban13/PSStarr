@@ -4,7 +4,7 @@
         Adds or removes tags on Radarr movies.
 
     .DESCRIPTION
-        This function adds or removes selected tags without replacing other movie tags or changing other movie settings. It delegates the bulk update to the shared HTTP transport.
+        This function adds or removes selected movie tags. It does not replace other tags or change other movie settings. WhatIf prevents the update.
 
     .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.

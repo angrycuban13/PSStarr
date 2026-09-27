@@ -4,7 +4,7 @@
         Retrieves Radarr cutoff-unmet records using the legacy command name.
 
     .DESCRIPTION
-        This function preserves the original command name and delegates to Get-StarrRadarrCutoffUnmet, which more clearly describes the returned wanted records.
+        This function is a compatibility name for Get-StarrRadarrCutoffUnmet. It retrieves wanted movies that have not met the quality cutoff.
 
     .PARAMETER InstanceName
         The optional saved Radarr instance name.

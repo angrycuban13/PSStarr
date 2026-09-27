@@ -4,7 +4,7 @@
         Retrieves categories exposed by configured Prowlarr indexers.
 
     .DESCRIPTION
-        This function retrieves the category hierarchy available from configured Prowlarr indexers.
+        This function retrieves the category hierarchy from configured Prowlarr indexers.
 
     .PARAMETER InstanceName
         The saved Prowlarr instance name. When omitted, the only matching instance is used.

@@ -69,7 +69,7 @@ if ($unexpectedPackageFiles.Count -gt 0) {
     throw 'The package contains files outside the approved module artifact set.'
 }
 
-[pscustomobject]@{
+[PSCustomObject]@{
     ModuleVersion    = $manifest.Version
     ExportedCommands = $exportedCommands.Count
     TestsPassed      = $pesterResult.PassedCount

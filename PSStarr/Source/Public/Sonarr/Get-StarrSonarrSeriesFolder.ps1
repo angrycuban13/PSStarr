@@ -4,7 +4,7 @@
         Retrieves Sonarr calculated series folder name.
 
     .DESCRIPTION
-        This function retrieves the folder name calculated by Sonarr for a series. It does not create or rename a folder.
+        This function returns the folder name that Sonarr calculates for a series. It does not create or rename folders.
 
     .PARAMETER InstanceName
         The optional saved instance name. When omitted, the matching instance is inferred.

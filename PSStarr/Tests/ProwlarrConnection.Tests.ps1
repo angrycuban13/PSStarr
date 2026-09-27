@@ -6,9 +6,17 @@ InModuleScope PSStarr {
     Describe 'Prowlarr connections' {
         BeforeEach {
             Mock Write-PSStarrLogEntry
-            Mock Invoke-RestMethod { [pscustomobject]@{ appName = 'Prowlarr' } }
+            Mock Invoke-RestMethod { [PSCustomObject]@{ appName = 'Prowlarr' } }
             Mock Get-StarrConfiguration {
-                @{ Instances = @{ Main = @{ Application = 'Prowlarr'; Url = 'http://localhost:9696/base/'; ApiKey = 'fixture-key' } } }
+                @{
+                    Instances = @{
+                        Main = @{
+                            Application = 'Prowlarr'
+                            Url         = 'http://localhost:9696/base/'
+                            ApiKey      = 'fixture-key'
+                        }
+                    }
+                }
             }
         }
 
@@ -42,7 +50,14 @@ InModuleScope PSStarr {
 
         It 'masks shared Prowlarr provider credentials' {
             Mock Invoke-RestMethod {
-                [pscustomobject]@{ id = 1; fields = @([pscustomobject]@{ name = 'apiKey'; privacy = 'apiKey'; value = 'provider-fixture-secret' }) }
+                [PSCustomObject]@{
+                    id     = 1
+                    fields = @([PSCustomObject]@{
+                            name    = 'apiKey'
+                            privacy = 'apiKey'
+                            value   = 'provider-fixture-secret'
+                        })
+                }
             }
 
             $result = Get-StarrIndexer -Name Main

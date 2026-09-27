@@ -4,7 +4,7 @@
         Retrieves metadata provider schemas from Radarr or Sonarr.
 
     .DESCRIPTION
-        This function retrieves metadata provider schemas using an inferred or named instance, or explicit connection credentials.
+    This function retrieves metadata-provider schemas.
 
     .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.

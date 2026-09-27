@@ -4,7 +4,7 @@ function Get-StarrCommand {
         Retrieves commands from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves commands from an inferred or named Starr instance, or from an explicit URL and API key.
+    This function retrieves application command records.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.

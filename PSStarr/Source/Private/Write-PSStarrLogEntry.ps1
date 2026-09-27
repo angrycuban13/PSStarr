@@ -4,7 +4,7 @@
         Writes readable entries to the PSStarr log.
 
     .DESCRIPTION
-        This function writes readable plain-text entries to the cross-platform PSStarr log.
+        This function writes plain-text entries to the PSStarr log. It can also write messages to the console.
 
     .PARAMETER Message
         The text written to the log.
@@ -204,6 +204,7 @@
         $encoding = [Text.UTF8Encoding]::new($false)
         $maxAttempts = $RetryCount + 1
 
+        # Retry only file-sharing failures. Report other write failures immediately.
         for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
             $fileStream = $null
             $streamWriter = $null

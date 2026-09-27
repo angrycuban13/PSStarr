@@ -4,7 +4,7 @@
         Retrieves indexer schemas from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves indexer schemas from an inferred or named Starr instance, or from an explicit URL and API key.
+    This function retrieves indexer schemas.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.

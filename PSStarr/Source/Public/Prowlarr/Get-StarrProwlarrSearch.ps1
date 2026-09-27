@@ -4,7 +4,7 @@
         Retrieves Prowlarr search results.
 
     .DESCRIPTION
-        This function searches Prowlarr indexers without downloading releases. This GET can contact indexers, consume quotas, record search history, and populate server caches. Omitting Term requests recent releases according to the selected search type and indexers.
+        This function searches Prowlarr indexers without downloading releases. A search can consume quotas, record history, and populate server caches. If Term is absent, the function requests recent releases for the selected search type and indexers.
 
     .PARAMETER InstanceName
         The saved Prowlarr instance name. When omitted, the only matching instance is used.

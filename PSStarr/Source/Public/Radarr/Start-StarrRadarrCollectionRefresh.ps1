@@ -4,7 +4,7 @@
         Starts refreshing selected Radarr collections.
 
     .DESCRIPTION
-        This function submits the typed RefreshCollections command to Radarr API v3. A successful response means Radarr accepted the asynchronous command, not that every refresh completed.
+        This function starts a Radarr collection refresh. A successful response means Radarr accepted the command. It does not mean that every refresh completed. WhatIf prevents command submission.
 
     .PARAMETER InstanceName
         The optional saved Radarr instance name. The matching instance is inferred when omitted.

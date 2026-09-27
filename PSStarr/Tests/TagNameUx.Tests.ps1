@@ -17,7 +17,7 @@ InModuleScope PSStarr {
     ) {
         BeforeEach {
             Mock Resolve-StarrTagId { 7 }
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ id = 42 } }
+            Mock Invoke-StarrApiRequest { [PSCustomObject]@{ id = 42 } }
         }
 
         It 'resolves an exact tag name before writing' {
@@ -83,8 +83,14 @@ InModuleScope PSStarr {
         It 'matches labels case-insensitively and exactly' {
             Mock Get-StarrTag {
                 @(
-                    [pscustomobject]@{ id = 7; label = 'Reviewed' }
-                    [pscustomobject]@{ id = 8; label = 'Reviewed Later' }
+                    [PSCustomObject]@{
+                        id    = 7
+                        label = 'Reviewed'
+                    }
+                    [PSCustomObject]@{
+                        id    = 8
+                        label = 'Reviewed Later'
+                    }
                 )
             }
 
@@ -99,8 +105,14 @@ InModuleScope PSStarr {
         It 'returns a structured ambiguity error' {
             Mock Get-StarrTag {
                 @(
-                    [pscustomobject]@{ id = 7; label = 'Reviewed' }
-                    [pscustomobject]@{ id = 8; label = 'reviewed' }
+                    [PSCustomObject]@{
+                        id    = 7
+                        label = 'Reviewed'
+                    }
+                    [PSCustomObject]@{
+                        id    = 8
+                        label = 'reviewed'
+                    }
                 )
             }
 

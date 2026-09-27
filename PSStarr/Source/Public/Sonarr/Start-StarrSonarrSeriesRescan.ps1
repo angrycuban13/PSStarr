@@ -4,7 +4,7 @@
         Starts rescanning a Sonarr series folder.
 
     .DESCRIPTION
-        This function submits the typed RescanSeries command to Sonarr API v3. A successful response means Sonarr accepted the asynchronous command, not that the rescan completed.
+        This function starts an asynchronous file rescan for selected series. A successful response means Sonarr accepted the command, not that the rescan completed.
 
     .PARAMETER InstanceName
         The optional saved Sonarr instance name. The matching instance is inferred when omitted.

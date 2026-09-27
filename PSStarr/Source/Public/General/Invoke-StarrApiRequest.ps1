@@ -4,7 +4,7 @@
         Sends an authenticated request to a Starr application API.
 
     .DESCRIPTION
-        This function resolves a Starr instance, constructs an authenticated API request, invokes it, and returns the deserialized response.
+    This function sends an authenticated request to a Starr API and returns the response.
 
     .PARAMETER InstanceName
         The name of the saved Starr instance.
@@ -112,6 +112,7 @@
         $Unversioned
     )
 
+    # Preserve the caller's error behavior after internal terminating errors.
     if ($PSBoundParameters.ContainsKey('ErrorAction')) {
         $originalErrorAction = [System.Management.Automation.ActionPreference] $PSBoundParameters.ErrorAction
     }
@@ -226,6 +227,7 @@
         "$baseUrl/api/$normalizedApiVersion/$normalizedEndpoint"
     }
 
+    # Repeat array keys because most Starr endpoints do not accept CSV values.
     if ($null -ne $Query -and $Query.Count -gt 0) {
         $queryParts = foreach ($key in @($Query.Keys | Sort-Object)) {
             foreach ($value in @($Query[$key])) {
@@ -265,6 +267,7 @@
     try {
         $response = Invoke-RestMethod @parameters
 
+        # Redact provider credentials before the response leaves the transport boundary.
         if ($resolvedApplication -eq 'Prowlarr' -and $normalizedEndpoint -match '^(indexer|downloadclient|notification)(/(schema|[0-9]+))?$') {
             $response = @(
                 foreach ($provider in $response) {
@@ -273,6 +276,7 @@
             )
         }
 
+        # Redact the current API key from application log text.
         if ($normalizedEndpoint -eq 'log' -and $null -ne $response -and $null -ne $response.PSObject.Properties['records']) {
             foreach ($record in @($response.records)) {
                 if ($null -eq $record) {

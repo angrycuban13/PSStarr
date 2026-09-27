@@ -4,7 +4,7 @@
         Retrieves Radarr alternative titles.
 
     .DESCRIPTION
-        This function retrieves Radarr alternative titles through the shared transport. Use AlternativeTitleId for an individual title, or movie filters for a list.
+        This function retrieves Radarr alternative titles. AlternativeTitleId selects one title. Movie filters select a list.
 
     .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.

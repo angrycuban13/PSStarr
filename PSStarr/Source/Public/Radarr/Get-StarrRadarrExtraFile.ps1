@@ -4,7 +4,7 @@
         Retrieves Radarr extra-file records.
 
     .DESCRIPTION
-        This function retrieves Radarr extra-file records through the shared transport. It returns file information, not file contents.
+        This function retrieves Radarr extra-file information. It does not return file contents.
 
     .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.

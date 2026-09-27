@@ -4,7 +4,7 @@
         Submits an application command using the legacy command name.
 
     .DESCRIPTION
-        This function is the compatibility name for Invoke-StarrCommand. It submits a command asynchronously through Radarr or Sonarr API v3. New code should use Invoke-StarrCommand.
+    This function submits a command to Radarr or Sonarr. The command name remains available for compatibility. Use Invoke-StarrCommand in new code.
 
     .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.

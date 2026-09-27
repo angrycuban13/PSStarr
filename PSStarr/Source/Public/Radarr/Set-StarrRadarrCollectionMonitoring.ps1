@@ -4,7 +4,7 @@
         Changes Radarr collection monitoring.
 
     .DESCRIPTION
-        This function sets monitoring on selected collections without directly changing existing movie monitoring or other collection settings. Radarr queues a collection refresh after this update; enabling monitoring can trigger configured collection automation.
+        This function changes monitoring for selected collections. It does not directly change movie monitoring or other collection settings. Radarr queues a collection refresh after the update. Enabling monitoring can start configured automation. WhatIf prevents the update.
 
     .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.

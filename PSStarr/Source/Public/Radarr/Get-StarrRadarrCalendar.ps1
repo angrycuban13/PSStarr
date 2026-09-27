@@ -4,7 +4,7 @@
         Retrieves Radarr calendar records.
 
     .DESCRIPTION
-        This function exposes only Radarr calendar parameters and provides typed tag-identifier filtering.
+        This function retrieves Radarr calendar entries. It can filter entries by date, monitoring state, and tag.
 
     .PARAMETER InstanceName
         The optional saved Radarr instance name.

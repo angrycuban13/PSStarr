@@ -4,7 +4,7 @@
         Retrieves release profile settings from Radarr or Sonarr.
 
     .DESCRIPTION
-        This function retrieves release profile settings using an inferred or named instance, or explicit connection credentials.
+    This function retrieves release-profile settings.
 
     .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.

@@ -4,7 +4,7 @@
         Starts a Sonarr search for selected series.
 
     .DESCRIPTION
-        This function submits one typed SeriesSearch command to Sonarr API v3. A successful response means Sonarr accepted the asynchronous command, not that searching completed.
+        This function starts one asynchronous search for selected series. A successful response means Sonarr accepted the command, not that the search completed.
 
     .PARAMETER InstanceName
         The optional saved Sonarr instance name. The matching instance is inferred when omitted.

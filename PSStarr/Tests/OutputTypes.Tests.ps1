@@ -10,7 +10,7 @@ InModuleScope PSStarr {
 
         It 'types an application resource without removing upstream properties' {
             Mock Invoke-RestMethod {
-                [pscustomobject]@{
+                [PSCustomObject]@{
                     id           = 42
                     title        = 'Fixture Movie'
                     upstreamOnly = 'preserved'
@@ -28,12 +28,12 @@ InModuleScope PSStarr {
 
         It 'types a paging envelope and each record separately' {
             Mock Invoke-RestMethod {
-                [pscustomobject]@{
+                [PSCustomObject]@{
                     page         = 1
                     pageSize     = 10
                     totalRecords = 1
                     records      = @(
-                        [pscustomobject]@{
+                        [PSCustomObject]@{
                             id     = 7
                             status = 'queued'
                         }
@@ -51,7 +51,7 @@ InModuleScope PSStarr {
         }
 
         It 'uses a stable fallback type for unmapped endpoints' {
-            Mock Invoke-RestMethod { [pscustomobject]@{ value = 42 } }
+            Mock Invoke-RestMethod { [PSCustomObject]@{ value = 42 } }
 
             $result = Invoke-StarrApiRequest -Url 'http://localhost:7878' -ApiKey 'fixture-key' -Endpoint 'future/resource'
 
@@ -62,10 +62,10 @@ InModuleScope PSStarr {
 
     Describe 'Typed safe copies' {
         It 'preserves PSStarr type ordering while redacting provider fields' {
-            $resource = [pscustomobject]@{
+            $resource = [PSCustomObject]@{
                 id     = 7
                 fields = @(
-                    [pscustomobject]@{
+                    [PSCustomObject]@{
                         name  = 'apiKey'
                         value = 'fixture-secret'
                     }

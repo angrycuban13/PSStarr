@@ -4,7 +4,7 @@
         Starts metadata refreshes for selected Sonarr series.
 
     .DESCRIPTION
-        This function submits the typed RefreshSeries command to Sonarr API v3. A successful response means Sonarr accepted the asynchronous command, not that every refresh completed.
+        This function starts an asynchronous metadata refresh for selected series. A successful response means Sonarr accepted the command, not that every refresh completed.
 
     .PARAMETER InstanceName
         The optional saved Sonarr instance name. The matching instance is inferred when omitted.

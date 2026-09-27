@@ -4,7 +4,7 @@
         Validates a Starr instance URL.
 
     .DESCRIPTION
-        This function verifies that a value is an absolute HTTP or HTTPS URL with a host.
+        This function reports whether a value is an absolute HTTP or HTTPS URL with a host.
 
     .PARAMETER Url
         The absolute URL to validate.

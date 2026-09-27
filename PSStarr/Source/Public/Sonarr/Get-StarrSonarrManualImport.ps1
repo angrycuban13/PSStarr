@@ -4,7 +4,7 @@
         Retrieves Sonarr manual-import candidates.
 
     .DESCRIPTION
-        This function inspects candidate files on the Sonarr host without importing them. Folder/download inspection and existing series inspection are separate operations. This GET may scan server storage and take time.
+        This function inspects import candidates on the Sonarr host without importing them. Folder, download, and existing-series inspections are separate operations. Inspection may scan server storage and take time.
 
     .PARAMETER InstanceName
         The optional saved instance name. When omitted, the matching instance is inferred.

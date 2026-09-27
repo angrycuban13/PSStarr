@@ -4,7 +4,7 @@ function Get-StarrDownloadClient {
         Retrieves download clients from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves download clients from an inferred or named Starr instance, or from an explicit URL and API key.
+    This function retrieves download clients.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.

@@ -4,7 +4,7 @@
         Retrieves Sonarr release search results.
 
     .DESCRIPTION
-        This function retrieves RSS release results when no selector is given, or searches indexers for one episode or a complete series/season pair. This GET can contact indexers, consume quotas, take time, and populate server caches. It does not download releases.
+        This function retrieves RSS releases when you omit selectors. It searches indexers for an episode or a series and season when you supply selectors. A search can consume provider quotas, take time, and populate server caches. This function does not download releases.
 
     .PARAMETER InstanceName
         The optional saved instance name. When omitted, the matching instance is inferred.

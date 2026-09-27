@@ -4,7 +4,7 @@
         Retrieves Prowlarr application profiles.
 
     .DESCRIPTION
-        This function retrieves application profiles that control how Prowlarr synchronizes indexers with connected applications.
+        This function retrieves Prowlarr profiles that control indexer synchronization with connected applications.
 
     .PARAMETER InstanceName
         The saved Prowlarr instance name. When omitted, the only matching instance is used.

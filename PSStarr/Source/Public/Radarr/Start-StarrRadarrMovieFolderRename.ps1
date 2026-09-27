@@ -4,7 +4,7 @@
         Starts renaming selected Radarr movie folders.
 
     .DESCRIPTION
-        This function submits the typed RenameMovieFolder command to Radarr API v3. A successful response means Radarr accepted the asynchronous command, not that every folder was renamed.
+        This function starts renaming selected Radarr movie folders. A successful response means Radarr accepted the command. It does not mean that every folder was renamed. WhatIf prevents command submission.
 
     .PARAMETER InstanceName
         The optional saved Radarr instance name. The matching instance is inferred when omitted.

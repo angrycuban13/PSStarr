@@ -4,7 +4,7 @@
         Retrieves indexer flags from Radarr or Sonarr.
 
     .DESCRIPTION
-        This function retrieves indexer flags using an inferred or named instance, or explicit connection credentials.
+    This function retrieves indexer flags.
 
     .PARAMETER InstanceName
         The saved instance name. When omitted, the only configured instance is used.

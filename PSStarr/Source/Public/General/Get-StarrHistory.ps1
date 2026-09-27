@@ -4,7 +4,7 @@ function Get-StarrHistory {
         Retrieves history from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves paged history or history scoped by date, Radarr movie, or Sonarr series using documented filters.
+    This function retrieves paged history or history for a specified date, Radarr movie, or Sonarr series.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.

@@ -4,18 +4,42 @@
 
 InModuleScope PSStarr {
     Describe 'Application configuration section <Section>' -ForEach @(
-        @{ Section = 'DownloadClient'; Path = 'config/downloadclient' }
-        @{ Section = 'Host'; Path = 'config/host' }
-        @{ Section = 'ImportList'; Path = 'config/importlist' }
-        @{ Section = 'Indexer'; Path = 'config/indexer' }
-        @{ Section = 'MediaManagement'; Path = 'config/mediamanagement' }
-        @{ Section = 'Metadata'; Path = 'config/metadata' }
-        @{ Section = 'Naming'; Path = 'config/naming' }
-        @{ Section = 'Ui'; Path = 'config/ui' }
+        @{
+            Section = 'DownloadClient'
+            Path    = 'config/downloadclient'
+        }
+        @{
+            Section = 'Host'
+            Path    = 'config/host'
+        }
+        @{
+            Section = 'ImportList'
+            Path    = 'config/importlist'
+        }
+        @{
+            Section = 'Indexer'
+            Path    = 'config/indexer'
+        }
+        @{
+            Section = 'MediaManagement'
+            Path    = 'config/mediamanagement'
+        }
+        @{
+            Section = 'Metadata'
+            Path    = 'config/metadata'
+        }
+        @{
+            Section = 'Naming'
+            Path    = 'config/naming'
+        }
+        @{
+            Section = 'Ui'
+            Path    = 'config/ui'
+        }
     ) {
         BeforeEach {
             Mock Invoke-StarrApiRequest {
-                [pscustomobject]@{
+                [PSCustomObject]@{
                     id      = 1
                     enabled = $false
                 }
@@ -53,7 +77,7 @@ InModuleScope PSStarr {
 
     Describe 'Application configuration shared connection contract' {
         BeforeEach {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ id = 1 } }
+            Mock Invoke-StarrApiRequest { [PSCustomObject]@{ id = 1 } }
         }
 
         It 'forwards explicit credentials' {
@@ -91,7 +115,7 @@ InModuleScope PSStarr {
         }
 
         It 'redacts all host secret fields without modifying the transport object' {
-            $script:hostFixture = [pscustomobject]@{
+            $script:hostFixture = [PSCustomObject]@{
                 id                   = 1
                 apiKey               = 'fixture-api-key'
                 password             = 'fixture-password'
@@ -117,7 +141,12 @@ InModuleScope PSStarr {
         }
 
         It 'redacts case-insensitive secret names on the ID route' {
-            Mock Invoke-StarrApiRequest { [pscustomobject]@{ APIKEY = 'fixture-key'; id = 1 } }
+            Mock Invoke-StarrApiRequest {
+                [PSCustomObject]@{
+                    APIKEY = 'fixture-key'
+                    id     = 1
+                }
+            }
 
             $result = Get-StarrApplicationConfiguration -InstanceName Main -Section host -ConfigurationId 1
 

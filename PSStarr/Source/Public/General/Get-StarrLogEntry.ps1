@@ -4,7 +4,7 @@
         Retrieves application log records from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves application log records from an inferred or named Starr instance, or from an explicit URL and API key. Returns one page with paging metadata. Log content can contain sensitive operational details; protect the returned data. The current connection API key is redacted from text fields, but other secrets cannot be identified reliably.
+    This function retrieves one page of application log records and its paging metadata. Logs can contain sensitive operational data. The function redacts the current API key but may not identify other secrets.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.

@@ -4,7 +4,7 @@ function Get-StarrDownloadClientSchema {
         Retrieves download-client schemas from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves download-client schemas from an inferred or named Starr instance, or from an explicit URL and API key.
+    This function retrieves download-client schemas.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.

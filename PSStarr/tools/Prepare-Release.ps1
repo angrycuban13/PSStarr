@@ -139,7 +139,7 @@ if ($PSCmdlet.ShouldProcess($targetDescription, "Prepare PSStarr $Version releas
 
     Set-Content -LiteralPath $resolvedChangelogPath -Value $updatedChangelogContent -NoNewline
 
-    [pscustomobject]@{
+    [PSCustomObject]@{
         Version       = $Version
         ReleaseDate   = $ReleaseDate.ToString('yyyy-MM-dd')
         ManifestPath  = $resolvedManifestPath

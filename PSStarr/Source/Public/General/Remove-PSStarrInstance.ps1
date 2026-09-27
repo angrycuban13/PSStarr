@@ -4,7 +4,7 @@
         Removes a saved Starr instance.
 
     .DESCRIPTION
-        This function removes a saved Starr instance and cleans up empty configuration directories.
+    This function removes a saved Starr instance and its empty configuration directories.
 
     .PARAMETER Name
         The name of the saved Starr instance.

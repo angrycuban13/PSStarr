@@ -4,7 +4,7 @@
         Retrieves Prowlarr history.
 
     .DESCRIPTION
-        This function retrieves one page of history, history since a timestamp, or history for one indexer through Prowlarr API v1. Selectors and filters for different routes cannot be mixed. Returned history can contain private search terms and download identifiers.
+        This function retrieves one page of Prowlarr history. It can select records by timestamp or indexer. Do not combine selectors for different result types. Returned records can contain private search terms and download identifiers.
 
     .PARAMETER InstanceName
         The optional saved Prowlarr instance name. The matching instance is inferred when omitted.

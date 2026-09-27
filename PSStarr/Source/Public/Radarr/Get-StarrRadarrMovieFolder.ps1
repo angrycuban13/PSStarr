@@ -4,7 +4,7 @@
         Retrieves Radarr movie folder results.
 
     .DESCRIPTION
-        This function retrieves the computed folder name for a movie using Radarr naming settings. It does not list files, create folders, or move movies.
+        This function retrieves the folder name that Radarr calculates for a movie. It does not list files, create folders, or move movies.
 
     .PARAMETER InstanceName
         The saved Radarr instance name. When omitted, the only matching instance is used.

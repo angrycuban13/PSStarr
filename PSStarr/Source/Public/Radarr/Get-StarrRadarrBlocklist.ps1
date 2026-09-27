@@ -4,7 +4,7 @@
         Retrieves Radarr blocklist records.
 
     .DESCRIPTION
-        This function exposes only Radarr blocklist parameters, including the movie-scoped route.
+        This function retrieves paged Radarr blocklist records. It can limit the records to one movie.
 
     .PARAMETER InstanceName
         The optional saved Radarr instance name.

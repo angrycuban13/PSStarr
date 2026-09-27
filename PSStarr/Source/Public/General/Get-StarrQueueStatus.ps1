@@ -4,7 +4,7 @@
         Retrieves queue status from a Starr instance.
 
     .DESCRIPTION
-        This function retrieves queue status from an inferred or named Starr instance, or from an explicit URL and API key.
+    This function retrieves download-queue status.
 
     .PARAMETER InstanceName
         The optional name of a saved Starr instance. When omitted, the only matching instance is used.

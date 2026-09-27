@@ -4,7 +4,7 @@
         Retrieves Sonarr queue details.
 
     .DESCRIPTION
-        This function exposes only the queue-detail parameters supported by Sonarr.
+        This function retrieves Sonarr queue details. You can filter items by series or episode identifier.
 
     .PARAMETER InstanceName
         The optional saved Sonarr instance name.

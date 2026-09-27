@@ -4,7 +4,7 @@
         Retrieves the persisted PSStarr configuration.
 
     .DESCRIPTION
-        This function retrieves the persisted PSStarr configuration and ensures its instance collection is usable.
+        This function returns the saved PSStarr configuration with a usable instance collection.
 
     .EXAMPLE
         Get-StarrConfiguration

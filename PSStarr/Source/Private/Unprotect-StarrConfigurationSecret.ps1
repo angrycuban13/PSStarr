@@ -4,7 +4,7 @@
         Resolves a persisted PSStarr configuration secret.
 
     .DESCRIPTION
-        This function returns legacy plaintext secrets and decrypts supported versioned DPAPI or AES-256 secret envelopes.
+        This function returns a saved configuration secret as plaintext. It supports legacy plaintext values and encrypted DPAPI or AES-256 values.
 
     .PARAMETER Value
         The persisted plaintext value or encrypted secret envelope.
@@ -67,6 +67,7 @@
             }
         }
 
+        # Clear the unmanaged buffer after conversion, including conversion failures.
         $secretPointer = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($secureSecret)
 
         try {

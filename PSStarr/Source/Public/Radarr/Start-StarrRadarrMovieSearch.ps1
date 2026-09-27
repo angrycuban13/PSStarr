@@ -4,7 +4,7 @@
         Starts a Radarr search for selected movies.
 
     .DESCRIPTION
-        This function submits the typed MoviesSearch command to Radarr API v3. A successful response means Radarr accepted the asynchronous command, not that searching completed.
+        This function starts an indexer search for selected Radarr movies. The search can consume provider quotas. A successful response means Radarr accepted the command. It does not mean that the search completed. WhatIf prevents command submission.
 
     .PARAMETER InstanceName
         The optional saved Radarr instance name. The matching instance is inferred when omitted.

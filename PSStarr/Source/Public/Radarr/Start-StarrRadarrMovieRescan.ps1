@@ -4,7 +4,7 @@
         Starts rescanning a Radarr movie folder.
 
     .DESCRIPTION
-        This function submits the typed RescanMovie command to Radarr API v3. A successful response means Radarr accepted the asynchronous command, not that the rescan completed.
+        This function starts a rescan for selected Radarr movies. A successful response means Radarr accepted the command. It does not mean that the rescan completed. WhatIf prevents command submission.
 
     .PARAMETER InstanceName
         The optional saved Radarr instance name. The matching instance is inferred when omitted.
