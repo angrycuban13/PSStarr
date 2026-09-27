@@ -119,8 +119,6 @@ None.
 
 This function does not return objects to the pipeline.
 
-System.Void
-
 ## NOTES
 
 ## RELATED LINKS

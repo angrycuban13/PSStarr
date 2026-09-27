@@ -33,6 +33,7 @@ $requiredPlatyPSVersion = [System.Version]'1.0.3'
 $utf8WithoutBom = [System.Text.UTF8Encoding]::new($false)
 $failures = [System.Collections.Generic.List[System.String]]::new()
 $inputHelpByCommand = @{}
+$outputHelpByCommand = @{}
 $module = $null
 $generationRoot = Join-Path ([System.IO.Path]::GetTempPath()) "PSStarr-docs-$([System.Guid]::NewGuid().ToString('N'))"
 $resolvedRepositoryRoot = [System.IO.Path]::GetFullPath($RepositoryRoot)
@@ -108,6 +109,7 @@ if ($failures.Count -eq 0) {
 
             $commandHelp = Get-Help -Name $commandName -Full
             $inputHelpByCommand[$commandName] = [System.String]$commandHelp.inputTypes.inputType.type.name
+            $outputHelpByCommand[$commandName] = [System.String]$commandHelp.returnValues.returnValue.type.name
         }
 
         if ($failures.Count -eq 0) {
@@ -304,6 +306,21 @@ try {
                             $content,
                             '(?ms)^## INPUTS[ \t]*\n.*?(?=^## |\z)',
                             $inputSection
+                        )
+                    }
+
+                    if ($outputHelpByCommand.ContainsKey($pageName)) {
+                        $documentedOutputs = $outputHelpByCommand[$pageName].Replace("`r`n", "`n").Trim()
+                        $documentedOutputs = [System.Text.RegularExpressions.Regex]::Replace(
+                            $documentedOutputs,
+                            '\A\\?\[(?<Type>.+?)\\?\]',
+                            '${Type}'
+                        )
+                        $outputSection = "## OUTPUTS`n`n$documentedOutputs`n`n"
+                        $content = [System.Text.RegularExpressions.Regex]::Replace(
+                            $content,
+                            '(?ms)^## OUTPUTS[ \t]*\n.*?(?=^## |\z)',
+                            $outputSection
                         )
                     }
 

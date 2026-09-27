@@ -472,9 +472,9 @@ You cannot pipe objects to this function.
 
 ## OUTPUTS
 
-PSStarr.Sonarr.PagedResult
+PSStarr.Sonarr.PagedResult, [PSStarr.Sonarr.History]
 
-PSStarr.Sonarr.History
+This function returns Sonarr history responses.
 
 ## NOTES
 

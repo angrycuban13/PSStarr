@@ -254,11 +254,9 @@ This function accepts objects with an Id property representing a Radarr movie.
 
 ## OUTPUTS
 
-System.Object
+PSStarr.Radarr.AlternativeTitle
 
 This function returns deserialized alternative titles.
-
-PSStarr.Radarr.AlternativeTitle
 
 ## NOTES
 

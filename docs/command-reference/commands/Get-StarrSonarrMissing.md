@@ -306,9 +306,9 @@ You cannot pipe objects to this function.
 
 ## OUTPUTS
 
-PSStarr.Sonarr.PagedResult
+PSStarr.Sonarr.PagedResult, [PSStarr.Sonarr.WantedItem]
 
-PSStarr.Sonarr.WantedItem
+This function returns response objects retrieved from the Starr API.
 
 ## NOTES
 

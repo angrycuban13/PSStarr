@@ -541,9 +541,9 @@ You cannot pipe objects to this function.
 
 ## OUTPUTS
 
-PSStarr.Prowlarr.PagedResult
+PSStarr.Prowlarr.PagedResult, [PSStarr.Prowlarr.History]
 
-PSStarr.Prowlarr.History
+This function returns a paging response or history records from Prowlarr.
 
 ## NOTES
 

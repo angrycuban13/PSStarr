@@ -304,9 +304,9 @@ You cannot pipe objects to this function.
 
 ## OUTPUTS
 
-PSStarr.Radarr.PagedResult
+PSStarr.Radarr.PagedResult, [PSStarr.Radarr.ImportListExclusion]
 
-PSStarr.Radarr.ImportListExclusion
+This function returns a paging object containing records, or an individual exclusion.
 
 ## NOTES
 

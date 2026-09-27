@@ -234,9 +234,9 @@ You cannot pipe objects to this function.
 
 ## OUTPUTS
 
-PSStarr.Radarr.PagedResult
+PSStarr.Radarr.PagedResult, [PSStarr.Radarr.WantedItem]
 
-PSStarr.Radarr.WantedItem
+This function returns Radarr cutoff-unmet response objects.
 
 ## NOTES
 

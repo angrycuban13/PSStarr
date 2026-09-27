@@ -408,9 +408,9 @@ You cannot pipe objects to this function.
 
 ## OUTPUTS
 
-PSStarr.Radarr.PagedResult
+PSStarr.Radarr.PagedResult, [PSStarr.Radarr.History]
 
-PSStarr.Radarr.History
+This function returns Radarr history responses.
 
 ## NOTES
 

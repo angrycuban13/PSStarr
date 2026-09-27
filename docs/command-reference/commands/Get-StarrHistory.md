@@ -566,9 +566,9 @@ You cannot pipe objects to this function.
 
 ## OUTPUTS
 
-PSStarr.PagedResult
+PSStarr.PagedResult, [PSStarr.History]
 
-PSStarr.History
+This function returns history response objects retrieved from the Starr API.
 
 ## NOTES
 

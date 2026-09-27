@@ -320,9 +320,9 @@ You cannot pipe objects to this function.
 
 ## OUTPUTS
 
-PSStarr.Sonarr.PagedResult
+PSStarr.Sonarr.PagedResult, [PSStarr.Sonarr.WantedItem]
 
-PSStarr.Sonarr.WantedItem
+This function returns Sonarr cutoff-unmet response objects.
 
 ## NOTES
 
