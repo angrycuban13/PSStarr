@@ -185,6 +185,15 @@ jobs:
                   name: ${{ needs.validate.outputs.artifact_name }}
                   path: release-package
 
+            - name: Install release dependencies
+              run: |
+                  if ($null -eq (Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue)) {
+                      Register-PSRepository -Default
+                  }
+
+                  Set-PSRepository PSGallery -InstallationPolicy Trusted
+                  Install-Module Configuration -RequiredVersion 1.6.0 -Scope CurrentUser -Force
+
             - name: Verify and expand validated module
               env:
                   ARCHIVE_NAME: ${{ needs.validate.outputs.archive_name }}
@@ -205,13 +214,6 @@ jobs:
                   POWERSHELL_GALLERY_API_KEY: ${{ secrets.POWERSHELL_GALLERY_API_KEY }}
                   RELEASE_VERSION: ${{ needs.validate.outputs.version }}
               run: |
-                  if ($null -eq (Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue)) {
-                      Register-PSRepository -Default
-                  }
-
-                  Set-PSRepository PSGallery -InstallationPolicy Trusted
-                  Install-Module Configuration -RequiredVersion 1.6.0 -Scope CurrentUser -Force
-
                   if ([System.String]::IsNullOrWhiteSpace($env:POWERSHELL_GALLERY_API_KEY)) {
                       throw 'POWERSHELL_GALLERY_API_KEY is not configured.'
                   }

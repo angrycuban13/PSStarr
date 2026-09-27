@@ -406,9 +406,6 @@ try {
         throw "Module documentation generation failed:`n - $($failures -join "`n - ")"
     }
 
-    $navigationPath = Join-Path $stagingPath '.nav.yml'
-    [System.IO.File]::WriteAllText($navigationPath, "title: Command Reference`n", $utf8WithoutBom)
-
     $stagedFiles = @(Get-ChildItem -LiteralPath $stagingPath -File -Filter '*.md' -Recurse)
 
     if ($stagedFiles.Count -ne $expectedNames.Count) {
