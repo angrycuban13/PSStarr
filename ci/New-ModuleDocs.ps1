@@ -168,6 +168,8 @@ try {
                 try {
                     $content = [System.IO.File]::ReadAllText($generatedFile.FullName)
                     $content = $content.Replace("`r`n", "`n").Replace("`r", "`n")
+                    $content = [System.Text.RegularExpressions.Regex]::Replace($content, '(?m)[ \t]+$', '')
+                    $content = [System.Text.RegularExpressions.Regex]::Replace($content, '(?m)^ms\.date:.*\n', '')
                     $frontMatter = [System.Text.RegularExpressions.Regex]::Match(
                         $content,
                         '\A---\n.*?^---[ \t]*$',

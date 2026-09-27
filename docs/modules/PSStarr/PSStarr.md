@@ -1,11 +1,10 @@
 ---
 document type: module
 Help Version: 1.0.0.0
-HelpInfoUri: 
+HelpInfoUri:
 Locale: en-US
 Module Guid: 06cf630d-08c5-491c-901a-fdc6413c671b
 Module Name: PSStarr
-ms.date: 09/26/2026
 PlatyPS schema version: 2024-05-01
 title: PSStarr Module
 ---

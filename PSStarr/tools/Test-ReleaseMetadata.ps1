@@ -119,4 +119,3 @@ if ([System.String]::IsNullOrWhiteSpace($releaseNotes) -or $releaseNotes -notmat
     Version     = $version
     ReleaseDate = $releaseDate.ToString('yyyy-MM-dd')
 }
-

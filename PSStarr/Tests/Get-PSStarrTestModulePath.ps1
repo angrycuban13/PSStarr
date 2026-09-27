@@ -30,4 +30,3 @@ if (-not (Test-Path -LiteralPath $builtManifestPath -PathType Leaf)) {
 }
 
 (Resolve-Path -LiteralPath $builtManifestPath).Path
-
