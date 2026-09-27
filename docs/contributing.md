@@ -97,6 +97,6 @@ uv run --locked --only-group docs zensical build --clean --strict
 
 ## Open a pull request
 
-Commit the source, tests, generated documentation, manifest, and changelog changes together. Open a pull request against `main`.
+Commit related source, tests, generated documentation, manifest, and changelog changes together when they apply. Open a pull request against `main`.
 
 The pull request must pass release validation. Documentation changes must also pass the documentation consistency check.
