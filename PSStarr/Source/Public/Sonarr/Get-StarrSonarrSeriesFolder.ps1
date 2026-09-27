@@ -1,4 +1,4 @@
-﻿function Get-StarrSonarrSeriesFolder {
+function Get-StarrSonarrSeriesFolder {
     <#
     .SYNOPSIS
         Retrieves Sonarr calculated series folder name.
@@ -22,7 +22,7 @@
         Get-StarrSonarrSeriesFolder -InstanceName Main -SeriesId 42
 
     .EXAMPLE
-        Get-StarrSonarrSeriesFolder -Url 'http://localhost:8989' -ApiKey '<api-key>' -SeriesId 42
+        Get-StarrSonarrSeriesFolder -Url 'http://localhost:8989' -ApiKey 'example-api-key' -SeriesId 42
 
     .EXAMPLE
         Get-StarrSonarrSeries -SeriesId 42 | Get-StarrSonarrSeriesFolder

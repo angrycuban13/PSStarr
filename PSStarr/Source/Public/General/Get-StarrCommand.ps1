@@ -28,7 +28,7 @@ function Get-StarrCommand {
         Get-StarrCommand -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrCommand -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrCommand -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

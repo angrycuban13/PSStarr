@@ -48,7 +48,7 @@ Get-StarrDiskSpace -InstanceName 'Main'
 ### EXAMPLE 3
 
 ```powershell
-'
+Get-StarrDiskSpace -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

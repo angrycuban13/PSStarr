@@ -33,19 +33,19 @@ An update can change one or more values, including the encryption mode.
 ### EXAMPLE 1
 
 ```powershell
-'
+Set-PSStarrInstance -Name 'RadarrMain' -Application Radarr -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 ```
 
 ### EXAMPLE 2
 
 ```powershell
-' -EncryptionMode Aes256
+Set-PSStarrInstance -Name 'RadarrMain' -Application Radarr -Url 'http://localhost:7878' -ApiKey 'example-api-key' -EncryptionMode Aes256
 ```
 
 ### EXAMPLE 3
 
 ```powershell
-' -EncryptionMode None
+Set-PSStarrInstance -Name 'RadarrMain' -Application Radarr -Url 'http://localhost:7878' -ApiKey 'example-api-key' -EncryptionMode None
 ```
 
 ### EXAMPLE 4

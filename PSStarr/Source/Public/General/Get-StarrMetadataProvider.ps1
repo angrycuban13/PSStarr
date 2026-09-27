@@ -1,4 +1,4 @@
-﻿function Get-StarrMetadataProvider {
+function Get-StarrMetadataProvider {
     <#
     .SYNOPSIS
         Retrieves metadata provider settings from Radarr or Sonarr.
@@ -28,7 +28,7 @@
         Get-StarrMetadataProvider -InstanceName 'Main' -MetadataProviderId 1
 
     .EXAMPLE
-        Get-StarrMetadataProvider -Url 'http://localhost:8989' -ApiKey '<api-key>'
+        Get-StarrMetadataProvider -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

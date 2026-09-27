@@ -1,4 +1,4 @@
-﻿function Get-StarrProwlarrApplicationSchema {
+function Get-StarrProwlarrApplicationSchema {
     <#
     .SYNOPSIS
         Retrieves supported Prowlarr application-integration definitions.
@@ -19,7 +19,7 @@
         Get-StarrProwlarrApplicationSchema -InstanceName Main
 
     .EXAMPLE
-        Get-StarrProwlarrApplicationSchema -Url 'http://localhost:9696' -ApiKey '<api-key>'
+        Get-StarrProwlarrApplicationSchema -Url 'http://localhost:9696' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

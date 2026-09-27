@@ -1,4 +1,4 @@
-﻿function Start-StarrSonarrEpisodeSearch {
+function Start-StarrSonarrEpisodeSearch {
     <#
     .SYNOPSIS
         Starts a Sonarr search for selected episodes.
@@ -22,7 +22,7 @@
         Start-StarrSonarrEpisodeSearch -InstanceName SonarrMain -EpisodeId 101,102
 
     .EXAMPLE
-        Start-StarrSonarrEpisodeSearch -Url 'http://localhost:8989' -ApiKey '<api-key>' -EpisodeId 101 -WhatIf
+        Start-StarrSonarrEpisodeSearch -Url 'http://localhost:8989' -ApiKey 'example-api-key' -EpisodeId 101 -WhatIf
 
     .INPUTS
         None.

@@ -1,4 +1,4 @@
-﻿function Get-StarrPing {
+function Get-StarrPing {
     <#
     .SYNOPSIS
         Retrieves a ping response from a Starr application.
@@ -22,7 +22,7 @@
         Get-StarrPing -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrPing -Url 'http://localhost:8989' -ApiKey '<api-key>'
+        Get-StarrPing -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

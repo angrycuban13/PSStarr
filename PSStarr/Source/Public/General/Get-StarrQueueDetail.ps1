@@ -1,4 +1,4 @@
-﻿function Get-StarrQueueDetail {
+function Get-StarrQueueDetail {
     <#
     .SYNOPSIS
         Retrieves queue details from a Starr instance.
@@ -43,7 +43,7 @@
         Get-StarrQueueDetail -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrQueueDetail -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrQueueDetail -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

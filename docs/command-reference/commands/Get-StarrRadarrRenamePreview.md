@@ -43,7 +43,7 @@ Get-StarrRadarrRenamePreview -InstanceName 'Main' -MovieIdFilter 42,43
 ### EXAMPLE 2
 
 ```powershell
-' -MovieIdFilter 42,43
+Get-StarrRadarrRenamePreview -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieIdFilter 42,43
 ```
 
 ### EXAMPLE 3

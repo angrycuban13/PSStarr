@@ -48,7 +48,7 @@ Get-StarrLanguage -InstanceName 'Main' -LanguageId 1
 ### EXAMPLE 3
 
 ```powershell
-'
+Get-StarrLanguage -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

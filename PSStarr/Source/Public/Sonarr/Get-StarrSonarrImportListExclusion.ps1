@@ -1,4 +1,4 @@
-﻿function Get-StarrSonarrImportListExclusion {
+function Get-StarrSonarrImportListExclusion {
     <#
     .SYNOPSIS
         Retrieves Sonarr import-list exclusions.
@@ -37,7 +37,7 @@
         Get-StarrSonarrImportListExclusion -InstanceName 'Main' -ExclusionId 7
 
     .EXAMPLE
-        Get-StarrSonarrImportListExclusion -Url 'http://localhost:8989' -ApiKey '<api-key>'
+        Get-StarrSonarrImportListExclusion -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

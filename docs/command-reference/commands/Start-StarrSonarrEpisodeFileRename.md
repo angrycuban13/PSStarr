@@ -46,7 +46,7 @@ Start-StarrSonarrEpisodeFileRename -InstanceName SonarrMain -SeriesId 42 -Episod
 ### EXAMPLE 2
 
 ```powershell
-' -SeriesId 42 -EpisodeFileId 100 -WhatIf
+Start-StarrSonarrEpisodeFileRename -Url 'http://localhost:8989' -ApiKey 'example-api-key' -SeriesId 42 -EpisodeFileId 100 -WhatIf
 ```
 
 ## PARAMETERS

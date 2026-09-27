@@ -25,7 +25,7 @@ function Get-StarrBackup {
         Get-StarrBackup -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrBackup -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrBackup -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

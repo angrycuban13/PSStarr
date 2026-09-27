@@ -1,4 +1,4 @@
-﻿function Get-StarrRadarrCutoffUnmet {
+function Get-StarrRadarrCutoffUnmet {
     <#
     .SYNOPSIS
         Retrieves Radarr movies that have not met their quality cutoff.
@@ -37,7 +37,7 @@
         Get-StarrRadarrCutoffUnmet -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrRadarrCutoffUnmet -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrRadarrCutoffUnmet -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

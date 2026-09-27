@@ -1,4 +1,4 @@
-﻿function Get-StarrProwlarrIndexer {
+function Get-StarrProwlarrIndexer {
     <#
     .SYNOPSIS
         Retrieves every configured Prowlarr indexer or one indexer by ID.
@@ -22,7 +22,7 @@
         Get-StarrProwlarrIndexer -InstanceName ProwlarrMain
 
     .EXAMPLE
-        Get-StarrProwlarrIndexer -Url 'http://localhost:9696' -ApiKey '<api-key>' -IndexerId 4
+        Get-StarrProwlarrIndexer -Url 'http://localhost:9696' -ApiKey 'example-api-key' -IndexerId 4
 
     .INPUTS
         None.

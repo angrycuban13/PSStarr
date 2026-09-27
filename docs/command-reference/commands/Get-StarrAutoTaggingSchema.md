@@ -48,7 +48,7 @@ Get-StarrAutoTaggingSchema -InstanceName 'Main'
 ### EXAMPLE 3
 
 ```powershell
-'
+Get-StarrAutoTaggingSchema -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

@@ -1,4 +1,4 @@
-﻿function Get-StarrQualityProfileSchema {
+function Get-StarrQualityProfileSchema {
     <#
     .SYNOPSIS
         Retrieves quality-profile schemas from a Starr instance.
@@ -25,7 +25,7 @@
         Get-StarrQualityProfileSchema -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrQualityProfileSchema -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrQualityProfileSchema -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

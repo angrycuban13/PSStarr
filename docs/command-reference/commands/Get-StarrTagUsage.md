@@ -43,7 +43,7 @@ Get-StarrTagUsage -InstanceName RadarrMain
 ### EXAMPLE 2
 
 ```powershell
-' -TagId 3
+Get-StarrTagUsage -Url 'http://localhost:8989' -ApiKey 'example-api-key' -TagId 3
 ```
 
 ## PARAMETERS

@@ -42,7 +42,7 @@ Get-StarrMetadataProviderSchema -InstanceName 'Main'
 ### EXAMPLE 2
 
 ```powershell
-'
+Get-StarrMetadataProviderSchema -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

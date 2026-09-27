@@ -28,7 +28,7 @@ function Get-StarrCustomFormat {
         Get-StarrCustomFormat -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrCustomFormat -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrCustomFormat -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

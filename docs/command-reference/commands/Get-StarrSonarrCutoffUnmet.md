@@ -53,7 +53,7 @@ Get-StarrSonarrCutoffUnmet -InstanceName 'Main'
 ### EXAMPLE 3
 
 ```powershell
-'
+Get-StarrSonarrCutoffUnmet -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

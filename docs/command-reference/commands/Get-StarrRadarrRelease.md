@@ -46,7 +46,7 @@ Get-StarrRadarrRelease -InstanceName 'Main' -MovieId 42
 ### EXAMPLE 2
 
 ```powershell
-' -MovieId 42
+Get-StarrRadarrRelease -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieId 42
 ```
 
 ### EXAMPLE 3

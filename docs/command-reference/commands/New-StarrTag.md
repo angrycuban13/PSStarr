@@ -43,7 +43,7 @@ New-StarrTag -InstanceName Main -Label 'reviewed'
 ### EXAMPLE 2
 
 ```powershell
-' -Label 'reviewed' -WhatIf
+New-StarrTag -Url 'http://localhost:8989' -ApiKey 'example-api-key' -Label 'reviewed' -WhatIf
 ```
 
 ## PARAMETERS

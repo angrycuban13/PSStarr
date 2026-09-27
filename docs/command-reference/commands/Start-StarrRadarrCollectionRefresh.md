@@ -47,7 +47,7 @@ Start-StarrRadarrCollectionRefresh -InstanceName RadarrMain -CollectionId 7,8
 ### EXAMPLE 2
 
 ```powershell
-' -CollectionId 7 -WhatIf
+Start-StarrRadarrCollectionRefresh -Url 'http://localhost:7878' -ApiKey 'example-api-key' -CollectionId 7 -WhatIf
 ```
 
 ## PARAMETERS

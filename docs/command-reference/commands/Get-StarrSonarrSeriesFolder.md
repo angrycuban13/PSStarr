@@ -43,7 +43,7 @@ Get-StarrSonarrSeriesFolder -InstanceName Main -SeriesId 42
 ### EXAMPLE 2
 
 ```powershell
-' -SeriesId 42
+Get-StarrSonarrSeriesFolder -Url 'http://localhost:8989' -ApiKey 'example-api-key' -SeriesId 42
 ```
 
 ### EXAMPLE 3

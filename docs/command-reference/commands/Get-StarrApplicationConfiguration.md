@@ -53,7 +53,7 @@ Get-StarrApplicationConfiguration -InstanceName Main -Section Host -Configuratio
 ### EXAMPLE 3
 
 ```powershell
-' -Section Metadata
+Get-StarrApplicationConfiguration -Url 'http://localhost:7878' -ApiKey 'example-api-key' -Section Metadata
 ```
 
 ## PARAMETERS

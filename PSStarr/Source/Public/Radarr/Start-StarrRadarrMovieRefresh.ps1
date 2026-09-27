@@ -1,4 +1,4 @@
-﻿function Start-StarrRadarrMovieRefresh {
+function Start-StarrRadarrMovieRefresh {
     <#
     .SYNOPSIS
         Starts metadata refreshes for selected Radarr movies.
@@ -22,7 +22,7 @@
         Start-StarrRadarrMovieRefresh -InstanceName RadarrMain -MovieId 42
 
     .EXAMPLE
-        Start-StarrRadarrMovieRefresh -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieId 42,43 -WhatIf
+        Start-StarrRadarrMovieRefresh -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieId 42,43 -WhatIf
 
     .INPUTS
         None.

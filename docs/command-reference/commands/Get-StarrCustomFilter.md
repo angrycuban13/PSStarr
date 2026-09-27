@@ -48,7 +48,7 @@ Get-StarrCustomFilter -InstanceName 'Main' -CustomFilterId 1
 ### EXAMPLE 3
 
 ```powershell
-'
+Get-StarrCustomFilter -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

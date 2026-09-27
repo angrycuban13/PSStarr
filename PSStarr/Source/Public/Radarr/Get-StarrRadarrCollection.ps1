@@ -1,4 +1,4 @@
-﻿function Get-StarrRadarrCollection {
+function Get-StarrRadarrCollection {
     <#
     .SYNOPSIS
         Retrieves Radarr collections from a Starr instance.
@@ -28,7 +28,7 @@
         Get-StarrRadarrCollection -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrRadarrCollection -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrRadarrCollection -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

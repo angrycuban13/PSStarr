@@ -1,4 +1,4 @@
-﻿function Get-StarrRadarrRenamePreview {
+function Get-StarrRadarrRenamePreview {
     <#
     .SYNOPSIS
         Retrieves Radarr rename results.
@@ -22,7 +22,7 @@
         Get-StarrRadarrRenamePreview -InstanceName 'Main' -MovieIdFilter 42,43
 
     .EXAMPLE
-        Get-StarrRadarrRenamePreview -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieIdFilter 42,43
+        Get-StarrRadarrRenamePreview -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieIdFilter 42,43
 
     .EXAMPLE
         Get-StarrRadarrMovie -MovieId 42 | Get-StarrRadarrRenamePreview

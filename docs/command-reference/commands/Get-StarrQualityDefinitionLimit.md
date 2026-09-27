@@ -42,7 +42,7 @@ Get-StarrQualityDefinitionLimit -InstanceName 'Main'
 ### EXAMPLE 2
 
 ```powershell
-'
+Get-StarrQualityDefinitionLimit -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

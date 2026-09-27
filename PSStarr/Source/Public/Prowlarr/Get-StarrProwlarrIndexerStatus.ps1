@@ -1,4 +1,4 @@
-﻿function Get-StarrProwlarrIndexerStatus {
+function Get-StarrProwlarrIndexerStatus {
     <#
     .SYNOPSIS
         Retrieves Prowlarr indexer failure and backoff records.
@@ -19,7 +19,7 @@
         Get-StarrProwlarrIndexerStatus -InstanceName Main
 
     .EXAMPLE
-        Get-StarrProwlarrIndexerStatus -Url 'http://localhost:9696' -ApiKey '<api-key>'
+        Get-StarrProwlarrIndexerStatus -Url 'http://localhost:9696' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

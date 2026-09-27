@@ -1,4 +1,4 @@
-﻿function Set-StarrRadarrCollectionMonitoring {
+function Set-StarrRadarrCollectionMonitoring {
     <#
     .SYNOPSIS
         Changes Radarr collection monitoring.
@@ -25,7 +25,7 @@
         Set-StarrRadarrCollectionMonitoring -InstanceName 'Main' -CollectionId 42,43 -Monitored $true
 
     .EXAMPLE
-        Set-StarrRadarrCollectionMonitoring -Url 'http://localhost:7878' -ApiKey '<api-key>' -CollectionId 42 -Monitored $false -WhatIf
+        Set-StarrRadarrCollectionMonitoring -Url 'http://localhost:7878' -ApiKey 'example-api-key' -CollectionId 42 -Monitored $false -WhatIf
 
     .INPUTS
         None.

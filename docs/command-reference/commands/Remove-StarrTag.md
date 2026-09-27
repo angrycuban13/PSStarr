@@ -56,7 +56,7 @@ Remove-StarrTag -InstanceName Main -TagName reviewed
 ### EXAMPLE 2
 
 ```powershell
-' -TagId 7 -WhatIf
+Remove-StarrTag -Url 'http://localhost:8989' -ApiKey 'example-api-key' -TagId 7 -WhatIf
 ```
 
 ## PARAMETERS

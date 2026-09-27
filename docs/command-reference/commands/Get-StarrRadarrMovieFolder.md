@@ -43,7 +43,7 @@ Get-StarrRadarrMovieFolder -InstanceName 'Main' -MovieId 42
 ### EXAMPLE 2
 
 ```powershell
-' -MovieId 42
+Get-StarrRadarrMovieFolder -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieId 42
 ```
 
 ### EXAMPLE 3

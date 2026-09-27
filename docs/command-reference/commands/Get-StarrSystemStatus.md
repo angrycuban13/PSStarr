@@ -48,7 +48,7 @@ Get-StarrSystemStatus -InstanceName 'Main'
 ### EXAMPLE 3
 
 ```powershell
-'
+Get-StarrSystemStatus -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

@@ -1,4 +1,4 @@
-﻿function Get-StarrQualityDefinitionLimit {
+function Get-StarrQualityDefinitionLimit {
     <#
     .SYNOPSIS
         Retrieves quality definition limits from Radarr or Sonarr.
@@ -22,7 +22,7 @@
         Get-StarrQualityDefinitionLimit -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrQualityDefinitionLimit -Url 'http://localhost:8989' -ApiKey '<api-key>'
+        Get-StarrQualityDefinitionLimit -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

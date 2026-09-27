@@ -46,7 +46,7 @@ Get-StarrRadarrImportListMovie -InstanceName 'Main' -IncludeTrending $true
 ### EXAMPLE 2
 
 ```powershell
-' -IncludeTrending $true
+Get-StarrRadarrImportListMovie -Url 'http://localhost:7878' -ApiKey 'example-api-key' -IncludeTrending $true
 ```
 
 ## PARAMETERS

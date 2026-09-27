@@ -1,4 +1,4 @@
-﻿function Get-StarrQueue {
+function Get-StarrQueue {
     <#
     .SYNOPSIS
         Retrieves queue records from a Starr instance.
@@ -70,7 +70,7 @@
         Get-StarrQueue -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrQueue -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrQueue -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

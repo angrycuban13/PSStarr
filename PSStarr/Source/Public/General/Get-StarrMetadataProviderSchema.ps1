@@ -1,4 +1,4 @@
-﻿function Get-StarrMetadataProviderSchema {
+function Get-StarrMetadataProviderSchema {
     <#
     .SYNOPSIS
         Retrieves metadata provider schemas from Radarr or Sonarr.
@@ -22,7 +22,7 @@
         Get-StarrMetadataProviderSchema -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrMetadataProviderSchema -Url 'http://localhost:8989' -ApiKey '<api-key>'
+        Get-StarrMetadataProviderSchema -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

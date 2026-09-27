@@ -42,7 +42,7 @@ Get-StarrIndexerFlag -InstanceName 'Main'
 ### EXAMPLE 2
 
 ```powershell
-'
+Get-StarrIndexerFlag -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

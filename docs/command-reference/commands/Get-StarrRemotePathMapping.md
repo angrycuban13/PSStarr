@@ -50,7 +50,7 @@ Get-StarrRemotePathMapping -InstanceName 'Main'
 ### EXAMPLE 3
 
 ```powershell
-'
+Get-StarrRemotePathMapping -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

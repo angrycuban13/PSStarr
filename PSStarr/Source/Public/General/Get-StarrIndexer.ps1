@@ -1,4 +1,4 @@
-﻿function Get-StarrIndexer {
+function Get-StarrIndexer {
     <#
     .SYNOPSIS
         Retrieves indexers from a Starr instance.
@@ -28,7 +28,7 @@
         Get-StarrIndexer -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrIndexer -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrIndexer -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

@@ -46,7 +46,7 @@ Start-StarrRadarrMovieSearch -InstanceName RadarrMain -MovieId 42,43
 ### EXAMPLE 2
 
 ```powershell
-' -MovieId 42 -WhatIf
+Start-StarrRadarrMovieSearch -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieId 42 -WhatIf
 ```
 
 ## PARAMETERS

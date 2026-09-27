@@ -25,7 +25,7 @@ function Get-StarrAutoTaggingSchema {
         Get-StarrAutoTaggingSchema -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrAutoTaggingSchema -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrAutoTaggingSchema -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

@@ -1,4 +1,4 @@
-﻿function Get-StarrRadarrImportListMovie {
+function Get-StarrRadarrImportListMovie {
     <#
     .SYNOPSIS
         Retrieves Radarr import list movie results.
@@ -28,7 +28,7 @@
         Get-StarrRadarrImportListMovie -InstanceName 'Main' -IncludeTrending $true
 
     .EXAMPLE
-        Get-StarrRadarrImportListMovie -Url 'http://localhost:7878' -ApiKey '<api-key>' -IncludeTrending $true
+        Get-StarrRadarrImportListMovie -Url 'http://localhost:7878' -ApiKey 'example-api-key' -IncludeTrending $true
 
     .INPUTS
         None.

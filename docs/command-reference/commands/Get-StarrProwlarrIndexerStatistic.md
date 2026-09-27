@@ -45,7 +45,7 @@ Get-StarrProwlarrIndexerStatistic -InstanceName 'Main' -IndexerIdFilter 1,2 -Pro
 ### EXAMPLE 2
 
 ```powershell
-'
+Get-StarrProwlarrIndexerStatistic -Url 'http://localhost:9696' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

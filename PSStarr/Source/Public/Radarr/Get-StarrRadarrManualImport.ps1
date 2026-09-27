@@ -1,4 +1,4 @@
-﻿function Get-StarrRadarrManualImport {
+function Get-StarrRadarrManualImport {
     <#
     .SYNOPSIS
         Retrieves Radarr manual import results.
@@ -34,7 +34,7 @@
         Get-StarrRadarrManualImport -InstanceName 'Main' -MovieId 42
 
     .EXAMPLE
-        Get-StarrRadarrManualImport -Url 'http://localhost:7878' -ApiKey '<api-key>' -Folder '/downloads/movies'
+        Get-StarrRadarrManualImport -Url 'http://localhost:7878' -ApiKey 'example-api-key' -Folder '/downloads/movies'
 
     .INPUTS
         None.

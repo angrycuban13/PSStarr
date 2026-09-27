@@ -1,4 +1,4 @@
-﻿function Get-StarrSonarrNamingExample {
+function Get-StarrSonarrNamingExample {
     <#
     .SYNOPSIS
         Retrieves Sonarr filename examples.
@@ -55,7 +55,7 @@
         Get-StarrSonarrNamingExample -InstanceName Main
 
     .EXAMPLE
-        Get-StarrSonarrNamingExample -Url 'http://localhost:8989' -ApiKey '<api-key>'
+        Get-StarrSonarrNamingExample -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 
     .EXAMPLE
         Get-StarrSonarrNamingExample -InstanceName Main -NamingConfigId 1 -RenameEpisodes $true -ReplaceIllegalCharacters $true -ColonReplacementFormat 0 -MultiEpisodeStyle 0 -StandardEpisodeFormat '{Series Title} - S{season:00}E{episode:00}' -DailyEpisodeFormat '{Series Title} - {Air-Date}' -AnimeEpisodeFormat '{Series Title} - S{season:00}E{episode:00}' -SeriesFolderFormat '{Series Title}' -SeasonFolderFormat 'Season {season:00}' -SpecialsFolderFormat 'Specials'

@@ -43,7 +43,7 @@ Get-StarrSonarrSeriesLookup -InstanceName 'RadarrMain' -Term 'example'
 ### EXAMPLE 2
 
 ```powershell
-' -Term 'example'
+Get-StarrSonarrSeriesLookup -Url 'http://localhost:7878' -ApiKey 'example-api-key' -Term 'example'
 ```
 
 ## PARAMETERS

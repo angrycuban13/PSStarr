@@ -1,4 +1,4 @@
-﻿function Get-StarrRemotePathMapping {
+function Get-StarrRemotePathMapping {
     <#
     .SYNOPSIS
         Retrieves remote-path mappings from a Starr instance.
@@ -28,7 +28,7 @@
         Get-StarrRemotePathMapping -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrRemotePathMapping -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrRemotePathMapping -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

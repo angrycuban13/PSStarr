@@ -1,4 +1,4 @@
-﻿function Invoke-StarrApiRequest {
+function Invoke-StarrApiRequest {
     <#
     .SYNOPSIS
         Sends an authenticated request to a Starr application API.
@@ -43,7 +43,7 @@
         Invoke-StarrApiRequest -InstanceName 'RadarrMain' -Endpoint 'health'
 
     .EXAMPLE
-        Invoke-StarrApiRequest -Url 'http://localhost:7878' -ApiKey '<api-key>' -Endpoint 'health'
+        Invoke-StarrApiRequest -Url 'http://localhost:7878' -ApiKey 'example-api-key' -Endpoint 'health'
 
     .INPUTS
         None.

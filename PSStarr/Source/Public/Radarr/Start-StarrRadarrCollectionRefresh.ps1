@@ -1,4 +1,4 @@
-﻿function Start-StarrRadarrCollectionRefresh {
+function Start-StarrRadarrCollectionRefresh {
     <#
     .SYNOPSIS
         Starts refreshing selected Radarr collections.
@@ -22,7 +22,7 @@
         Start-StarrRadarrCollectionRefresh -InstanceName RadarrMain -CollectionId 7,8
 
     .EXAMPLE
-        Start-StarrRadarrCollectionRefresh -Url 'http://localhost:7878' -ApiKey '<api-key>' -CollectionId 7 -WhatIf
+        Start-StarrRadarrCollectionRefresh -Url 'http://localhost:7878' -ApiKey 'example-api-key' -CollectionId 7 -WhatIf
 
     .INPUTS
         None.

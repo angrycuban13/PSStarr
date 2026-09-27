@@ -1,4 +1,4 @@
-﻿function Get-StarrProwlarrIndexerProxy {
+function Get-StarrProwlarrIndexerProxy {
     <#
     .SYNOPSIS
         Retrieves Prowlarr IndexerProxy resources.
@@ -25,7 +25,7 @@
         Get-StarrProwlarrIndexerProxy -InstanceName Main -IndexerProxyId 1
 
     .EXAMPLE
-        Get-StarrProwlarrIndexerProxy -Url 'http://localhost:9696' -ApiKey '<api-key>'
+        Get-StarrProwlarrIndexerProxy -Url 'http://localhost:9696' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

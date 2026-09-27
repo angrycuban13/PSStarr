@@ -1,4 +1,4 @@
-﻿function Get-StarrRadarrExtraFile {
+function Get-StarrRadarrExtraFile {
     <#
     .SYNOPSIS
         Retrieves Radarr extra-file records.
@@ -22,7 +22,7 @@
         Get-StarrRadarrExtraFile -InstanceName 'Main' -MovieId 42
 
     .EXAMPLE
-        Get-StarrRadarrExtraFile -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieId 42
+        Get-StarrRadarrExtraFile -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieId 42
 
     .EXAMPLE
         Get-StarrRadarrMovie -MovieId 42 | Get-StarrRadarrExtraFile

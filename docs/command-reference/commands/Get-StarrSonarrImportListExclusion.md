@@ -63,7 +63,7 @@ Get-StarrSonarrImportListExclusion -InstanceName 'Main' -ExclusionId 7
 ### EXAMPLE 3
 
 ```powershell
-'
+Get-StarrSonarrImportListExclusion -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

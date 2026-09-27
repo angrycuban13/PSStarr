@@ -1,4 +1,4 @@
-﻿function Get-StarrSonarrManualImport {
+function Get-StarrSonarrManualImport {
     <#
     .SYNOPSIS
         Retrieves Sonarr manual-import candidates.
@@ -34,7 +34,7 @@
         Get-StarrSonarrManualImport -InstanceName Main -Folder '/downloads/example'
 
     .EXAMPLE
-        Get-StarrSonarrManualImport -Url 'http://localhost:8989' -ApiKey '<api-key>' -Folder '/downloads/example'
+        Get-StarrSonarrManualImport -Url 'http://localhost:8989' -ApiKey 'example-api-key' -Folder '/downloads/example'
 
     .EXAMPLE
         Get-StarrSonarrManualImport -InstanceName Main -SeriesId 42 -SeasonNumber 0

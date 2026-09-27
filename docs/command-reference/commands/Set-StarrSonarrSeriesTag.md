@@ -60,7 +60,7 @@ Set-StarrSonarrSeriesTag -InstanceName Main -SeriesId 42,43 -TagName reviewed -A
 ### EXAMPLE 2
 
 ```powershell
-' -SeriesId 42 -TagId 7,8 -Action Remove -WhatIf
+Set-StarrSonarrSeriesTag -Url 'http://localhost:8989' -ApiKey 'example-api-key' -SeriesId 42 -TagId 7,8 -Action Remove -WhatIf
 ```
 
 Previews removing tags without contacting Sonarr.

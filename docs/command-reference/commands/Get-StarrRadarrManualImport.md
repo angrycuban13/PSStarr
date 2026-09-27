@@ -54,7 +54,7 @@ Get-StarrRadarrManualImport -InstanceName 'Main' -MovieId 42
 ### EXAMPLE 3
 
 ```powershell
-' -Folder '/downloads/movies'
+Get-StarrRadarrManualImport -Url 'http://localhost:7878' -ApiKey 'example-api-key' -Folder '/downloads/movies'
 ```
 
 ## PARAMETERS

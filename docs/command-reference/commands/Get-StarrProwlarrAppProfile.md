@@ -48,7 +48,7 @@ Get-StarrProwlarrAppProfile -InstanceName Main -AppProfileId 1
 ### EXAMPLE 3
 
 ```powershell
-'
+Get-StarrProwlarrAppProfile -Url 'http://localhost:9696' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

@@ -1,4 +1,4 @@
-﻿function Get-StarrTag {
+function Get-StarrTag {
     <#
     .SYNOPSIS
         Retrieves tags from a Starr instance.
@@ -28,7 +28,7 @@
         Get-StarrTag -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrTag -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrTag -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

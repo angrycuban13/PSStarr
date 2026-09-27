@@ -63,7 +63,7 @@ Get-StarrRadarrAlternativeTitle -InstanceName 'Main' -AlternativeTitleId 7
 ### EXAMPLE 3
 
 ```powershell
-' -MovieId 42
+Get-StarrRadarrAlternativeTitle -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieId 42
 ```
 
 ### EXAMPLE 4

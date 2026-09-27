@@ -25,7 +25,7 @@ function Invoke-StarrCommand {
         Invoke-StarrCommand -InstanceName Main -CommandName RefreshMovie -Arguments @{ movieIds = @(42) }
 
     .EXAMPLE
-        Invoke-StarrCommand -Url 'http://localhost:8989' -ApiKey '<api-key>' -CommandName RefreshSeries -WhatIf
+        Invoke-StarrCommand -Url 'http://localhost:8989' -ApiKey 'example-api-key' -CommandName RefreshSeries -WhatIf
 
     .INPUTS
         None.

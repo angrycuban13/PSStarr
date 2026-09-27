@@ -1,4 +1,4 @@
-﻿function Get-StarrRadarrMovie {
+function Get-StarrRadarrMovie {
     <#
     .SYNOPSIS
         Retrieves Radarr movies from a Starr instance.
@@ -34,7 +34,7 @@
         Get-StarrRadarrMovie -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrRadarrMovie -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrRadarrMovie -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

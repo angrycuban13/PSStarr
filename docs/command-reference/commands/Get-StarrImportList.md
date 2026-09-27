@@ -48,7 +48,7 @@ Get-StarrImportList -InstanceName 'Main' -ImportListId 1
 ### EXAMPLE 3
 
 ```powershell
-'
+Get-StarrImportList -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

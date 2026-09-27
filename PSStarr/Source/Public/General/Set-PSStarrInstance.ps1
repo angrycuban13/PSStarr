@@ -1,4 +1,4 @@
-﻿function Set-PSStarrInstance {
+function Set-PSStarrInstance {
     <#
     .SYNOPSIS
         Creates or updates a saved PSStarr instance.
@@ -22,13 +22,13 @@
         The API-key storage mode. The default is Dpapi on Windows and None on other platforms. Aes256 requires PSSTARR_AES_KEY to contain exactly 32 Base64-encoded bytes.
 
     .EXAMPLE
-        Set-PSStarrInstance -Name 'RadarrMain' -Application Radarr -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Set-PSStarrInstance -Name 'RadarrMain' -Application Radarr -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .EXAMPLE
-        Set-PSStarrInstance -Name 'RadarrMain' -Application Radarr -Url 'http://localhost:7878' -ApiKey '<api-key>' -EncryptionMode Aes256
+        Set-PSStarrInstance -Name 'RadarrMain' -Application Radarr -Url 'http://localhost:7878' -ApiKey 'example-api-key' -EncryptionMode Aes256
 
     .EXAMPLE
-        Set-PSStarrInstance -Name 'RadarrMain' -Application Radarr -Url 'http://localhost:7878' -ApiKey '<api-key>' -EncryptionMode None
+        Set-PSStarrInstance -Name 'RadarrMain' -Application Radarr -Url 'http://localhost:7878' -ApiKey 'example-api-key' -EncryptionMode None
 
     .EXAMPLE
         Set-PSStarrInstance -Name 'RadarrMain' -Url 'http://localhost:7879'

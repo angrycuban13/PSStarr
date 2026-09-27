@@ -1,4 +1,4 @@
-﻿function Get-StarrSystemStatus {
+function Get-StarrSystemStatus {
     <#
     .SYNOPSIS
         Retrieves system status information from a Starr instance.
@@ -25,7 +25,7 @@
         Get-StarrSystemStatus -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrSystemStatus -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrSystemStatus -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

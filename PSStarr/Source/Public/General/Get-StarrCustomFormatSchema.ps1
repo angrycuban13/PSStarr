@@ -25,7 +25,7 @@ function Get-StarrCustomFormatSchema {
         Get-StarrCustomFormatSchema -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrCustomFormatSchema -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrCustomFormatSchema -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

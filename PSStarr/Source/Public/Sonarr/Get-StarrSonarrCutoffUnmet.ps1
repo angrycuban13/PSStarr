@@ -1,4 +1,4 @@
-﻿function Get-StarrSonarrCutoffUnmet {
+function Get-StarrSonarrCutoffUnmet {
     <#
     .SYNOPSIS
         Retrieves Sonarr episodes that have not met their quality cutoff.
@@ -49,7 +49,7 @@
         Get-StarrSonarrCutoffUnmet -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrSonarrCutoffUnmet -Url 'http://localhost:8989' -ApiKey '<api-key>'
+        Get-StarrSonarrCutoffUnmet -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

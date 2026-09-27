@@ -42,7 +42,7 @@ Get-StarrSonarrCalendarEntry -InstanceName Main -EpisodeId 42
 ### EXAMPLE 2
 
 ```powershell
-' -EpisodeId 42
+Get-StarrSonarrCalendarEntry -Url 'http://localhost:8989' -ApiKey 'example-api-key' -EpisodeId 42
 ```
 
 ## PARAMETERS

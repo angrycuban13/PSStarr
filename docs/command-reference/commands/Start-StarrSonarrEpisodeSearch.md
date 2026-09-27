@@ -45,7 +45,7 @@ Start-StarrSonarrEpisodeSearch -InstanceName SonarrMain -EpisodeId 101,102
 ### EXAMPLE 2
 
 ```powershell
-' -EpisodeId 101 -WhatIf
+Start-StarrSonarrEpisodeSearch -Url 'http://localhost:8989' -ApiKey 'example-api-key' -EpisodeId 101 -WhatIf
 ```
 
 ## PARAMETERS

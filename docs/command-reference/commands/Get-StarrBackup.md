@@ -48,7 +48,7 @@ Get-StarrBackup -InstanceName 'Main'
 ### EXAMPLE 3
 
 ```powershell
-'
+Get-StarrBackup -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

@@ -1,4 +1,4 @@
-﻿function Get-StarrImportList {
+function Get-StarrImportList {
     <#
     .SYNOPSIS
         Retrieves import list settings from Radarr or Sonarr.
@@ -28,7 +28,7 @@
         Get-StarrImportList -InstanceName 'Main' -ImportListId 1
 
     .EXAMPLE
-        Get-StarrImportList -Url 'http://localhost:8989' -ApiKey '<api-key>'
+        Get-StarrImportList -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

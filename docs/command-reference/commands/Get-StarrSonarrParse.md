@@ -44,7 +44,7 @@ Get-StarrSonarrParse -InstanceName Main -Title 'Example.Show.S01E01.1080p'
 ### EXAMPLE 2
 
 ```powershell
-' -Title 'Example.Show.S01E01.1080p'
+Get-StarrSonarrParse -Url 'http://localhost:8989' -ApiKey 'example-api-key' -Title 'Example.Show.S01E01.1080p'
 ```
 
 ### EXAMPLE 3

@@ -1,4 +1,4 @@
-﻿function Get-StarrLogEntry {
+function Get-StarrLogEntry {
     <#
     .SYNOPSIS
         Retrieves application log records from a Starr instance.
@@ -40,7 +40,7 @@
         Get-StarrLogEntry -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrLogEntry -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrLogEntry -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

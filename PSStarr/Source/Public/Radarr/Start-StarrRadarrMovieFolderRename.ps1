@@ -1,4 +1,4 @@
-﻿function Start-StarrRadarrMovieFolderRename {
+function Start-StarrRadarrMovieFolderRename {
     <#
     .SYNOPSIS
         Starts renaming selected Radarr movie folders.
@@ -22,7 +22,7 @@
         Start-StarrRadarrMovieFolderRename -InstanceName RadarrMain -MovieId 42,43
 
     .EXAMPLE
-        Start-StarrRadarrMovieFolderRename -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieId 42 -WhatIf
+        Start-StarrRadarrMovieFolderRename -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieId 42 -WhatIf
 
     .INPUTS
         None.

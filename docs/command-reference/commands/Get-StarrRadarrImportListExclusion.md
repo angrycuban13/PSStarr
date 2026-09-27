@@ -64,7 +64,7 @@ Get-StarrRadarrImportListExclusion -InstanceName 'Main' -ExclusionId 7
 ### EXAMPLE 3
 
 ```powershell
-'
+Get-StarrRadarrImportListExclusion -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

@@ -1,4 +1,4 @@
-﻿function Get-StarrRadarrMovieFile {
+function Get-StarrRadarrMovieFile {
     <#
     .SYNOPSIS
         Retrieves Radarr movie files from a Starr instance.
@@ -31,7 +31,7 @@
         Get-StarrRadarrMovieFile -InstanceName 'Main' -MovieIdFilter 123
 
     .EXAMPLE
-        Get-StarrRadarrMovieFile -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieFileIdFilter 456,789
+        Get-StarrRadarrMovieFile -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieFileIdFilter 456,789
 
     .EXAMPLE
         Get-StarrRadarrMovie -MovieId 123 | Get-StarrRadarrMovieFile

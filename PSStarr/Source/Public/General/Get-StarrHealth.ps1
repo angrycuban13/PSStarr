@@ -1,4 +1,4 @@
-﻿function Get-StarrHealth {
+function Get-StarrHealth {
     <#
     .SYNOPSIS
         Retrieves health information from a Starr instance.
@@ -25,7 +25,7 @@
         Get-StarrHealth -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrHealth -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrHealth -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

@@ -1,4 +1,4 @@
-﻿function Get-StarrRadarrCredit {
+function Get-StarrRadarrCredit {
     <#
     .SYNOPSIS
         Retrieves Radarr credits from a Starr instance.
@@ -31,7 +31,7 @@
         Get-StarrRadarrCredit -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrRadarrCredit -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrRadarrCredit -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .EXAMPLE
         Get-StarrRadarrMovie -MovieId 123 | Get-StarrRadarrCredit

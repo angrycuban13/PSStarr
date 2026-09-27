@@ -1,4 +1,4 @@
-﻿function Get-StarrRadarrNamingExample {
+function Get-StarrRadarrNamingExample {
     <#
     .SYNOPSIS
         Retrieves Radarr naming example results.
@@ -40,7 +40,7 @@
         Get-StarrRadarrNamingExample -InstanceName 'Main' -NamingConfigId 1 -StandardMovieFormat '{Movie Title} ({Release Year})' -MovieFolderFormat '{Movie Title} ({Release Year})'
 
     .EXAMPLE
-        Get-StarrRadarrNamingExample -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrRadarrNamingExample -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

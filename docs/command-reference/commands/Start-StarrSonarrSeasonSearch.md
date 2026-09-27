@@ -46,7 +46,7 @@ Start-StarrSonarrSeasonSearch -InstanceName SonarrMain -SeriesId 42 -SeasonNumbe
 ### EXAMPLE 2
 
 ```powershell
-' -SeriesId 42 -SeasonNumber 0 -WhatIf
+Start-StarrSonarrSeasonSearch -Url 'http://localhost:8989' -ApiKey 'example-api-key' -SeriesId 42 -SeasonNumber 0 -WhatIf
 ```
 
 ## PARAMETERS

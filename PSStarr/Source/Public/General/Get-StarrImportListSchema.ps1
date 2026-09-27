@@ -1,4 +1,4 @@
-﻿function Get-StarrImportListSchema {
+function Get-StarrImportListSchema {
     <#
     .SYNOPSIS
         Retrieves import list schemas from Radarr or Sonarr.
@@ -22,7 +22,7 @@
         Get-StarrImportListSchema -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrImportListSchema -Url 'http://localhost:8989' -ApiKey '<api-key>'
+        Get-StarrImportListSchema -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

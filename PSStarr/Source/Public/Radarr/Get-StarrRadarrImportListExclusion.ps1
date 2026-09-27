@@ -1,4 +1,4 @@
-﻿function Get-StarrRadarrImportListExclusion {
+function Get-StarrRadarrImportListExclusion {
     <#
     .SYNOPSIS
         Retrieves Radarr import-list exclusions.
@@ -37,7 +37,7 @@
         Get-StarrRadarrImportListExclusion -InstanceName 'Main' -ExclusionId 7
 
     .EXAMPLE
-        Get-StarrRadarrImportListExclusion -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrRadarrImportListExclusion -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

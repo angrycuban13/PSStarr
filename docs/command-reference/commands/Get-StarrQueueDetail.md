@@ -52,7 +52,7 @@ Get-StarrQueueDetail -InstanceName 'Main'
 ### EXAMPLE 3
 
 ```powershell
-'
+Get-StarrQueueDetail -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

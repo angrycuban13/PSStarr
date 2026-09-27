@@ -48,7 +48,7 @@ Get-StarrDelayProfile -InstanceName 'Main' -DelayProfileId 1
 ### EXAMPLE 3
 
 ```powershell
-'
+Get-StarrDelayProfile -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

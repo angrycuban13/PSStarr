@@ -25,7 +25,7 @@ function Get-StarrDownloadClientSchema {
         Get-StarrDownloadClientSchema -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrDownloadClientSchema -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrDownloadClientSchema -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

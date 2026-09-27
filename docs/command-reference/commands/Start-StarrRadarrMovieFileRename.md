@@ -47,7 +47,7 @@ Start-StarrRadarrMovieFileRename -InstanceName RadarrMain -MovieId 42 -MovieFile
 ### EXAMPLE 2
 
 ```powershell
-' -MovieId 42 -MovieFileId 101 -WhatIf
+Start-StarrRadarrMovieFileRename -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieId 42 -MovieFileId 101 -WhatIf
 ```
 
 ## PARAMETERS

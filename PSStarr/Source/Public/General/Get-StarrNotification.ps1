@@ -1,4 +1,4 @@
-﻿function Get-StarrNotification {
+function Get-StarrNotification {
     <#
     .SYNOPSIS
         Retrieves notifications from a Starr instance.
@@ -28,7 +28,7 @@
         Get-StarrNotification -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrNotification -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrNotification -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

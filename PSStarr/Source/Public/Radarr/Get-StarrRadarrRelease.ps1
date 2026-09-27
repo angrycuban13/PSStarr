@@ -1,4 +1,4 @@
-﻿function Get-StarrRadarrRelease {
+function Get-StarrRadarrRelease {
     <#
     .SYNOPSIS
         Retrieves Radarr release results.
@@ -22,7 +22,7 @@
         Get-StarrRadarrRelease -InstanceName 'Main' -MovieId 42
 
     .EXAMPLE
-        Get-StarrRadarrRelease -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieId 42
+        Get-StarrRadarrRelease -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieId 42
 
     .EXAMPLE
         Get-StarrRadarrRelease -InstanceName 'Main'

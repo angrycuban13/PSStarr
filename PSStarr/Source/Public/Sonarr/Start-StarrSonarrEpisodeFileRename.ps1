@@ -1,4 +1,4 @@
-﻿function Start-StarrSonarrEpisodeFileRename {
+function Start-StarrSonarrEpisodeFileRename {
     <#
     .SYNOPSIS
         Starts renaming selected Sonarr episode files.
@@ -25,7 +25,7 @@
         Start-StarrSonarrEpisodeFileRename -InstanceName SonarrMain -SeriesId 42 -EpisodeFileId 100,101
 
     .EXAMPLE
-        Start-StarrSonarrEpisodeFileRename -Url 'http://localhost:8989' -ApiKey '<api-key>' -SeriesId 42 -EpisodeFileId 100 -WhatIf
+        Start-StarrSonarrEpisodeFileRename -Url 'http://localhost:8989' -ApiKey 'example-api-key' -SeriesId 42 -EpisodeFileId 100 -WhatIf
 
     .INPUTS
         None.

@@ -1,4 +1,4 @@
-﻿function Get-StarrRadarrMovieLookup {
+function Get-StarrRadarrMovieLookup {
     <#
     .SYNOPSIS
         Searches Radarr metadata providers for movies to add.
@@ -28,7 +28,7 @@
         Get-StarrRadarrMovieLookup -InstanceName 'RadarrMain' -Term 'example'
 
     .EXAMPLE
-        Get-StarrRadarrMovieLookup -Url 'http://localhost:7878' -ApiKey '<api-key>' -Term 'example'
+        Get-StarrRadarrMovieLookup -Url 'http://localhost:7878' -ApiKey 'example-api-key' -Term 'example'
 
     .INPUTS
         None.

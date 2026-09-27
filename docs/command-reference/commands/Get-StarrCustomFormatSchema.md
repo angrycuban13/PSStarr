@@ -48,7 +48,7 @@ Get-StarrCustomFormatSchema -InstanceName 'Main'
 ### EXAMPLE 3
 
 ```powershell
-'
+Get-StarrCustomFormatSchema -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

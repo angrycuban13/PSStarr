@@ -43,7 +43,7 @@ Get-StarrRadarrParse -InstanceName 'Main' -Title 'Example.Movie.2024.1080p'
 ### EXAMPLE 2
 
 ```powershell
-' -Title 'Example.Movie.2024.1080p'
+Get-StarrRadarrParse -Url 'http://localhost:7878' -ApiKey 'example-api-key' -Title 'Example.Movie.2024.1080p'
 ```
 
 ## PARAMETERS

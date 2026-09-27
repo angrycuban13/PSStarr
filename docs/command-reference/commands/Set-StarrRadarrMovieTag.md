@@ -60,7 +60,7 @@ Set-StarrRadarrMovieTag -InstanceName 'Main' -MovieId 42,43 -TagName reviewed -A
 ### EXAMPLE 2
 
 ```powershell
-' -MovieId 42 -TagId 2 -Action Remove -WhatIf
+Set-StarrRadarrMovieTag -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieId 42 -TagId 2 -Action Remove -WhatIf
 ```
 
 ## PARAMETERS

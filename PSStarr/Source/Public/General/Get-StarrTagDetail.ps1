@@ -1,4 +1,4 @@
-﻿function Get-StarrTagDetail {
+function Get-StarrTagDetail {
     <#
     .SYNOPSIS
         Retrieves tag usage records using the legacy command name.
@@ -28,7 +28,7 @@
         Get-StarrTagDetail -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrTagDetail -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrTagDetail -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

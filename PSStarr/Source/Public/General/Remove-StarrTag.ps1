@@ -1,4 +1,4 @@
-﻿function Remove-StarrTag {
+function Remove-StarrTag {
     <#
     .SYNOPSIS
         Removes an application tag from Radarr or Sonarr.
@@ -25,7 +25,7 @@
         Remove-StarrTag -InstanceName Main -TagName reviewed
 
     .EXAMPLE
-        Remove-StarrTag -Url 'http://localhost:8989' -ApiKey '<api-key>' -TagId 7 -WhatIf
+        Remove-StarrTag -Url 'http://localhost:8989' -ApiKey 'example-api-key' -TagId 7 -WhatIf
 
     .INPUTS
         None.

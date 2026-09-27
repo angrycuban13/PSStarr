@@ -1,4 +1,4 @@
-﻿function Get-StarrSonarrMissing {
+function Get-StarrSonarrMissing {
     <#
     .SYNOPSIS
         Retrieves Sonarr missing records from a Starr instance.
@@ -46,7 +46,7 @@
         Get-StarrSonarrMissing -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrSonarrMissing -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrSonarrMissing -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

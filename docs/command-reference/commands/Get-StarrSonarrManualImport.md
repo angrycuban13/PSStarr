@@ -58,7 +58,7 @@ Get-StarrSonarrManualImport -InstanceName Main -Folder '/downloads/example'
 ### EXAMPLE 2
 
 ```powershell
-' -Folder '/downloads/example'
+Get-StarrSonarrManualImport -Url 'http://localhost:8989' -ApiKey 'example-api-key' -Folder '/downloads/example'
 ```
 
 ### EXAMPLE 3

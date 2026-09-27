@@ -1,4 +1,4 @@
-﻿function Get-StarrRadarrParse {
+function Get-StarrRadarrParse {
     <#
     .SYNOPSIS
         Retrieves Radarr parse results.
@@ -22,7 +22,7 @@
         Get-StarrRadarrParse -InstanceName 'Main' -Title 'Example.Movie.2024.1080p'
 
     .EXAMPLE
-        Get-StarrRadarrParse -Url 'http://localhost:7878' -ApiKey '<api-key>' -Title 'Example.Movie.2024.1080p'
+        Get-StarrRadarrParse -Url 'http://localhost:7878' -ApiKey 'example-api-key' -Title 'Example.Movie.2024.1080p'
 
     .INPUTS
         None.

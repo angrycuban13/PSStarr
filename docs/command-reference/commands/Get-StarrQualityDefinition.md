@@ -50,7 +50,7 @@ Get-StarrQualityDefinition -InstanceName 'Main' -QualityDefinitionId 1
 ### EXAMPLE 3
 
 ```powershell
-'
+Get-StarrQualityDefinition -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

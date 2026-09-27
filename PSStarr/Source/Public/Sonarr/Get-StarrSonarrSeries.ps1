@@ -1,4 +1,4 @@
-﻿function Get-StarrSonarrSeries {
+function Get-StarrSonarrSeries {
     <#
     .SYNOPSIS
         Retrieves Sonarr series from a Starr instance.
@@ -31,7 +31,7 @@
         Get-StarrSonarrSeries -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrSonarrSeries -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrSonarrSeries -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

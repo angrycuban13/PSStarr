@@ -1,4 +1,4 @@
-﻿function Get-StarrRadarrAlternativeTitle {
+function Get-StarrRadarrAlternativeTitle {
     <#
     .SYNOPSIS
         Retrieves Radarr alternative titles.
@@ -31,7 +31,7 @@
         Get-StarrRadarrAlternativeTitle -InstanceName 'Main' -AlternativeTitleId 7
 
     .EXAMPLE
-        Get-StarrRadarrAlternativeTitle -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieId 42
+        Get-StarrRadarrAlternativeTitle -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieId 42
 
     .EXAMPLE
         Get-StarrRadarrMovie -MovieId 42 | Get-StarrRadarrAlternativeTitle

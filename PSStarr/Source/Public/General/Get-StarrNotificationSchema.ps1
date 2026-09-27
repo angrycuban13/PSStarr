@@ -1,4 +1,4 @@
-﻿function Get-StarrNotificationSchema {
+function Get-StarrNotificationSchema {
     <#
     .SYNOPSIS
         Retrieves notification schemas from a Starr instance.
@@ -25,7 +25,7 @@
         Get-StarrNotificationSchema -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrNotificationSchema -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrNotificationSchema -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

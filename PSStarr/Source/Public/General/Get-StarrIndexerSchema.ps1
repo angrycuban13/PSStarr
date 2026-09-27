@@ -1,4 +1,4 @@
-﻿function Get-StarrIndexerSchema {
+function Get-StarrIndexerSchema {
     <#
     .SYNOPSIS
         Retrieves indexer schemas from a Starr instance.
@@ -25,7 +25,7 @@
         Get-StarrIndexerSchema -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrIndexerSchema -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrIndexerSchema -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

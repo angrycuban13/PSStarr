@@ -43,7 +43,7 @@ Start-StarrSonarrSeriesRescan -InstanceName SonarrMain -SeriesId 42
 ### EXAMPLE 2
 
 ```powershell
-' -SeriesId 42 -WhatIf
+Start-StarrSonarrSeriesRescan -Url 'http://localhost:8989' -ApiKey 'example-api-key' -SeriesId 42 -WhatIf
 ```
 
 ## PARAMETERS

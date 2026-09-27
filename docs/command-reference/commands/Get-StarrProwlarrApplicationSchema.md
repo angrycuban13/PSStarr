@@ -44,7 +44,7 @@ Get-StarrProwlarrApplicationSchema -InstanceName Main
 ### EXAMPLE 2
 
 ```powershell
-'
+Get-StarrProwlarrApplicationSchema -Url 'http://localhost:9696' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

@@ -1,4 +1,4 @@
-﻿function Get-StarrApplicationConfiguration {
+function Get-StarrApplicationConfiguration {
     <#
     .SYNOPSIS
         Retrieves application configuration from a Starr application.
@@ -31,7 +31,7 @@
         Get-StarrApplicationConfiguration -InstanceName Main -Section Host -ConfigurationId 1
 
     .EXAMPLE
-        Get-StarrApplicationConfiguration -Url 'http://localhost:7878' -ApiKey '<api-key>' -Section Metadata
+        Get-StarrApplicationConfiguration -Url 'http://localhost:7878' -ApiKey 'example-api-key' -Section Metadata
 
     .INPUTS
         None.

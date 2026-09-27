@@ -65,7 +65,7 @@ Get-StarrSonarrNamingExample -InstanceName Main
 ### EXAMPLE 2
 
 ```powershell
-'
+Get-StarrSonarrNamingExample -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 ```
 
 ### EXAMPLE 3

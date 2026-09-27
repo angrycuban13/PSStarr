@@ -1,4 +1,4 @@
-﻿function New-StarrTag {
+function New-StarrTag {
     <#
     .SYNOPSIS
         Creates an application tag in Radarr or Sonarr.
@@ -22,7 +22,7 @@
         New-StarrTag -InstanceName Main -Label 'reviewed'
 
     .EXAMPLE
-        New-StarrTag -Url 'http://localhost:8989' -ApiKey '<api-key>' -Label 'reviewed' -WhatIf
+        New-StarrTag -Url 'http://localhost:8989' -ApiKey 'example-api-key' -Label 'reviewed' -WhatIf
 
     .INPUTS
         None.

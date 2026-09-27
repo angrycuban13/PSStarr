@@ -53,7 +53,7 @@ Get-StarrSonarrMissing -InstanceName 'Main'
 ### EXAMPLE 3
 
 ```powershell
-'
+Get-StarrSonarrMissing -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

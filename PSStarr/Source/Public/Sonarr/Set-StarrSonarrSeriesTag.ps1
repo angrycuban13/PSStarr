@@ -1,4 +1,4 @@
-﻿function Set-StarrSonarrSeriesTag {
+function Set-StarrSonarrSeriesTag {
     <#
     .SYNOPSIS
         Adds or removes tags on Sonarr series.
@@ -31,7 +31,7 @@
         Set-StarrSonarrSeriesTag -InstanceName Main -SeriesId 42,43 -TagName reviewed -Action Add
 
     .EXAMPLE
-        Set-StarrSonarrSeriesTag -Url 'http://localhost:8989' -ApiKey '<api-key>' -SeriesId 42 -TagId 7,8 -Action Remove -WhatIf
+        Set-StarrSonarrSeriesTag -Url 'http://localhost:8989' -ApiKey 'example-api-key' -SeriesId 42 -TagId 7,8 -Action Remove -WhatIf
 
         Previews removing tags without contacting Sonarr.
 

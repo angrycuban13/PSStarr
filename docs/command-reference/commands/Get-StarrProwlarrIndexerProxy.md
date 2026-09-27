@@ -50,7 +50,7 @@ Get-StarrProwlarrIndexerProxy -InstanceName Main -IndexerProxyId 1
 ### EXAMPLE 3
 
 ```powershell
-'
+Get-StarrProwlarrIndexerProxy -Url 'http://localhost:9696' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

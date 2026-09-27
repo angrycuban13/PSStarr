@@ -1,4 +1,4 @@
-﻿function Get-StarrSonarrRenamePreview {
+function Get-StarrSonarrRenamePreview {
     <#
     .SYNOPSIS
         Retrieves Sonarr episode-file rename previews.
@@ -25,7 +25,7 @@
         Get-StarrSonarrRenamePreview -InstanceName Main -SeriesId 42
 
     .EXAMPLE
-        Get-StarrSonarrRenamePreview -Url 'http://localhost:8989' -ApiKey '<api-key>' -SeriesId 42
+        Get-StarrSonarrRenamePreview -Url 'http://localhost:8989' -ApiKey 'example-api-key' -SeriesId 42
 
     .EXAMPLE
         Get-StarrSonarrRenamePreview -InstanceName Main -SeriesId 42 -SeasonNumber 0

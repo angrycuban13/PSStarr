@@ -1,4 +1,4 @@
-﻿function Get-StarrTask {
+function Get-StarrTask {
     <#
     .SYNOPSIS
         Retrieves system tasks from a Starr instance.
@@ -28,7 +28,7 @@
         Get-StarrTask -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrTask -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrTask -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

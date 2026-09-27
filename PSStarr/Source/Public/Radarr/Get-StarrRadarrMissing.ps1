@@ -1,4 +1,4 @@
-﻿function Get-StarrRadarrMissing {
+function Get-StarrRadarrMissing {
     <#
     .SYNOPSIS
         Retrieves Radarr missing records from a Starr instance.
@@ -37,7 +37,7 @@
         Get-StarrRadarrMissing -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrRadarrMissing -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrRadarrMissing -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

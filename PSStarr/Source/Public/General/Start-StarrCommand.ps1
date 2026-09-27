@@ -1,4 +1,4 @@
-﻿function Start-StarrCommand {
+function Start-StarrCommand {
     <#
     .SYNOPSIS
         Submits an application command using the legacy command name.
@@ -25,7 +25,7 @@
         Start-StarrCommand -InstanceName Main -CommandName 'RefreshMovie' -Arguments @{ movieIds = @(42) }
 
     .EXAMPLE
-        Start-StarrCommand -Url 'http://localhost:8989' -ApiKey '<api-key>' -CommandName 'RefreshSeries' -WhatIf
+        Start-StarrCommand -Url 'http://localhost:8989' -ApiKey 'example-api-key' -CommandName 'RefreshSeries' -WhatIf
 
     .INPUTS
         None.

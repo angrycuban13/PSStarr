@@ -46,7 +46,7 @@ Start-StarrCommand -InstanceName Main -CommandName 'RefreshMovie' -Arguments @{ 
 ### EXAMPLE 2
 
 ```powershell
-' -CommandName 'RefreshSeries' -WhatIf
+Start-StarrCommand -Url 'http://localhost:8989' -ApiKey 'example-api-key' -CommandName 'RefreshSeries' -WhatIf
 ```
 
 ## PARAMETERS

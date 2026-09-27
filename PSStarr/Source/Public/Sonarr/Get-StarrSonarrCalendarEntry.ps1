@@ -1,4 +1,4 @@
-﻿function Get-StarrSonarrCalendarEntry {
+function Get-StarrSonarrCalendarEntry {
     <#
     .SYNOPSIS
         Retrieves Sonarr calendar episode.
@@ -22,7 +22,7 @@
         Get-StarrSonarrCalendarEntry -InstanceName Main -EpisodeId 42
 
     .EXAMPLE
-        Get-StarrSonarrCalendarEntry -Url 'http://localhost:8989' -ApiKey '<api-key>' -EpisodeId 42
+        Get-StarrSonarrCalendarEntry -Url 'http://localhost:8989' -ApiKey 'example-api-key' -EpisodeId 42
 
     .INPUTS
         None.

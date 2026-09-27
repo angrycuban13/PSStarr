@@ -1,4 +1,4 @@
-﻿function Get-StarrLanguage {
+function Get-StarrLanguage {
     <#
     .SYNOPSIS
         Retrieves language settings from Radarr or Sonarr.
@@ -28,7 +28,7 @@
         Get-StarrLanguage -InstanceName 'Main' -LanguageId 1
 
     .EXAMPLE
-        Get-StarrLanguage -Url 'http://localhost:8989' -ApiKey '<api-key>'
+        Get-StarrLanguage -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

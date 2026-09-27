@@ -1,4 +1,4 @@
-﻿function Start-StarrSonarrSeriesRefresh {
+function Start-StarrSonarrSeriesRefresh {
     <#
     .SYNOPSIS
         Starts metadata refreshes for selected Sonarr series.
@@ -22,7 +22,7 @@
         Start-StarrSonarrSeriesRefresh -InstanceName SonarrMain -SeriesId 42
 
     .EXAMPLE
-        Start-StarrSonarrSeriesRefresh -Url 'http://localhost:8989' -ApiKey '<api-key>' -SeriesId 42,43 -WhatIf
+        Start-StarrSonarrSeriesRefresh -Url 'http://localhost:8989' -ApiKey 'example-api-key' -SeriesId 42,43 -WhatIf
 
     .INPUTS
         None.

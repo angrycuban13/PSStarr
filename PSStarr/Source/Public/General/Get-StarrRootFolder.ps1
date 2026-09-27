@@ -1,4 +1,4 @@
-﻿function Get-StarrRootFolder {
+function Get-StarrRootFolder {
     <#
     .SYNOPSIS
         Retrieves root folders from a Starr instance.
@@ -28,7 +28,7 @@
         Get-StarrRootFolder -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrRootFolder -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrRootFolder -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

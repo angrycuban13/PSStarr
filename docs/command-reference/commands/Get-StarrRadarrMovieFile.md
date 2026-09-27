@@ -50,7 +50,7 @@ Get-StarrRadarrMovieFile -InstanceName 'Main' -MovieIdFilter 123
 ### EXAMPLE 3
 
 ```powershell
-' -MovieFileIdFilter 456,789
+Get-StarrRadarrMovieFile -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieFileIdFilter 456,789
 ```
 
 ### EXAMPLE 4

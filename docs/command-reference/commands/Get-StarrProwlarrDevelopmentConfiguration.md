@@ -44,7 +44,7 @@ Get-StarrProwlarrDevelopmentConfiguration -InstanceName Main
 ### EXAMPLE 2
 
 ```powershell
-' -ConfigurationId 1
+Get-StarrProwlarrDevelopmentConfiguration -Url 'http://localhost:9696' -ApiKey 'example-api-key' -ConfigurationId 1
 ```
 
 ## PARAMETERS

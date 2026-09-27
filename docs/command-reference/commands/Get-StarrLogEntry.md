@@ -52,7 +52,7 @@ Get-StarrLogEntry -InstanceName 'Main'
 ### EXAMPLE 3
 
 ```powershell
-'
+Get-StarrLogEntry -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

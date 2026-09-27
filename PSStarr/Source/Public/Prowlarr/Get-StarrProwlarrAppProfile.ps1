@@ -1,4 +1,4 @@
-﻿function Get-StarrProwlarrAppProfile {
+function Get-StarrProwlarrAppProfile {
     <#
     .SYNOPSIS
         Retrieves Prowlarr application profiles.
@@ -25,7 +25,7 @@
         Get-StarrProwlarrAppProfile -InstanceName Main -AppProfileId 1
 
     .EXAMPLE
-        Get-StarrProwlarrAppProfile -Url 'http://localhost:9696' -ApiKey '<api-key>'
+        Get-StarrProwlarrAppProfile -Url 'http://localhost:9696' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

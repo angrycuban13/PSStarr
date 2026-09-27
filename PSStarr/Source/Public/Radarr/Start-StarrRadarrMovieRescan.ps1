@@ -1,4 +1,4 @@
-﻿function Start-StarrRadarrMovieRescan {
+function Start-StarrRadarrMovieRescan {
     <#
     .SYNOPSIS
         Starts rescanning a Radarr movie folder.
@@ -22,7 +22,7 @@
         Start-StarrRadarrMovieRescan -InstanceName RadarrMain -MovieId 42
 
     .EXAMPLE
-        Start-StarrRadarrMovieRescan -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieId 42 -WhatIf
+        Start-StarrRadarrMovieRescan -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieId 42 -WhatIf
 
     .INPUTS
         None.

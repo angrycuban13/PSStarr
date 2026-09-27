@@ -1,4 +1,4 @@
-﻿function Get-StarrQueueStatus {
+function Get-StarrQueueStatus {
     <#
     .SYNOPSIS
         Retrieves queue status from a Starr instance.
@@ -25,7 +25,7 @@
         Get-StarrQueueStatus -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrQueueStatus -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrQueueStatus -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

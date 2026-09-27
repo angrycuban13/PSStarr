@@ -1,4 +1,4 @@
-﻿function Start-StarrSonarrSeriesSearch {
+function Start-StarrSonarrSeriesSearch {
     <#
     .SYNOPSIS
         Starts a Sonarr search for selected series.
@@ -22,7 +22,7 @@
         Start-StarrSonarrSeriesSearch -InstanceName SonarrMain -SeriesId 42
 
     .EXAMPLE
-        Start-StarrSonarrSeriesSearch -Url 'http://localhost:8989' -ApiKey '<api-key>' -SeriesId 42 -WhatIf
+        Start-StarrSonarrSeriesSearch -Url 'http://localhost:8989' -ApiKey 'example-api-key' -SeriesId 42 -WhatIf
 
     .INPUTS
         None.

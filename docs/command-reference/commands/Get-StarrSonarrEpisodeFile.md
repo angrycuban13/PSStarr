@@ -51,7 +51,7 @@ Get-StarrSonarrEpisodeFile -InstanceName 'Main' -SeriesId 123
 ### EXAMPLE 3
 
 ```powershell
-' -EpisodeFileIdFilter 456,789
+Get-StarrSonarrEpisodeFile -Url 'http://localhost:8989' -ApiKey 'example-api-key' -EpisodeFileIdFilter 456,789
 ```
 
 ### EXAMPLE 4

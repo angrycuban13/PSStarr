@@ -44,7 +44,7 @@ Get-StarrProwlarrIndexerStatus -InstanceName Main
 ### EXAMPLE 2
 
 ```powershell
-'
+Get-StarrProwlarrIndexerStatus -Url 'http://localhost:9696' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

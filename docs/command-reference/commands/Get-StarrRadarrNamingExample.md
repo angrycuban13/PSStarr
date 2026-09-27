@@ -62,7 +62,7 @@ Get-StarrRadarrNamingExample -InstanceName 'Main' -NamingConfigId 1 -StandardMov
 ### EXAMPLE 2
 
 ```powershell
-'
+Get-StarrRadarrNamingExample -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

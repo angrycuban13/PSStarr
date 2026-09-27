@@ -1,4 +1,4 @@
-﻿function Get-StarrRadarrMovieFolder {
+function Get-StarrRadarrMovieFolder {
     <#
     .SYNOPSIS
         Retrieves Radarr movie folder results.
@@ -22,7 +22,7 @@
         Get-StarrRadarrMovieFolder -InstanceName 'Main' -MovieId 42
 
     .EXAMPLE
-        Get-StarrRadarrMovieFolder -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieId 42
+        Get-StarrRadarrMovieFolder -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieId 42
 
     .EXAMPLE
         Get-StarrRadarrMovie -MovieId 42 | Get-StarrRadarrMovieFolder

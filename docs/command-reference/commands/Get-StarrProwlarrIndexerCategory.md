@@ -42,7 +42,7 @@ Get-StarrProwlarrIndexerCategory -InstanceName Main
 ### EXAMPLE 2
 
 ```powershell
-'
+Get-StarrProwlarrIndexerCategory -Url 'http://localhost:9696' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

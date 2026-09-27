@@ -1,4 +1,4 @@
-﻿function Start-StarrSonarrSeriesFolderRename {
+function Start-StarrSonarrSeriesFolderRename {
     <#
     .SYNOPSIS
         Starts renaming selected Sonarr series folders.
@@ -22,7 +22,7 @@
         Start-StarrSonarrSeriesFolderRename -InstanceName SonarrMain -SeriesId 42,43
 
     .EXAMPLE
-        Start-StarrSonarrSeriesFolderRename -Url 'http://localhost:8989' -ApiKey '<api-key>' -SeriesId 42 -WhatIf
+        Start-StarrSonarrSeriesFolderRename -Url 'http://localhost:8989' -ApiKey 'example-api-key' -SeriesId 42 -WhatIf
 
     .INPUTS
         None.

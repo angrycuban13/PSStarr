@@ -49,7 +49,7 @@ Get-StarrReleaseProfile -InstanceName 'Main' -ReleaseProfileId 1
 ### EXAMPLE 3
 
 ```powershell
-'
+Get-StarrReleaseProfile -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

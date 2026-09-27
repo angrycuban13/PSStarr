@@ -46,7 +46,7 @@ Get-StarrProwlarrSearch -InstanceName 'Main' -Term 'Example' -IndexerIdFilter 1,
 ### EXAMPLE 2
 
 ```powershell
-'
+Get-StarrProwlarrSearch -Url 'http://localhost:9696' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

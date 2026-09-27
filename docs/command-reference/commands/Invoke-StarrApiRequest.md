@@ -46,7 +46,7 @@ Invoke-StarrApiRequest -InstanceName 'RadarrMain' -Endpoint 'health'
 ### EXAMPLE 2
 
 ```powershell
-' -Endpoint 'health'
+Invoke-StarrApiRequest -Url 'http://localhost:7878' -ApiKey 'example-api-key' -Endpoint 'health'
 ```
 
 ## PARAMETERS

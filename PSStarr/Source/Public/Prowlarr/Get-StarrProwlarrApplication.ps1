@@ -1,4 +1,4 @@
-﻿function Get-StarrProwlarrApplication {
+function Get-StarrProwlarrApplication {
     <#
     .SYNOPSIS
         Retrieves applications configured for synchronization from Prowlarr.
@@ -25,7 +25,7 @@
         Get-StarrProwlarrApplication -InstanceName Main -ApplicationId 1
 
     .EXAMPLE
-        Get-StarrProwlarrApplication -Url 'http://localhost:9696' -ApiKey '<api-key>'
+        Get-StarrProwlarrApplication -Url 'http://localhost:9696' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

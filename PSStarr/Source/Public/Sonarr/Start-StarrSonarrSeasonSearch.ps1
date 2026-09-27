@@ -1,4 +1,4 @@
-﻿function Start-StarrSonarrSeasonSearch {
+function Start-StarrSonarrSeasonSearch {
     <#
     .SYNOPSIS
         Starts a Sonarr search for one season.
@@ -25,7 +25,7 @@
         Start-StarrSonarrSeasonSearch -InstanceName SonarrMain -SeriesId 42 -SeasonNumber 1
 
     .EXAMPLE
-        Start-StarrSonarrSeasonSearch -Url 'http://localhost:8989' -ApiKey '<api-key>' -SeriesId 42 -SeasonNumber 0 -WhatIf
+        Start-StarrSonarrSeasonSearch -Url 'http://localhost:8989' -ApiKey 'example-api-key' -SeriesId 42 -SeasonNumber 0 -WhatIf
 
     .INPUTS
         None.

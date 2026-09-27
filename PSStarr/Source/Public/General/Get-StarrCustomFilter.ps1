@@ -28,7 +28,7 @@ function Get-StarrCustomFilter {
         Get-StarrCustomFilter -InstanceName 'Main' -CustomFilterId 1
 
     .EXAMPLE
-        Get-StarrCustomFilter -Url 'http://localhost:8989' -ApiKey '<api-key>'
+        Get-StarrCustomFilter -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

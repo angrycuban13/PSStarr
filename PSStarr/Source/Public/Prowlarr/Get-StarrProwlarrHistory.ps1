@@ -1,4 +1,4 @@
-﻿function Get-StarrProwlarrHistory {
+function Get-StarrProwlarrHistory {
     <#
     .SYNOPSIS
         Retrieves Prowlarr history.
@@ -58,7 +58,7 @@
         Get-StarrProwlarrHistory -InstanceName Main -Since ([datetime]'2026-01-01T00:00:00Z') -EventType indexerQuery
 
     .EXAMPLE
-        Get-StarrProwlarrHistory -Url 'http://localhost:9696' -ApiKey '<api-key>' -IndexerId 7 -Limit 20
+        Get-StarrProwlarrHistory -Url 'http://localhost:9696' -ApiKey 'example-api-key' -IndexerId 7 -Limit 20
 
     .INPUTS
         None.

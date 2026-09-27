@@ -1,4 +1,4 @@
-﻿function Get-StarrQualityDefinition {
+function Get-StarrQualityDefinition {
     <#
     .SYNOPSIS
         Retrieves quality definition settings from Radarr or Sonarr.
@@ -28,7 +28,7 @@
         Get-StarrQualityDefinition -InstanceName 'Main' -QualityDefinitionId 1
 
     .EXAMPLE
-        Get-StarrQualityDefinition -Url 'http://localhost:8989' -ApiKey '<api-key>'
+        Get-StarrQualityDefinition -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

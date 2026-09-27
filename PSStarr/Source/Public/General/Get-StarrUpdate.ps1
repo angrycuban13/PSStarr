@@ -1,4 +1,4 @@
-﻿function Get-StarrUpdate {
+function Get-StarrUpdate {
     <#
     .SYNOPSIS
         Retrieves available updates from a Starr instance.
@@ -25,7 +25,7 @@
         Get-StarrUpdate -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrUpdate -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrUpdate -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

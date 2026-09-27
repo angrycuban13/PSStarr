@@ -25,7 +25,7 @@ function Get-StarrDiskSpace {
         Get-StarrDiskSpace -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrDiskSpace -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrDiskSpace -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

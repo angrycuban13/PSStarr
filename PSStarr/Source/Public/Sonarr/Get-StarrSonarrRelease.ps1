@@ -1,4 +1,4 @@
-﻿function Get-StarrSonarrRelease {
+function Get-StarrSonarrRelease {
     <#
     .SYNOPSIS
         Retrieves Sonarr release search results.
@@ -28,7 +28,7 @@
         Get-StarrSonarrRelease -InstanceName Main -EpisodeId 42
 
     .EXAMPLE
-        Get-StarrSonarrRelease -Url 'http://localhost:8989' -ApiKey '<api-key>' -EpisodeId 42
+        Get-StarrSonarrRelease -Url 'http://localhost:8989' -ApiKey 'example-api-key' -EpisodeId 42
 
     .EXAMPLE
         Get-StarrSonarrRelease -InstanceName Main

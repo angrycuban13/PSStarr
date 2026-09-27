@@ -1,4 +1,4 @@
-﻿function Get-StarrProwlarrIndexerCategory {
+function Get-StarrProwlarrIndexerCategory {
     <#
     .SYNOPSIS
         Retrieves categories exposed by configured Prowlarr indexers.
@@ -19,7 +19,7 @@
         Get-StarrProwlarrIndexerCategory -InstanceName Main
 
     .EXAMPLE
-        Get-StarrProwlarrIndexerCategory -Url 'http://localhost:9696' -ApiKey '<api-key>'
+        Get-StarrProwlarrIndexerCategory -Url 'http://localhost:9696' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

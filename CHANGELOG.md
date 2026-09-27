@@ -16,6 +16,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 ### Changed
 
 - Revised comment-based help to describe command behavior without transport details.
+- Replaced angle-bracket API-key placeholders so PowerShell preserves complete help examples.
 - Normalized PowerShell source and test formatting.
 - Made test imports follow the module version in the source manifest.
 

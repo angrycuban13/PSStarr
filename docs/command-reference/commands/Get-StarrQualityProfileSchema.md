@@ -48,7 +48,7 @@ Get-StarrQualityProfileSchema -InstanceName 'Main'
 ### EXAMPLE 3
 
 ```powershell
-'
+Get-StarrQualityProfileSchema -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

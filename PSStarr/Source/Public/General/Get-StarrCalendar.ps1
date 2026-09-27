@@ -49,7 +49,7 @@ function Get-StarrCalendar {
         Get-StarrCalendar -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrCalendar -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrCalendar -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

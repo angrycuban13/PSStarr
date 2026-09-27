@@ -48,7 +48,7 @@ Set-StarrRadarrCollectionMonitoring -InstanceName 'Main' -CollectionId 42,43 -Mo
 ### EXAMPLE 2
 
 ```powershell
-' -CollectionId 42 -Monitored $false -WhatIf
+Set-StarrRadarrCollectionMonitoring -Url 'http://localhost:7878' -ApiKey 'example-api-key' -CollectionId 42 -Monitored $false -WhatIf
 ```
 
 ## PARAMETERS

@@ -1,4 +1,4 @@
-﻿function Get-StarrProwlarrAppProfileSchema {
+function Get-StarrProwlarrAppProfileSchema {
     <#
     .SYNOPSIS
         Retrieves the Prowlarr application-profile schema.
@@ -19,7 +19,7 @@
         Get-StarrProwlarrAppProfileSchema -InstanceName Main
 
     .EXAMPLE
-        Get-StarrProwlarrAppProfileSchema -Url 'http://localhost:9696' -ApiKey '<api-key>'
+        Get-StarrProwlarrAppProfileSchema -Url 'http://localhost:9696' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

@@ -25,7 +25,7 @@ function Get-StarrApiInfo {
         Get-StarrApiInfo -InstanceName 'Main'
 
     .EXAMPLE
-        Get-StarrApiInfo -Url 'http://localhost:7878' -ApiKey '<api-key>'
+        Get-StarrApiInfo -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

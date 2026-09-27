@@ -1,4 +1,4 @@
-﻿function Get-StarrTagUsage {
+function Get-StarrTagUsage {
     <#
     .SYNOPSIS
         Retrieves resources associated with application tags.
@@ -25,7 +25,7 @@
         Get-StarrTagUsage -InstanceName RadarrMain
 
     .EXAMPLE
-        Get-StarrTagUsage -Url 'http://localhost:8989' -ApiKey '<api-key>' -TagId 3
+        Get-StarrTagUsage -Url 'http://localhost:8989' -ApiKey 'example-api-key' -TagId 3
 
     .INPUTS
         None.

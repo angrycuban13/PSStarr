@@ -1,4 +1,4 @@
-﻿function Get-StarrSonarrEpisode {
+function Get-StarrSonarrEpisode {
     <#
     .SYNOPSIS
         Retrieves Sonarr episodes from a Starr instance.
@@ -46,7 +46,7 @@
         Get-StarrSonarrEpisode -InstanceName 'Main' -SeriesId 123
 
     .EXAMPLE
-        Get-StarrSonarrEpisode -Url 'http://localhost:8989' -ApiKey '<api-key>' -EpisodeIdFilter 456,789
+        Get-StarrSonarrEpisode -Url 'http://localhost:8989' -ApiKey 'example-api-key' -EpisodeIdFilter 456,789
 
     .EXAMPLE
         Get-StarrSonarrSeries -SeriesId 123 | Get-StarrSonarrEpisode

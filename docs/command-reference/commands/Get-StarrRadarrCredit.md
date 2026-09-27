@@ -50,7 +50,7 @@ Get-StarrRadarrCredit -InstanceName 'Main'
 ### EXAMPLE 3
 
 ```powershell
-'
+Get-StarrRadarrCredit -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 ```
 
 ### EXAMPLE 4

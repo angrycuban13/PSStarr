@@ -42,7 +42,7 @@ Get-StarrPing -InstanceName 'Main'
 ### EXAMPLE 2
 
 ```powershell
-'
+Get-StarrPing -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

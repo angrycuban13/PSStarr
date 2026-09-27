@@ -1,4 +1,4 @@
-﻿function Get-StarrProwlarrDevelopmentConfiguration {
+function Get-StarrProwlarrDevelopmentConfiguration {
     <#
     .SYNOPSIS
         Retrieves Prowlarr development settings.
@@ -22,7 +22,7 @@
         Get-StarrProwlarrDevelopmentConfiguration -InstanceName Main
 
     .EXAMPLE
-        Get-StarrProwlarrDevelopmentConfiguration -Url 'http://localhost:9696' -ApiKey '<api-key>' -ConfigurationId 1
+        Get-StarrProwlarrDevelopmentConfiguration -Url 'http://localhost:9696' -ApiKey 'example-api-key' -ConfigurationId 1
 
     .INPUTS
         None.

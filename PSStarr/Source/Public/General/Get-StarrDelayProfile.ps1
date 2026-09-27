@@ -28,7 +28,7 @@ function Get-StarrDelayProfile {
         Get-StarrDelayProfile -InstanceName 'Main' -DelayProfileId 1
 
     .EXAMPLE
-        Get-StarrDelayProfile -Url 'http://localhost:8989' -ApiKey '<api-key>'
+        Get-StarrDelayProfile -Url 'http://localhost:8989' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

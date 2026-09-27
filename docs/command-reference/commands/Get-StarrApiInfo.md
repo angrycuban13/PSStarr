@@ -48,7 +48,7 @@ Get-StarrApiInfo -InstanceName 'Main'
 ### EXAMPLE 3
 
 ```powershell
-'
+Get-StarrApiInfo -Url 'http://localhost:7878' -ApiKey 'example-api-key'
 ```
 
 ## PARAMETERS

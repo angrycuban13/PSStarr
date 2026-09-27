@@ -1,4 +1,4 @@
-﻿function Get-StarrProwlarrSearch {
+function Get-StarrProwlarrSearch {
     <#
     .SYNOPSIS
         Retrieves Prowlarr search results.
@@ -37,7 +37,7 @@
         Get-StarrProwlarrSearch -InstanceName 'Main' -Term 'Example' -IndexerIdFilter 1,2
 
     .EXAMPLE
-        Get-StarrProwlarrSearch -Url 'http://localhost:9696' -ApiKey '<api-key>'
+        Get-StarrProwlarrSearch -Url 'http://localhost:9696' -ApiKey 'example-api-key'
 
     .INPUTS
         None.

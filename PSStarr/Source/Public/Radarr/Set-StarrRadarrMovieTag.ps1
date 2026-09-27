@@ -1,4 +1,4 @@
-﻿function Set-StarrRadarrMovieTag {
+function Set-StarrRadarrMovieTag {
     <#
     .SYNOPSIS
         Adds or removes tags on Radarr movies.
@@ -31,7 +31,7 @@
         Set-StarrRadarrMovieTag -InstanceName 'Main' -MovieId 42,43 -TagName reviewed -Action Add
 
     .EXAMPLE
-        Set-StarrRadarrMovieTag -Url 'http://localhost:7878' -ApiKey '<api-key>' -MovieId 42 -TagId 2 -Action Remove -WhatIf
+        Set-StarrRadarrMovieTag -Url 'http://localhost:7878' -ApiKey 'example-api-key' -MovieId 42 -TagId 2 -Action Remove -WhatIf
 
     .INPUTS
         None.

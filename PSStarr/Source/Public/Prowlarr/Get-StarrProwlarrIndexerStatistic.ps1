@@ -1,4 +1,4 @@
-﻿function Get-StarrProwlarrIndexerStatistic {
+function Get-StarrProwlarrIndexerStatistic {
     <#
     .SYNOPSIS
         Retrieves Prowlarr indexer statistics results.
@@ -34,7 +34,7 @@
         Get-StarrProwlarrIndexerStatistic -InstanceName 'Main' -IndexerIdFilter 1,2 -Protocol Torrent -Tag movies
 
     .EXAMPLE
-        Get-StarrProwlarrIndexerStatistic -Url 'http://localhost:9696' -ApiKey '<api-key>'
+        Get-StarrProwlarrIndexerStatistic -Url 'http://localhost:9696' -ApiKey 'example-api-key'
 
     .INPUTS
         None.
