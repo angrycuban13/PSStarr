@@ -2,23 +2,11 @@ name: Validate and release PSStarr
 
 on:
     pull_request:
-        paths:
-            - ".github/workflows/release.yml"
-            - "CHANGELOG.md"
-            - "PSStarr/Source/**"
-            - "PSStarr/Tests/**"
-            - "PSStarr/tools/**"
-            - "PSStarr/build.psd1"
     push:
         branches:
             - main
         paths:
-            - ".github/workflows/release.yml"
-            - "CHANGELOG.md"
-            - "PSStarr/Source/**"
-            - "PSStarr/Tests/**"
-            - "PSStarr/tools/**"
-            - "PSStarr/build.psd1"
+            - "PSStarr/Source/PSStarr.psd1"
     workflow_dispatch:
         inputs:
             version:
@@ -29,50 +17,26 @@ on:
 permissions:
     contents: read
 
+concurrency:
+    group: release-${{ github.event_name }}-${{ github.ref }}
+    cancel-in-progress: false
+
 jobs:
     validate:
+        name: Release validation
         runs-on: windows-latest
         outputs:
             version: ${{ steps.metadata.outputs.version }}
             artifact_name: ${{ steps.metadata.outputs.artifact_name }}
+            archive_name: ${{ steps.metadata.outputs.archive_name }}
+            archive_sha256: ${{ steps.package.outputs.archive_sha256 }}
         defaults:
             run:
                 shell: pwsh
         steps:
             - uses: actions/checkout@v7
-
-            - name: Read and validate release metadata
-              id: metadata
-              env:
-                  EVENT_NAME: ${{ github.event_name }}
-                  REQUESTED_VERSION: ${{ inputs.version }}
-              run: |
-                  $manifest = Import-PowerShellDataFile ./PSStarr/Source/PSStarr.psd1
-                  $version = [string]$manifest.ModuleVersion
-
-                  if ($version -notmatch '^\d+\.\d+\.\d+$') {
-                      throw "Manifest version '$version' is not a stable semantic version."
-                  }
-
-                  if ($env:EVENT_NAME -eq 'workflow_dispatch') {
-                      if ($env:GITHUB_REF -ne 'refs/heads/main') {
-                          throw 'Releases must be dispatched from main.'
-                      }
-
-                      if ($env:REQUESTED_VERSION -ne $version) {
-                          throw "Requested version '$env:REQUESTED_VERSION' does not match manifest version '$version'."
-                      }
-
-                      $changelog = Get-Content ./CHANGELOG.md -Raw
-                      $escapedVersion = [regex]::Escape($version)
-
-                      if ($changelog -notmatch "(?m)^## \[$escapedVersion\] - \d{4}-\d{2}-\d{2}\s*$") {
-                          throw "CHANGELOG.md does not contain a dated $version release."
-                      }
-                  }
-
-                  "version=$version" >> $env:GITHUB_OUTPUT
-                  "artifact_name=PSStarr-$version" >> $env:GITHUB_OUTPUT
+              with:
+                  fetch-depth: 0
 
             - name: Install build dependencies
               run: |
@@ -86,18 +50,124 @@ jobs:
                   Install-Module Pester -RequiredVersion 5.7.1 -Scope CurrentUser -Force
                   Install-Module PSScriptAnalyzer -Scope CurrentUser -Force
 
+            - name: Read and validate release metadata
+              id: metadata
+              env:
+                  EVENT_NAME: ${{ github.event_name }}
+                  BASE_REF: ${{ github.base_ref }}
+                  REQUESTED_VERSION: ${{ inputs.version }}
+              run: |
+                  $manifestPath = './PSStarr/Source/PSStarr.psd1'
+                  $manifest = Import-PowerShellDataFile -Path $manifestPath
+                  $version = [System.String]$manifest.ModuleVersion
+                  $validateRelease = $false
+                  $previousVersion = $null
+
+                  if ($env:EVENT_NAME -eq 'pull_request') {
+                      $baseCommit = "origin/$env:BASE_REF"
+                      $changedFiles = @(git diff --name-only "$baseCommit...HEAD")
+
+                      if ($LASTEXITCODE -ne 0) {
+                          throw 'Could not read the pull request file changes.'
+                      }
+
+                      $manifestChanged = $changedFiles -contains 'PSStarr/Source/PSStarr.psd1'
+                      $changelogChanged = $changedFiles -contains 'CHANGELOG.md'
+                      $releasableChange = @(
+                          $changedFiles | Where-Object {
+                              $_ -like 'PSStarr/Source/*' -or $_ -eq 'PSStarr/build.psd1'
+                          }
+                      ).Count -gt 0
+
+                      if ($releasableChange -and (-not $manifestChanged -or -not $changelogChanged)) {
+                          throw 'Changes to module source or packaging require manifest and changelog updates.'
+                      }
+
+                      if ($manifestChanged) {
+                          $previousManifestText = git show "${baseCommit}:PSStarr/Source/PSStarr.psd1"
+
+                          if ($LASTEXITCODE -ne 0) {
+                              throw 'Could not read the base manifest.'
+                          }
+
+                          $temporaryManifest = Join-Path $env:RUNNER_TEMP 'base-PSStarr.psd1'
+                          Set-Content -LiteralPath $temporaryManifest -Value $previousManifestText
+                          $previousVersion = [System.String](Import-PowerShellDataFile -Path $temporaryManifest).ModuleVersion
+                          $validateRelease = $true
+                      }
+                  }
+                  elseif ($env:EVENT_NAME -eq 'push') {
+                      $previousManifestText = git show 'HEAD^:PSStarr/Source/PSStarr.psd1'
+
+                      if ($LASTEXITCODE -ne 0) {
+                          throw 'Could not read the previous manifest.'
+                      }
+
+                      $temporaryManifest = Join-Path $env:RUNNER_TEMP 'previous-PSStarr.psd1'
+                      Set-Content -LiteralPath $temporaryManifest -Value $previousManifestText
+                      $previousVersion = [System.String](Import-PowerShellDataFile -Path $temporaryManifest).ModuleVersion
+                      $validateRelease = $true
+                  }
+                  elseif ($env:EVENT_NAME -eq 'workflow_dispatch') {
+                      if ($env:GITHUB_REF -ne 'refs/heads/main') {
+                          throw 'Release retries must run from main.'
+                      }
+
+                      if ($env:REQUESTED_VERSION -ne $version) {
+                          throw "Requested version '$env:REQUESTED_VERSION' does not match manifest version '$version'."
+                      }
+
+                      $validateRelease = $true
+                  }
+
+                  if ($validateRelease) {
+                      $metadataParameters = @{}
+
+                      if (-not [System.String]::IsNullOrWhiteSpace($previousVersion)) {
+                          $metadataParameters.PreviousVersion = $previousVersion
+                      }
+
+                      $null = & ./PSStarr/tools/Test-ReleaseMetadata.ps1 @metadataParameters
+                  }
+
+                  "version=$version" >> $env:GITHUB_OUTPUT
+                  "artifact_name=PSStarr-$version-package" >> $env:GITHUB_OUTPUT
+                  "archive_name=PSStarr-$version.zip" >> $env:GITHUB_OUTPUT
+
             - name: Run clean-checkout release gate
               run: ./PSStarr/tools/Test-Release.ps1
+
+            - name: Create validated release package
+              id: package
+              env:
+                  RELEASE_VERSION: ${{ steps.metadata.outputs.version }}
+                  ARCHIVE_NAME: ${{ steps.metadata.outputs.archive_name }}
+              run: |
+                  $packagePath = "./PSStarr/Output/PSStarr/$env:RELEASE_VERSION"
+                  $stagingPath = Join-Path $env:RUNNER_TEMP 'release-package'
+                  $archivePath = Join-Path $stagingPath $env:ARCHIVE_NAME
+                  $digestPath = "$archivePath.sha256"
+
+                  New-Item -ItemType Directory -Path $stagingPath -Force | Out-Null
+                  Compress-Archive -Path "$packagePath/*" -DestinationPath $archivePath
+
+                  $archiveSha256 = (Get-FileHash -LiteralPath $archivePath -Algorithm SHA256).Hash.ToLowerInvariant()
+                  Set-Content -LiteralPath $digestPath -Value "$archiveSha256  $env:ARCHIVE_NAME"
+
+                  "archive_sha256=$archiveSha256" >> $env:GITHUB_OUTPUT
 
             - name: Upload validated module
               uses: actions/upload-artifact@v7
               with:
                   name: ${{ steps.metadata.outputs.artifact_name }}
-                  path: PSStarr/Output/PSStarr/${{ steps.metadata.outputs.version }}
+                  path: |
+                      ${{ runner.temp }}/release-package/${{ steps.metadata.outputs.archive_name }}
+                      ${{ runner.temp }}/release-package/${{ steps.metadata.outputs.archive_name }}.sha256
                   if-no-files-found: error
 
     release:
-        if: github.event_name == 'workflow_dispatch'
+        name: Publish release
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         needs: validate
         runs-on: windows-latest
         environment: PowerShellGallery
@@ -113,7 +183,22 @@ jobs:
               uses: actions/download-artifact@v8
               with:
                   name: ${{ needs.validate.outputs.artifact_name }}
-                  path: release-package/PSStarr
+                  path: release-package
+
+            - name: Verify and expand validated module
+              env:
+                  ARCHIVE_NAME: ${{ needs.validate.outputs.archive_name }}
+                  ARCHIVE_SHA256: ${{ needs.validate.outputs.archive_sha256 }}
+              run: |
+                  $archivePath = Join-Path './release-package' $env:ARCHIVE_NAME
+                  $actualSha256 = (Get-FileHash -LiteralPath $archivePath -Algorithm SHA256).Hash.ToLowerInvariant()
+
+                  if ($actualSha256 -ne $env:ARCHIVE_SHA256) {
+                      throw "Release archive digest mismatch. Expected $env:ARCHIVE_SHA256 but received $actualSha256."
+                  }
+
+                  Expand-Archive -LiteralPath $archivePath -DestinationPath './release-package/PSStarr'
+                  $null = Test-ModuleManifest -Path './release-package/PSStarr/PSStarr.psd1'
 
             - name: Publish module
               env:
@@ -127,32 +212,39 @@ jobs:
                   Set-PSRepository PSGallery -InstallationPolicy Trusted
                   Install-Module Configuration -RequiredVersion 1.6.0 -Scope CurrentUser -Force
 
-                  if ([string]::IsNullOrWhiteSpace($env:POWERSHELL_GALLERY_API_KEY)) {
+                  if ([System.String]::IsNullOrWhiteSpace($env:POWERSHELL_GALLERY_API_KEY)) {
                       throw 'POWERSHELL_GALLERY_API_KEY is not configured.'
                   }
-
-                  $null = Test-ModuleManifest -Path ./release-package/PSStarr/PSStarr.psd1
 
                   $publishedModule = Find-Module -Name PSStarr -RequiredVersion $env:RELEASE_VERSION -Repository PSGallery -ErrorAction SilentlyContinue
 
                   if ($null -eq $publishedModule) {
-                      Publish-Module -Path ./release-package/PSStarr -NuGetApiKey $env:POWERSHELL_GALLERY_API_KEY -Repository PSGallery
+                      $latestModule = Find-Module -Name PSStarr -Repository PSGallery -ErrorAction SilentlyContinue
+
+                      if ($null -ne $latestModule) {
+                          $null = & ./PSStarr/tools/Test-ReleaseMetadata.ps1 -PublishedVersion ([System.String]$latestModule.Version)
+                      }
+
+                      Publish-Module -Path './release-package/PSStarr' -NuGetApiKey $env:POWERSHELL_GALLERY_API_KEY -Repository PSGallery
                   }
                   else {
-                      Write-Host "PSStarr $env:RELEASE_VERSION is already published; skipping PowerShell Gallery."
+                      Write-Host "PSStarr $env:RELEASE_VERSION is already published. Continuing the release retry."
                   }
 
-            - name: Create GitHub release
+            - name: Create or verify GitHub release
               env:
                   GH_TOKEN: ${{ github.token }}
                   RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+                  ARCHIVE_NAME: ${{ needs.validate.outputs.archive_name }}
+                  ARCHIVE_SHA256: ${{ needs.validate.outputs.archive_sha256 }}
               run: |
                   $tag = "v$env:RELEASE_VERSION"
+                  $archivePath = Join-Path './release-package' $env:ARCHIVE_NAME
+                  $digestPath = "$archivePath.sha256"
                   $releaseNotesPath = Join-Path $env:RUNNER_TEMP 'release-notes.md'
-                  $releaseArchivePath = Join-Path $env:RUNNER_TEMP "PSStarr-$env:RELEASE_VERSION.zip"
                   $changelog = Get-Content ./CHANGELOG.md -Raw
-                  $escapedVersion = [regex]::Escape($env:RELEASE_VERSION)
-                  $releaseSection = [regex]::Match(
+                  $escapedVersion = [System.Text.RegularExpressions.Regex]::Escape($env:RELEASE_VERSION)
+                  $releaseSection = [System.Text.RegularExpressions.Regex]::Match(
                       $changelog,
                       "(?ms)^## \[$escapedVersion\] - \d{4}-\d{2}-\d{2}\s*(?<Notes>.*?)(?=^## \[|\z)"
                   )
@@ -163,15 +255,47 @@ jobs:
 
                   Set-Content -LiteralPath $releaseNotesPath -Value $releaseSection.Groups['Notes'].Value.Trim()
 
-                  Compress-Archive -Path ./release-package/PSStarr/* -DestinationPath $releaseArchivePath
+                  $encodedTag = [System.Uri]::EscapeDataString("tags/$tag")
+                  $tagReferenceJson = gh api "repos/$env:GITHUB_REPOSITORY/git/ref/$encodedTag" 2>$null
+                  $tagExists = $LASTEXITCODE -eq 0
 
-                  $null = gh release view $tag --json tagName 2>$null
+                  if ($tagExists) {
+                      $tagReference = $tagReferenceJson | ConvertFrom-Json
 
-                  if ($LASTEXITCODE -eq 0) {
-                      Write-Host "GitHub release $tag already exists; skipping creation."
+                      if ($tagReference.object.type -ne 'commit' -or $tagReference.object.sha -ne $env:GITHUB_SHA) {
+                          throw "Tag $tag does not point to release commit $env:GITHUB_SHA."
+                      }
+                  }
+
+                  $releaseJson = gh release view $tag --json tagName,assets 2>$null
+                  $releaseExists = $LASTEXITCODE -eq 0
+
+                  if ($releaseExists) {
+                      $release = $releaseJson | ConvertFrom-Json
+                      $assetNames = @($release.assets | ForEach-Object name)
+
+                      if (-not $tagExists -or $release.tagName -ne $tag -or $assetNames -notcontains $env:ARCHIVE_NAME -or $assetNames -notcontains "$env:ARCHIVE_NAME.sha256") {
+                          throw "GitHub release $tag does not contain the expected tag and assets."
+                      }
+
+                      $existingAssetPath = Join-Path $env:RUNNER_TEMP 'existing-release-asset'
+                      New-Item -ItemType Directory -Path $existingAssetPath -Force | Out-Null
+                      gh release download $tag --pattern "$env:ARCHIVE_NAME.sha256" --dir $existingAssetPath
+
+                      if ($LASTEXITCODE -ne 0) {
+                          throw "Could not download the digest from GitHub release $tag."
+                      }
+
+                      $publishedDigest = (Get-Content -LiteralPath (Join-Path $existingAssetPath "$env:ARCHIVE_NAME.sha256") -Raw).Split(' ')[0].Trim()
+
+                      if ($publishedDigest -ne $env:ARCHIVE_SHA256) {
+                          throw "GitHub release $tag contains a different archive digest."
+                      }
+
+                      Write-Host "GitHub release $tag already exists and contains the expected assets."
                   }
                   else {
-                      gh release create $tag --target $env:GITHUB_SHA --title "PSStarr $env:RELEASE_VERSION" --notes-file $releaseNotesPath $releaseArchivePath
+                      gh release create $tag --target $env:GITHUB_SHA --title "PSStarr $env:RELEASE_VERSION" --notes-file $releaseNotesPath $archivePath $digestPath
 
                       if ($LASTEXITCODE -ne 0) {
                           throw "Failed to create GitHub release $tag."

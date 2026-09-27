@@ -6,6 +6,19 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-09-26
+### Added
+
+- Generated command reference documentation and a Zensical site for `psstarr.xyz`.
+- Deterministic manifest-driven release validation and publication.
+- Structured bug-report and feature-request forms.
+
+### Changed
+
+- Revised comment-based help to describe command behavior without transport details.
+- Normalized PowerShell source and test formatting.
+- Made test imports follow the module version in the source manifest.
+
 ## [1.0.0] - 2026-09-14
 ### Added
 

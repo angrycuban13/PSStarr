@@ -1,0 +1,100 @@
+name: Bug report
+description: Report behavior that does not work as documented.
+title: "[Bug]: "
+labels:
+    - bug
+body:
+    - type: markdown
+      attributes:
+          value: |
+              Thank you for reporting a problem.
+
+              Do not include API keys, passwords, tokens, or other secrets. Remove secrets from commands, URLs, errors, and logs.
+
+    - type: dropdown
+      id: application
+      attributes:
+          label: Application
+          description: Select the application that the command uses.
+          options:
+              - Radarr
+              - Sonarr
+              - Prowlarr
+              - More than one application
+              - PSStarr configuration or shared behavior
+      validations:
+          required: true
+
+    - type: input
+      id: psstarr-version
+      attributes:
+          label: PSStarr version
+          description: Run `Get-Module PSStarr | Select-Object Name, Version` to get the loaded version.
+          placeholder: 1.0.0
+      validations:
+          required: true
+
+    - type: input
+      id: application-version
+      attributes:
+          label: Application version
+          description: Enter the Radarr, Sonarr, or Prowlarr version. Enter "Not applicable" for shared behavior.
+          placeholder: 5.0.0.0000
+      validations:
+          required: true
+
+    - type: textarea
+      id: environment
+      attributes:
+          label: Environment
+          description: Enter the PowerShell version, operating system, and installation method.
+          placeholder: |
+              PowerShell: 7.5.2
+              Operating system: Windows 11 24H2
+              Installation: PowerShell Gallery
+      validations:
+          required: true
+
+    - type: textarea
+      id: reproduction
+      attributes:
+          label: Steps to reproduce
+          description: List the shortest sequence that causes the problem. Replace all secrets with `[REDACTED]`.
+          placeholder: |
+              1. Configure a saved Radarr instance.
+              2. Run `Get-StarrRadarrMovie -InstanceName Test`.
+              3. Observe the error.
+      validations:
+          required: true
+
+    - type: textarea
+      id: expected-behavior
+      attributes:
+          label: Expected behavior
+          description: Describe the result that you expected.
+      validations:
+          required: true
+
+    - type: textarea
+      id: actual-behavior
+      attributes:
+          label: Actual behavior
+          description: Describe the result that occurred. Include the sanitized error text if it helps explain the problem.
+      validations:
+          required: true
+
+    - type: textarea
+      id: additional-context
+      attributes:
+          label: Additional context
+          description: Add sanitized logs, screenshots, or other details that can help reproduce the problem.
+
+    - type: checkboxes
+      id: acknowledgements
+      attributes:
+          label: Acknowledgements
+          options:
+              - label: I searched the existing issues for this problem.
+                required: true
+              - label: I removed API keys, credentials, tokens, and other secrets from this report.
+                required: true

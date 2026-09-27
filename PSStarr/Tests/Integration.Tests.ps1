@@ -4,7 +4,7 @@
 
 Describe 'Opt-in live GET requests' -Tag Integration {
     BeforeAll {
-        Import-Module "$PSScriptRoot/../Output/PSStarr/1.0.0/PSStarr.psd1" -Force
+        Import-Module (& "$PSScriptRoot/Get-PSStarrTestModulePath.ps1") -Force
     }
 
     It 'reads <Application> system status' -Skip:(-not $liveEnabled) -ForEach @(

@@ -1,0 +1,127 @@
+name: Documentation
+
+on:
+    pull_request:
+        paths:
+            - ".github/workflows/docs.yml"
+            - "ci/New-ModuleDocs.ps1"
+            - "docs/**"
+            - "PSStarr/Source/**"
+            - "PSStarr/build.psd1"
+            - "requirements-docs.txt"
+            - "zensical.toml"
+    push:
+        branches:
+            - main
+        paths:
+            - ".github/workflows/docs.yml"
+            - "docs/**"
+            - "requirements-docs.txt"
+            - "zensical.toml"
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+concurrency:
+    group: documentation-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    documentation-consistency:
+        name: Documentation consistency
+        if: github.event_name == 'pull_request'
+        runs-on: windows-latest
+        defaults:
+            run:
+                shell: pwsh
+        steps:
+            - name: Check out the repository
+              uses: actions/checkout@v7
+
+            - name: Set up Python
+              uses: actions/setup-python@v6
+              with:
+                  python-version: "3.13"
+
+            - name: Install module build dependencies
+              run: |
+                  if ($null -eq (Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue)) {
+                      Register-PSRepository -Default
+                  }
+
+                  Set-PSRepository PSGallery -InstallationPolicy Trusted
+                  Install-Module Configuration -RequiredVersion 1.6.0 -Scope CurrentUser -Force
+                  Install-Module Microsoft.PowerShell.PlatyPS -RequiredVersion 1.0.3 -Scope CurrentUser -Force
+                  Install-Module ModuleBuilder -Scope CurrentUser -Force
+
+            - name: Build the module and regenerate command documentation
+              run: |
+                  $manifest = Import-PowerShellDataFile ./PSStarr/Source/PSStarr.psd1
+                  $version = [string]$manifest.ModuleVersion
+
+                  Build-Module ./PSStarr/build.psd1
+
+                  ./ci/New-ModuleDocs.ps1 `
+                      -ModulePath "./PSStarr/Output/PSStarr/$version/PSStarr.psd1" `
+                      -OutputPath ./docs/modules/PSStarr
+
+            - name: Check generated command documentation
+              run: |
+                  $changes = @(git status --porcelain -- docs/modules)
+
+                  if ($changes.Count -gt 0) {
+                      $changes | Write-Host
+                      throw 'Generated command documentation is not current. Run ci/New-ModuleDocs.ps1 and commit the result.'
+                  }
+
+            - name: Install Zensical
+              shell: bash
+              run: python -m pip install --requirement requirements-docs.txt
+
+            - name: Build the site in strict mode
+              shell: bash
+              run: zensical build --clean --strict
+
+    site-build:
+        name: Site build
+        if: github.event_name != 'pull_request'
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out the repository
+              uses: actions/checkout@v7
+
+            - name: Configure GitHub Pages
+              uses: actions/configure-pages@v6
+
+            - name: Set up Python
+              uses: actions/setup-python@v6
+              with:
+                  python-version: "3.13"
+
+            - name: Install Zensical
+              run: python -m pip install --requirement requirements-docs.txt
+
+            - name: Build the site in strict mode
+              run: zensical build --clean --strict
+
+            - name: Upload the GitHub Pages artifact
+              uses: actions/upload-pages-artifact@v5
+              with:
+                  path: site
+
+    pages-deploy:
+        name: Pages deploy
+        if: github.event_name == 'push' || github.ref == 'refs/heads/main'
+        needs: site-build
+        runs-on: ubuntu-latest
+        permissions:
+            pages: write
+            id-token: write
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        steps:
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v5

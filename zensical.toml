@@ -1,0 +1,18 @@
+[project]
+site_name = "PSStarr"
+site_description = "PowerShell 7 commands for Radarr, Sonarr, and Prowlarr"
+site_url = "https://psstarr.xyz"
+repo_url = "https://github.com/angrycuban13/PSStarr"
+edit_uri = "edit/main/docs/"
+docs_dir = "docs"
+site_dir = "site"
+strict = true
+copyright = "Copyright &copy; 2026 AngryCuban13"
+
+[project.theme]
+features = [
+    "navigation.path",
+    "navigation.top",
+    "search.suggest",
+    "search.highlight",
+]
