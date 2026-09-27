@@ -296,8 +296,6 @@ System.Object
 
 This function accepts objects with an Id property representing a Sonarr episode.
 
-System.Int32
-
 ## OUTPUTS
 
 PSStarr.Sonarr.Release

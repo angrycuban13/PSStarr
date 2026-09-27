@@ -204,8 +204,6 @@ System.Object
 
 This function accepts objects with an Id property representing a Radarr movie.
 
-System.Int32
-
 ## OUTPUTS
 
 PSStarr.Radarr.Credit

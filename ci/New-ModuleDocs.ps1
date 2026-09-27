@@ -32,6 +32,7 @@ $ErrorActionPreference = 'Stop'
 $requiredPlatyPSVersion = [System.Version]'1.0.3'
 $utf8WithoutBom = [System.Text.UTF8Encoding]::new($false)
 $failures = [System.Collections.Generic.List[System.String]]::new()
+$inputHelpByCommand = @{}
 $module = $null
 $generationRoot = Join-Path ([System.IO.Path]::GetTempPath()) "PSStarr-docs-$([System.Guid]::NewGuid().ToString('N'))"
 $resolvedRepositoryRoot = [System.IO.Path]::GetFullPath($RepositoryRoot)
@@ -104,6 +105,9 @@ if ($failures.Count -eq 0) {
             if (-not $sourceFilesByCommand.ContainsKey($commandName)) {
                 $failures.Add("No public source file maps to exported command '$commandName'.")
             }
+
+            $commandHelp = Get-Help -Name $commandName -Full
+            $inputHelpByCommand[$commandName] = [System.String]$commandHelp.inputTypes.inputType.type.name
         }
 
         if ($failures.Count -eq 0) {
@@ -168,6 +172,7 @@ try {
 
             foreach ($generatedFile in $generatedFiles) {
                 try {
+                    $pageName = $generatedFile.BaseName
                     $content = [System.IO.File]::ReadAllText($generatedFile.FullName)
                     $content = $content.Replace("`r`n", "`n").Replace("`r", "`n")
                     $content = [System.Text.RegularExpressions.Regex]::Replace($content, '(?m)[ \t]+$', '')
@@ -287,6 +292,21 @@ try {
                             return "$($ioMatch.Groups['Heading'].Value)$($lines -join "`n")"
                         })
 
+                    if ($inputHelpByCommand.ContainsKey($pageName)) {
+                        $documentedInputs = $inputHelpByCommand[$pageName].Replace("`r`n", "`n").Trim()
+                        $documentedInputs = [System.Text.RegularExpressions.Regex]::Replace(
+                            $documentedInputs,
+                            '\A\\?\[(?<Type>.+?)\\?\]',
+                            '${Type}'
+                        )
+                        $inputSection = "## INPUTS`n`n$documentedInputs`n`n"
+                        $content = [System.Text.RegularExpressions.Regex]::Replace(
+                            $content,
+                            '(?ms)^## INPUTS[ \t]*\n.*?(?=^## |\z)',
+                            $inputSection
+                        )
+                    }
+
                     $content = [System.Text.RegularExpressions.Regex]::Replace(
                         $content,
                         '(?ms)^## ALIASES[ \t]*\n.*?(?=^## |\z)',
@@ -295,7 +315,6 @@ try {
                     $content = [System.Text.RegularExpressions.Regex]::Replace($content, '(?s)\{\{.*?\}\}', '')
                     $content = $content.Replace('### __AllParameterSets', '### All')
 
-                    $pageName = $generatedFile.BaseName
                     $documentationUri = if ($pageName -eq 'PSStarr') {
                         $DocumentationBaseUri.TrimEnd('/') + '/'
                     }

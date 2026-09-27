@@ -205,8 +205,6 @@ System.Object
 
 This function accepts objects with an Id property representing a Sonarr series.
 
-System.Int32
-
 ## OUTPUTS
 
 PSStarr.Sonarr.EpisodeFile
