@@ -9,22 +9,24 @@ description: Contribute code and documentation to PSStarr.
 
 PSStarr accepts fixes, command additions, tests, and documentation updates through pull requests.
 
-## Before you start
+## Requirements
 
-- Use PowerShell 7 or later.
-- Install [Git](https://git-scm.com/).
-- Install [uv](https://docs.astral.sh/uv/) to build the documentation site.
+- PowerShell 7 or later.
+- [Git](https://git-scm.com/)
+- [uv](https://docs.astral.sh/uv/) to build the documentation site.
 - Fork the repository and create a branch from the latest `main` branch.
 - Read the repository rules in `AGENTS.md`.
 - Do not include real API keys in code, tests, logs, or examples.
 
-## Change the module
+## Module Guidelines
 
-Place public functions in `PSStarr/Source/Public`. Place private functions in `PSStarr/Source/Private`.
-
-Use one function in each script. Give each public script the same name as its function. Add Pester tests for changed behavior.
-
-Every function must include comment-based help. Describe what the function does. Do not describe its internal implementation.
+- Place public functions in `PSStarr/Source/Public`.
+- Place private functions in `PSStarr/Source/Private`.
+- Use one function in each script.
+- Name each script the same as its function.
+- Add Pester tests for changed behavior.
+- Every function must include comment-based help.
+      - Describe what the function does. Do not describe its internal implementation.
 
 Run the complete release gate from the repository root:
 
@@ -42,7 +44,10 @@ Review the manifest and changelog changes before you commit them.
 
 ## Build the documentation
 
-The command reference comes from the comment-based help in the built module. Do not edit generated command pages directly.
+The command reference comes from the comment-based help in the built module.
+
+!!! Warning
+    Do not edit generated command pages directly.
 
 Install the required PowerShell modules:
 
@@ -60,22 +65,25 @@ $version = [string]$manifest.ModuleVersion
 
 Build-Module ./PSStarr/build.psd1
 
-./ci/New-ModuleDocs.ps1 `
-    -ModulePath "./PSStarr/Output/PSStarr/$version/PSStarr.psd1" `
-    -OutputPath ./docs/command-reference
+$newModuleDocsParams = @{
+    ModulePath = "./PSStarr/Output/PSStarr/$version/PSStarr.psd1"
+    OutputPath = "./docs/command-reference"
+}
+
+./ci/New-ModuleDocs.ps1 @newModuleDocsParams
 ```
 
 The generator creates an index and one page for each exported command. The root `.nav.yml` file controls the main navigation.
 
 Synchronize the locked documentation environment:
 
-```powershell
+```console
 uv sync --locked --only-group docs
 ```
 
 Start the local documentation server:
 
-```powershell
+```console
 uv run --locked --only-group docs zensical serve
 ```
 
@@ -83,7 +91,7 @@ Open `http://localhost:8000`. Check the navigation, links, examples, input types
 
 Run the strict site build before you commit:
 
-```powershell
+```console
 uv run --locked --only-group docs zensical build --clean --strict
 ```
 

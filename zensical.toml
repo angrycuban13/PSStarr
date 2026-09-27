@@ -41,10 +41,11 @@ features = [
 ]
 
 [project.theme.icon]
-next = "lucide/square-chevron-right"
-previous = "lucide/square-chevron-left"
-top = "lucide/square-chevron-up"
+next = "lucide/chevron-right"
+previous = "lucide/chevron-left"
+top = "lucide/chevrons-up"
 search = "lucide/search-code"
+repo = "fontawesome/brands/github"
 
 [[project.theme.palette]]
 media = "(prefers-color-scheme: dark)"
