@@ -1,94 +1,95 @@
 # Repository Guidelines
 
-## Project Purpose
+## Scope and Applications
 
-PSStarr is a reusable PowerShell 7 client module for Radarr, Sonarr, and Prowlarr.
-Keep this repository focused on application configuration, HTTP transport, and broadly useful API endpoint wrappers.
-Opinionated automation, notification behavior, scheduling, and workflow-specific settings belong in consuming projects such as `Just-A-Bunch-Of-Starr-Scripts`.
+- PSStarr is a PowerShell 7 client for Radarr, Sonarr, and Prowlarr.
+- Radarr and Sonarr use API v3. Prowlarr uses API v1. Do not add other Starr applications.
+- Keep this module focused on configuration, HTTP transport, and broadly useful API wrappers.
+- Keep scheduling, notifications, retention, and workflow automation in consuming projects.
+- Favor a small public API over complete upstream coverage. Add commands only for broad utility or confirmed consumer needs.
+- Exclude filesystem browsing, feeds, authentication UI, localization, downloads, and deprecated endpoints.
 
-Favor a small, coherent public API over complete upstream endpoint coverage or narrow functions designed for one existing script. Add commands only for broad utility or confirmed consumer needs, and apply the established mutation and exclusion rules before adding writes.
+## API Contracts
 
-## Established Decisions
+- Use `Invoke-StarrApiRequest` as the only HTTP boundary. Keep URL construction and `Invoke-RestMethod` out of endpoint wrappers.
+- Expose typed query parameters. Serialize dates as ISO 8601. Repeat array keys unless the upstream controller requires CSV.
+- Validate route-specific combinations and reversed date ranges before transport.
+- Require positive IDs and ID arrays. Start paging values at 1. Use typed booleans and descriptive `*IdFilter` names.
+- Stream ordinary collections. Return paging envelopes from paged routes and one resource from ID routes. Keep filters as list searches.
+- Do not fabricate empty arrays or placeholder objects.
+- Add stable `PSStarr.*` type names without removing upstream properties. Keep complete properties available through explicit selection.
+- Use property-name pipeline binding only for natural parent-to-child reads. Exclude searches and server-filesystem inspection.
+- Use `InstanceName` in application commands. Use `Name` only in `*-PSStarrInstance` commands.
+- Require an application discriminator when shared commands accept explicit credentials. Reject unsupported applications before transport.
+- Prefer application-specific commands for different Radarr and Sonarr contracts.
 
-- Radarr and Sonarr require API v3; Prowlarr uses API v1. Do not add Lidarr, Readarr, or Whisparr.
-- Supported JSON GET routes expose typed parameters rather than raw query hashtables. Serialize dates as ISO 8601, repeat ordinary array query keys, and use CSV only where the upstream controller requires it. Validate route-specific parameter combinations.
-- Saved configuration encrypts API keys only. Windows defaults to current-user/current-host DPAPI; portable AES-256 requires an external Base64-encoded 32-byte key in `PSSTARR_AES_KEY`; plaintext must be explicit on Windows. Never fall back to plaintext after an encryption failure.
-- Provider, host, error, and log responses must mask recognizable credentials. Redacted configuration output must never be submitted as an update. Successful calls are not logged; operational logging is controlled by `PSSTARR_LOG_DISABLED` and `PSSTARR_LOG_DIRECTORY`.
-- GETs that search releases or Prowlarr indexers can contact providers and consume quotas; manual-import reads inspect server files. Filesystem browsing, feeds, authentication UI, localization, static/binary downloads, log downloads, and deprecated endpoints stay excluded.
-- Consumer-required writes are limited to tag creation and deletion, command submission, Radarr movie-tag and collection-monitoring updates, and Sonarr series-tag updates. Typed command facades cover broadly useful refresh, rescan, rename, and tightly scoped search operations. All state changes require `SupportsShouldProcess`; collection monitoring and searches can trigger upstream automation or provider activity.
-- Tag mutation commands use `Action` with `Add` and `Remove` values. Where tags apply to media, accept tag names as a user-facing alternative to IDs, resolve names through the tag endpoint, and warn without mutation when a requested name does not exist.
-- `Remove-StarrTag` deletes a tag resource; removing a tag from media belongs to the applicable `Set-*Tag -Action Remove` command.
-- Unit tests use fake credentials and mocked HTTP. Live checks are opt-in and must never print credentials or response bodies. The saved-connection baseline covers safe Radarr, Sonarr, and Prowlarr reads; rerun the full live matrix after public parameter or configuration changes.
-- Application-facing commands use `InstanceName` for saved-connection selection; only `*-PSStarrInstance` configuration commands use `Name` for the configuration record itself.
-- Preserve predictable output shapes: ordinary collections stream zero or more resource objects, paged endpoints return their paging envelope, ID routes return one resource, and filter commands remain list searches. Do not fabricate empty arrays or placeholder objects. Apply stable `PSStarr.*` type names without removing upstream properties; default format views show useful properties while `Format-List *` and `Select-Object *` expose the complete response.
-- Support property-name pipeline binding only for natural parent-to-child reads. Avoid implicit pipeline behavior for searches and server-filesystem inspection.
-- Apply consistent parameter semantics: positive resource IDs and ID arrays, paging values starting at 1, typed booleans, descriptive `*IdFilter` names, ISO 8601 dates, and early validation of invalid combinations and reversed date ranges.
-- Shared commands must expose an application discriminator where explicit credentials are accepted and reject unsupported applications before transport. Prefer application-specific facades when Radarr and Sonarr contracts differ.
-- `Invoke-StarrCommand` is the canonical advanced command-submission interface. Keep `Start-StarrCommand` only for compatibility, and prefer typed application-specific command facades when a command is broadly useful enough to support directly.
-- Live verification must cover empty results, paged envelopes, ID/list behavior, explicit and saved connections, and application mismatch errors. Provider searches can consume quotas; manual-import reads inspect server files.
+## Mutations and Side Effects
 
-## Architecture
+- Limit writes to tag resources, command submission, supported media-tag updates, and Radarr collection monitoring.
+- Add typed command facades only for broadly useful refresh, rescan, rename, and scoped searches.
+- Require `SupportsShouldProcess` for every state change. Document upstream work and provider quota risks.
+- Treat `Invoke-StarrCommand` as the advanced command interface. Keep `Start-StarrCommand` only for compatibility.
+- Use `Action` with `Add` and `Remove` for media tag changes.
+- Accept tag names where tags apply to media. Resolve names through the tag endpoint and warn when a name is missing.
+- Use `Remove-StarrTag` to delete tag resources. Use `Set-*Tag -Action Remove` to remove tags from media.
 
-Use `Invoke-StarrApiRequest` as the single HTTP boundary. It should resolve a named connection, construct versioned URLs,
-add authentication headers, serialize query/body data, invoke the request, and return deserialized responses.
-It must sanitize API keys from verbose output and errors.
+## Configuration and Security
 
-Public endpoint commands should provide discoverability and delegate transport concerns.
-Prefer consistent names such as `Get-StarrSystemStatus`, `Get-StarrTag`, and application-specific commands such as `Get-StarrRadarrMovie`.
-Keep URL construction and direct `Invoke-RestMethod` calls out of endpoint wrappers.
+- Expose named connections with `Name`, `Application`, `Url`, and `ApiKey`. Require complete records only for creation.
+- Use the PoshCode `Configuration` module unless the design changes. Do not add PSFramework only for logging.
+- Treat the module name and author as storage identifiers. Require migration and compatibility tests before changing them.
+- Encrypt only saved API keys. Keep encryption metadata out of public connection objects.
+- Use current-user and current-host DPAPI by default on Windows. Require explicit plaintext selection.
+- Require `PSSTARR_AES_KEY` to contain a Base64-encoded 32-byte key for portable AES-256.
+- Never fall back to plaintext after encryption fails.
+- Mask credentials in provider, host, error, and log data. Never reuse redacted configuration as an update.
+- Never log, display, commit, or use real credentials in fixtures.
+- Control operational logging with `PSSTARR_LOG_DISABLED` and `PSSTARR_LOG_DIRECTORY`. Do not log successful calls by default.
+- Keep explicit `Url` and `ApiKey` parameters available for ephemeral and CI use where practical.
 
-## Configuration
+## Errors and Tests
 
-Store only named connections with `Name`, `Application`, `Url`, and `ApiKey`. Support multiple instances, for example `RadarrMain` and `Radarr4K`. `Set-PSStarrInstance` must support partial updates without requiring unchanged values; creation must still require a complete valid record.
-Encryption envelopes and metadata are internal persistence details, not properties of the public connection object.
-Use the PoshCode `Configuration` module unless the design is explicitly revisited; do not introduce PSFramework solely for logging.
-Treat the module name and author as configuration-storage identifiers because Configuration derives storage paths from them. Do not change either value without a configuration migration plan and compatibility tests.
+- Route operational failures through the shared error handler at public boundaries. Log only redacted operational failures.
+- Handle expected input errors through validation attributes or parameter sets. Do not log them by default.
+- Mock `Invoke-StarrApiRequest` in endpoint tests. Mock `Invoke-RestMethod` only in transport tests.
+- Use fake credentials. Cover URLs, queries, API versions, redaction, persistence, output shapes, and application differences.
+- Keep live tests opt-in. Never print credentials or response bodies.
+- Test safe saved and explicit connections for all applications. Cover empty, list, ID, paged, and mismatch behavior.
+- Run the full live matrix after public parameter or configuration changes.
+- Limit provider searches to the smallest useful sample. Treat manual-import reads as server-filesystem inspection.
 
-Never log, display, commit, or include real API keys in fixtures. Keep explicit `-Url` and `-ApiKey` parameters available for ephemeral and CI use where practical.
+## Help and Documentation
 
-## Coding and Testing
+- Treat source comment-based help as the command contract.
+- Generate `docs/command-reference` from the built module with `ci/New-ModuleDocs.ps1`.
+- Fix source help or the generator. Do not edit generated command pages directly.
+- Follow `docs/contributing.md` for documentation commands and validation.
+- Keep `PSStarr/Output` and `site` untracked.
 
-Follow PowerShell approved verbs, singular nouns, PascalCase parameters, four-space indentation, comment-based help, and `SupportsShouldProcess` for state-changing commands.
-Public filenames must match exported function names.
+## Releases and Repository Output
 
-Use Pester for unit tests. Mock `Invoke-StarrApiRequest` in endpoint tests and mock `Invoke-RestMethod` only in transport tests.
-Cover URL normalization, query serialization, API-version handling, sanitized errors, configuration persistence, list responses, ID lookup, and application-specific differences.
-Keep integration tests opt-in and driven by environment variables.
-
-## Documentation
-
-Comment-based help is the source of truth for the tracked command reference. Generate `docs/command-reference` from the built module with `ci/New-ModuleDocs.ps1`; fix source help or the generator instead of editing generated pages directly. `PSStarr/Output` and `site` are ignored build output. Follow `docs/contributing.md` for documentation commands and validation.
-
-## Delivery and Release
-
-Run `PSStarr/tools/Test-Release.ps1` for module, packaging, help, or release changes. Run both the release gate and strict documentation build when a public command changes.
-
-Changes under `PSStarr/Source` or to `PSStarr/build.psd1` require a new stable three-part manifest version and a matching dated `CHANGELOG.md` section in the same pull request. Prepare them with `PSStarr/tools/Prepare-Release.ps1`.
-
-Pull requests validate but do not publish. A manifest change merged into `main` starts publication; `workflow_dispatch` only retries the exact stable version already on `main`.
-
-Treat each CI job as a clean machine: install dependencies before first use, and never assume `needs` transfers installed tools or filesystem state. Release jobs must publish the exact validated artifact and remain idempotent.
-
-Build and publish from a clean checkout, use the repository changelog as the release-note source of truth, and never hand-edit or publish generated ModuleBuilder output.
-
-Treat tracked API specifications and consumer-coverage documents as dated research rather than a promise of complete upstream endpoint coverage. Re-audit them when upstream contracts or supported consumer requirements change. Keep temporary research untracked unless the user explicitly requests a durable repository artifact.
+- Run `PSStarr/tools/Test-Release.ps1` for module, packaging, help, or release changes.
+- Also run the strict documentation build when a public command changes.
+- Update the manifest and dated changelog for source or packaging changes. Use `PSStarr/tools/Prepare-Release.ps1`.
+- Let pull requests validate releases. Publish when a manifest change reaches `main`.
+- Use `workflow_dispatch` only to retry the exact stable version on `main`.
+- Treat each CI job as a clean machine. Install dependencies before use. Do not expect `needs` to transfer machine state.
+- Publish the exact validated artifact. Keep retries idempotent. Use `CHANGELOG.md` for release notes.
+- Build and publish from a clean checkout. Never hand-edit, commit, or publish ModuleBuilder output.
+- Treat tracked specifications and coverage documents as dated research. Re-audit them when contracts or consumer needs change.
+- Keep temporary research untracked unless the user requests a durable artifact.
 
 ## PowerShell Style
 
-- Put every parameter declaration on its own line.
-- Put parameter attributes, the parameter type, and the parameter variable on separate lines.
-- Apply equivalent validation consistently to parameters with equivalent semantics. Named instances and API keys must reject null, empty, and whitespace-only values; explicit URLs must use the shared URL validator.
-- Use four-space indentation.
-- Leave a blank line between distinct actions, including assignments, conditionals, loops, transport calls, and output construction.
-- Expand conditionals and loops across multiple lines when their bodies perform assignments, contain multiple actions, or would be harder to scan inline.
-- A simple single-action conditional may remain compact only when readability is not reduced.
-- Prefer readable multi-line hashtables over inline hashtables in implementation code.
-- ModuleBuilder source files must contain exactly one function per script. The filename must match the function name for public and private functions.
-- Keep logging plain-text and human-readable. Do not add enterprise-specific formats unless the project requirements explicitly change.
-- Every function must include comment-based help with `.SYNOPSIS`, `.DESCRIPTION`, `.PARAMETER` for every parameter, `.EXAMPLE`, `.INPUTS`, and `.OUTPUTS` sections.
-- Begin every `.DESCRIPTION` with `This function`.
-- Include more than one example when a function has meaningfully different use cases or parameter sets.
-- For functions that accept or return pipeline objects, use fully qualified .NET type names in `.INPUTS`, `.OUTPUTS`, and `[OutputType()]`, keep output types consistent, and add a brief description. For no-input or no-output functions, document `None.` followed by the standard explanatory sentence.
+- Use approved verbs, singular nouns, PascalCase parameters, and four-space indentation.
+- Put each parameter on its own line. Put its attributes, type, and variable on separate lines.
+- Apply equal validation to equal semantics. Reject blank instance names and API keys. Use the shared URL validator.
+- Leave blank lines between distinct actions. Expand conditionals and loops when compact forms reduce readability.
+- Prefer multi-line implementation hashtables.
+- Keep one function in each source file. Match each public and private filename to its function name.
+- Keep logs plain-text and human-readable.
+- Give every function `.SYNOPSIS`, `.DESCRIPTION`, every `.PARAMETER`, `.EXAMPLE`, `.INPUTS`, and `.OUTPUTS`.
+- Begin each `.DESCRIPTION` with `This function`. Add multiple examples for meaningfully different uses.
+- Use fully qualified .NET pipeline types. Keep `[OutputType()]`, `.INPUTS`, and `.OUTPUTS` consistent.
+- Document no input or output as `None.` followed by the standard explanation.
 - Do not add `.LINK` sections unless project requirements change.
-- Route operational failures at public command boundaries through structured error records and the shared error handler; keep parameter validation in PowerShell validation attributes or parameter sets.
-- Log operational failures, but do not log successful API calls by default. Expected user-input errors may be emitted without being logged.
