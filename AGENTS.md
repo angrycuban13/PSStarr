@@ -6,7 +6,7 @@ PSStarr is a reusable PowerShell 7 client module for Radarr, Sonarr, and Prowlar
 Keep this repository focused on application configuration, HTTP transport, and broadly useful API endpoint wrappers.
 Opinionated automation, notification behavior, scheduling, and workflow-specific settings belong in consuming projects such as `Just-A-Bunch-Of-Starr-Scripts`.
 
-Favor a small, coherent public API over narrow functions designed for one existing script. Implement read operations first, but design the transport for all HTTP methods.
+Favor a small, coherent public API over complete upstream endpoint coverage or narrow functions designed for one existing script. Add commands only for broad utility or confirmed consumer needs, and apply the established mutation and exclusion rules before adding writes.
 
 ## Established Decisions
 
@@ -17,6 +17,7 @@ Favor a small, coherent public API over narrow functions designed for one existi
 - GETs that search releases or Prowlarr indexers can contact providers and consume quotas; manual-import reads inspect server files. Filesystem browsing, feeds, authentication UI, localization, static/binary downloads, log downloads, and deprecated endpoints stay excluded.
 - Consumer-required writes are limited to tag creation and deletion, command submission, Radarr movie-tag and collection-monitoring updates, and Sonarr series-tag updates. Typed command facades cover broadly useful refresh, rescan, rename, and tightly scoped search operations. All state changes require `SupportsShouldProcess`; collection monitoring and searches can trigger upstream automation or provider activity.
 - Tag mutation commands use `Action` with `Add` and `Remove` values. Where tags apply to media, accept tag names as a user-facing alternative to IDs, resolve names through the tag endpoint, and warn without mutation when a requested name does not exist.
+- `Remove-StarrTag` deletes a tag resource; removing a tag from media belongs to the applicable `Set-*Tag -Action Remove` command.
 - Unit tests use fake credentials and mocked HTTP. Live checks are opt-in and must never print credentials or response bodies. The saved-connection baseline covers safe Radarr, Sonarr, and Prowlarr reads; rerun the full live matrix after public parameter or configuration changes.
 - Application-facing commands use `InstanceName` for saved-connection selection; only `*-PSStarrInstance` configuration commands use `Name` for the configuration record itself.
 - Preserve predictable output shapes: ordinary collections stream zero or more resource objects, paged endpoints return their paging envelope, ID routes return one resource, and filter commands remain list searches. Do not fabricate empty arrays or placeholder objects. Apply stable `PSStarr.*` type names without removing upstream properties; default format views show useful properties while `Format-List *` and `Select-Object *` expose the complete response.
@@ -24,8 +25,7 @@ Favor a small, coherent public API over narrow functions designed for one existi
 - Apply consistent parameter semantics: positive resource IDs and ID arrays, paging values starting at 1, typed booleans, descriptive `*IdFilter` names, ISO 8601 dates, and early validation of invalid combinations and reversed date ranges.
 - Shared commands must expose an application discriminator where explicit credentials are accepted and reject unsupported applications before transport. Prefer application-specific facades when Radarr and Sonarr contracts differ.
 - `Invoke-StarrCommand` is the canonical advanced command-submission interface. Keep `Start-StarrCommand` only for compatibility, and prefer typed application-specific command facades when a command is broadly useful enough to support directly.
-- Live verification must cover empty results, paged envelopes, ID/list behavior, explicit and saved connections, and application mismatch errors. Provider searches can consume quotas; manual-import reads inspect server files. Configure each application's recycle bin before destructive media tests.
-- ModuleBuilder output is generated and ignored. Build and publish from a clean checkout, use the repository changelog as the release-note source of truth, and never hand-edit or publish generated output.
+- Live verification must cover empty results, paged envelopes, ID/list behavior, explicit and saved connections, and application mismatch errors. Provider searches can consume quotas; manual-import reads inspect server files.
 
 ## Architecture
 
@@ -40,8 +40,9 @@ Keep URL construction and direct `Invoke-RestMethod` calls out of endpoint wrapp
 ## Configuration
 
 Store only named connections with `Name`, `Application`, `Url`, and `ApiKey`. Support multiple instances, for example `RadarrMain` and `Radarr4K`. `Set-PSStarrInstance` must support partial updates without requiring unchanged values; creation must still require a complete valid record.
+Encryption envelopes and metadata are internal persistence details, not properties of the public connection object.
 Use the PoshCode `Configuration` module unless the design is explicitly revisited; do not introduce PSFramework solely for logging.
-Finalize module author metadata before persisting user settings because Configuration derives storage paths from module name and author.
+Treat the module name and author as configuration-storage identifiers because Configuration derives storage paths from them. Do not change either value without a configuration migration plan and compatibility tests.
 
 Never log, display, commit, or include real API keys in fixtures. Keep explicit `-Url` and `-ApiKey` parameters available for ephemeral and CI use where practical.
 
@@ -54,13 +55,23 @@ Use Pester for unit tests. Mock `Invoke-StarrApiRequest` in endpoint tests and m
 Cover URL normalization, query serialization, API-version handling, sanitized errors, configuration persistence, list responses, ID lookup, and application-specific differences.
 Keep integration tests opt-in and driven by environment variables.
 
+## Documentation
+
+Comment-based help is the source of truth for the tracked command reference. Generate `docs/command-reference` from the built module with `ci/New-ModuleDocs.ps1`; fix source help or the generator instead of editing generated pages directly. `PSStarr/Output` and `site` are ignored build output. Follow `docs/contributing.md` for documentation commands and validation.
+
 ## Delivery and Release
 
-Run `PSStarr/tools/Test-Release.ps1` before publishing. The gate analyzes source and tooling, builds the module using the manifest version, validates the manifest and exported commands, verifies comment-based help, runs the full Pester suite, and rejects unexpected package files.
+Run `PSStarr/tools/Test-Release.ps1` for module, packaging, help, or release changes. Run both the release gate and strict documentation build when a public command changes.
 
-Prepare stable versions with `PSStarr/tools/Prepare-Release.ps1`, review the manifest and dated changelog changes through the normal Git workflow, and merge them into `main` before release dispatch. The release workflow must require a matching stable version from `main`, transfer the exact validated artifact into the `PowerShellGallery` environment, publish idempotently, and create the matching GitHub release and `v*` tag. Do not publish on ordinary pushes or pull requests.
+Changes under `PSStarr/Source` or to `PSStarr/build.psd1` require a new stable three-part manifest version and a matching dated `CHANGELOG.md` section in the same pull request. Prepare them with `PSStarr/tools/Prepare-Release.ps1`.
 
-Treat the local API specifications and consumer-coverage documents as dated research rather than a promise of complete upstream endpoint coverage. Re-audit them when upstream contracts or supported consumer requirements change.
+Pull requests validate but do not publish. A manifest change merged into `main` starts publication; `workflow_dispatch` only retries the exact stable version already on `main`.
+
+Treat each CI job as a clean machine: install dependencies before first use, and never assume `needs` transfers installed tools or filesystem state. Release jobs must publish the exact validated artifact and remain idempotent.
+
+Build and publish from a clean checkout, use the repository changelog as the release-note source of truth, and never hand-edit or publish generated ModuleBuilder output.
+
+Treat tracked API specifications and consumer-coverage documents as dated research rather than a promise of complete upstream endpoint coverage. Re-audit them when upstream contracts or supported consumer requirements change. Keep temporary research untracked unless the user explicitly requests a durable repository artifact.
 
 ## PowerShell Style
 
